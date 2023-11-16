@@ -8,7 +8,6 @@ import Chat from './screens/Chat';
 import Activities from './screens/Activities';
 import Recap from './screens/Recap';
 import Settings from './screens/Settings';
-import { red } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 
 const Tab = createBottomTabNavigator();
 
@@ -103,7 +102,7 @@ export default function App() {
         </Tab.Navigator>
       </NavigationContainer>
   ) : (
-    <LinearGradient colors={['#1A237E', '#64B5F6']} style={{ flex: 1 }}>
+    <LinearGradient colors={['#071542', '#000014']} style={{ flex: 1 }}>
       <Animated.View
         style={{
           flex: 1,
