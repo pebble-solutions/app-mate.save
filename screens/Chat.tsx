@@ -17,7 +17,7 @@ const Chat = () => {
     },
     {
       id: '2',
-      sender: 'Maman',
+      sender: 'Toto',
       message: 'Ça va bien, merci !',
       time: '10:05 AM',
     },
