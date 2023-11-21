@@ -1,41 +1,42 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
-import AddVariable from '../components/addVariable';
-import AddVariableModal from '../components/addVariableModal'; 
+import React, {useState} from 'react';
+import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
 
-const App = () => {
+const AddVarModal = () => {
+  const [modalVisible, setModalVisible] = useState(false);
   return (
-   
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Gestion des activités</Text>
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Mes activités</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Text style={styles.addButtonText}>+</Text>
-          <Text style={styles.addButtonText}>Ajouter une activité</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Autres activités</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Text style={styles.addButtonText}>+</Text>
-          <Text style={styles.addButtonText}>Ajouter une activité</Text>
-        </TouchableOpacity>
-      </View>
-      <AddVariable />
-
-      
+    <View style={styles.section}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.container}>
+          <View style={styles.section}>
+            <Text style={styles.addButtonText}>Libellé</Text>
+            <Pressable
+              style={[styles.section]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.addButtonText}>Valider</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <Pressable
+        style={[styles.addButton]}
+        onPress={() => setModalVisible(true)}>
+        <Text style={styles.addButtonText}>Configurer une variable</Text>
+      </Pressable>
     </View>
-    
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212', // Fond gris foncé
+    backgroundColor: '#333030', // Fond gris foncé
     justifyContent: 'flex-start',
   },
   header: {
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1F1F1F', // Fond de l'entête
+    backgroundColor: '#333030', // Fond de l'entête
   },
   title: {
     fontSize: 24,
@@ -83,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default AddVarModal;

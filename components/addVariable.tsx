@@ -1,41 +1,27 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
-import AddVariable from '../components/addVariable';
-import AddVariableModal from '../components/addVariableModal'; 
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import AddVariableModal from './addVariableModal';
 
-const App = () => {
+const AddVar = () => {
   return (
-   
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Gestion des activités</Text>
+        <Text style={styles.title}>Gestion des variables</Text>
       </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Mes activités</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Text style={styles.addButtonText}>+</Text>
-          <Text style={styles.addButtonText}>Ajouter une activité</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Autres activités</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Text style={styles.addButtonText}>+</Text>
-          <Text style={styles.addButtonText}>Ajouter une activité</Text>
-        </TouchableOpacity>
-      </View>
-      <AddVariable />
-
       
+      
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Mes variables</Text>
+       <AddVariableModal></AddVariableModal>
+      </View>
     </View>
-    
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212', // Fond gris foncé
+    backgroundColor: '#333030', // Fond gris foncé
     justifyContent: 'flex-start',
   },
   header: {
@@ -83,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default AddVar;

@@ -4,7 +4,6 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';  // Importe d
 const ChangeView = () => {
     console.log('Le bouton a été pressé , faut changer la couleur et la route!', styles.RecapButton.backgroundColor);
     
-    
   }
 
 interface RecapButtonProps {

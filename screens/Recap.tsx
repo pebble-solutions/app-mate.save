@@ -10,8 +10,7 @@ const Recap = () => {
 		<SafeAreaView style={styles.container}>
 
 			<ScrollView stickyHeaderIndices={[0]}>
-				<View style={styles.container}>
-					<View style={styles.header}>
+					<View style={styles.header}></View>
 						<Text style={styles.title}>Récapitulatif</Text>
 						<Text style={styles.subtitle}>John Doe</Text>
 						<View style={styles.buttonGroup}>
@@ -19,12 +18,16 @@ const Recap = () => {
 							<RecapButton buttonLabel= {type}/>
 						))}
 						</View>
-					</View>
-				</View>
-				<View style={styles.container}>
-					<RecapDay/>
-					<RecapWeek/>
-				</View>
+						<View style={styles.buttonGroup}>
+							<RecapButton buttonLabel= {'jour'}/>
+							<RecapButton buttonLabel= {'semaine'}/>
+							<RecapButton buttonLabel= {'mois'}/>
+							<RecapButton buttonLabel= {'periode'}/>
+						</View>
+						<View style={styles.container}>
+							<RecapDay/>
+							<RecapWeek/>
+						</View>
 			</ScrollView>
 		</SafeAreaView>
 	);
