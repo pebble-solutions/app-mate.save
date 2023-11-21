@@ -1,51 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, FC } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import SvgSun from './SVG/SvgSun';
 import SvgMountains from './SVG/SvgMountains';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Timer = () => {
-  const [isChronometerStarted, setIsChronometerStarted] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
+const Timer: FC = () => {
+  const [pressTimes, setPressTimes] = useState<Date[]>([]);
 
   useEffect(() => {
-    let interval;
-
-    if (isChronometerStarted && !isPaused) {
-      interval = setInterval(() => {
-        setSeconds((prevSeconds) => prevSeconds + 1);
-
-        if (seconds === 59) {
-          setMinutes((prevMinutes) => prevMinutes + 1);
-          setSeconds(0);
-
-          if (minutes === 59) {
-            setHours((prevHours) => prevHours + 1);
-            setMinutes(0);
-          }
+    const loadPressTimes = async () => {
+      try {
+        const storedPressTimes = await AsyncStorage.getItem('pressTimes');
+        if (storedPressTimes) {
+          const times = JSON.parse(storedPressTimes).map((time: string) => new Date(time));
+          setPressTimes(times);
         }
-      }, 1000);
-    } else {
-      clearInterval(interval);
-    }
+      } catch (error) {
+        console.error("Erreur lors du chargement des heures depuis AsyncStorage :", error);
+      }
+    };
+    loadPressTimes();
+  }, []);
 
-    return () => clearInterval(interval);
-  }, [isChronometerStarted, isPaused, seconds, minutes, hours]);
-
-  const startChronometer = () => {
-    if (!isChronometerStarted) {
-      setIsChronometerStarted(true);
-      setIsPaused(false);
-      setHours(0);
-      setMinutes(0);
-      setSeconds(0);
-    } else {
-      setIsPaused(!isPaused);
+  const onPressSun = async () => {
+    const currentTime = new Date();
+    const updatedPressTimes = [...pressTimes, currentTime];
+    try {
+      const timesToStore = JSON.stringify(updatedPressTimes.map(time => time.toISOString()));
+      await AsyncStorage.setItem('pressTimes', timesToStore);
+      setPressTimes(updatedPressTimes);
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde des heures dans AsyncStorage :", error);
     }
   };
+
+  const clearPressTimes = async () => {
+    try {
+      await AsyncStorage.removeItem('pressTimes');
+      setPressTimes([]);
+    } catch (error) {
+      console.error("Erreur lors de la suppression des données :", error);
+    }
+  };
+
+  const onValidatePress = () => {
+    // Votre logique ici
+  };
+
+  const renderItem = ({ item, index }: { item: Date; index: number }) => (
+    <Text style={styles.lastPressTimeText}>
+      Clic {index + 1} : {item.toLocaleTimeString()}
+    </Text>
+  );
 
   return (
     <LinearGradient
@@ -56,16 +63,35 @@ const Timer = () => {
         <SvgMountains />
       </View>
       <TouchableOpacity
-        onPress={() => startChronometer()}
+        onPress={onPressSun}
         style={styles.circleContainer}
       >
         <SvgSun />
       </TouchableOpacity>
-      <View style={styles.chronometerContainer}>
-        <Text style={[styles.chronometerText, isPaused ? { opacity: 0.5 } : null]}>
-          {`${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`}
-        </Text>
-      </View>
+      
+      {/* Utilisation de FlatList pour afficher la liste des clics */}
+      <FlatList
+        data={pressTimes}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        style={styles.listContainer}
+      />
+
+       {/* Bouton "Valider" */}
+       <TouchableOpacity
+        onPress={onValidatePress}
+        style={[styles.button, styles.validateButton]}
+      >
+        <Text style={styles.buttonText}>Valider</Text>
+      </TouchableOpacity>
+
+      {/* Votre bouton "Annuler" existant */}
+      <TouchableOpacity
+        onPress={clearPressTimes}
+        style={[styles.button, styles.clearButton]}
+      >
+        <Text style={styles.buttonText}>Annuler</Text>
+      </TouchableOpacity>
     </LinearGradient>
   );
 };
@@ -75,8 +101,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 390,
-    height: 844,
+    width: '100%',
+    height: '100%',
   },
   mountainsContainer: {
     position: 'absolute',
@@ -89,22 +115,42 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    top: 230,
-    right: 8,
+    top: '29%',
   },
-  chronometerContainer: {
+  listContainer: {
     position: 'absolute',
-    top: 50,
-    left: 0,
-    width: '100%',
-    height: 50,
+    top: 100,
+    left: 20,
+    right: 20,
+    maxHeight: '100%', // Ajustez la hauteur maximale si nécessaire
     padding: 10,
   },
-  chronometerText: {
+  lastPressTimeText: {
     color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 16,
     textAlign: 'center',
+  },
+  button: {
+    position: 'relative',
+    padding: 10,
+    borderRadius: 20,
+    width: 80,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  clearButton: {
+    right: 135, // Positionnement sur le côté opposé
+    top: 270, // Positionnement en haut
+    backgroundColor: '#FF0000', // Couleur rouge pour le bouton "Annuler"
+  
+  },
+  validateButton: {
+    right: -135, // Positionnement sur le côté opposé
+    top: 307, // Positionnement en haut
+    backgroundColor: '#0000FF', // Couleur bleue pour le bouton "Valider"
   },
 });
 

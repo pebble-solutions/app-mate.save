@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-nati
 
 
 
-const App = () => {
+const Recap = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -124,4 +124,4 @@ const styles = StyleSheet.create({
 
 
 
-export default App;
+export default Recap;
