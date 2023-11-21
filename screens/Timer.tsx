@@ -6,14 +6,15 @@ import SvgMountains from './SVG/SvgMountains';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Timer: FC = () => {
-  const [pressTimes, setPressTimes] = useState<Date[]>([]);
+  // Modification : stockage des temps avec leurs libellés
+  const [pressTimes, setPressTimes] = useState<{ time: Date; label: string }[]>([]);
 
   useEffect(() => {
     const loadPressTimes = async () => {
       try {
         const storedPressTimes = await AsyncStorage.getItem('pressTimes');
         if (storedPressTimes) {
-          const times = JSON.parse(storedPressTimes).map((time: string) => new Date(time));
+          const times = JSON.parse(storedPressTimes).map(({ time, label }: { time: string; label: string }) => ({ time: new Date(time), label }));
           setPressTimes(times);
         }
       } catch (error) {
@@ -25,15 +26,36 @@ const Timer: FC = () => {
 
   const onPressSun = async () => {
     const currentTime = new Date();
-    const updatedPressTimes = [...pressTimes, currentTime];
-    try {
-      const timesToStore = JSON.stringify(updatedPressTimes.map(time => time.toISOString()));
-      await AsyncStorage.setItem('pressTimes', timesToStore);
-      setPressTimes(updatedPressTimes);
-    } catch (error) {
-      console.error("Erreur lors de la sauvegarde des heures dans AsyncStorage :", error);
-    }
+    // Ajouter le nouveau clic sans définir le libellé pour le moment
+    setPressTimes([...pressTimes, { time: currentTime, label: "" }]);
   };
+  
+  useEffect(() => {
+    // Mettre à jour les libellés une fois que pressTimes est mis à jour
+    const updatedPressTimes = pressTimes.map((item, index, array) => {
+      if (index === 0) {
+        return { ...item, label: "Début d'activité" };
+      } else if (index % 2 === 1 && index !== array.length - 1) {
+        return { ...item, label: "Pause" };
+    } else if (index % 2 === 0) {
+        return { ...item, label: "Reprise" };
+      }
+      else {
+        return { ...item, label: "Fin d'activité" };
+      }
+    });
+  
+    // Vérifier si la mise à jour est nécessaire
+    if (updatedPressTimes.some((item, index) => item.label !== pressTimes[index]?.label)) {
+      setPressTimes(updatedPressTimes);
+    }
+  }, [pressTimes]); // Dépend de pressTimes
+  
+  
+  
+  
+  
+  
 
   const clearPressTimes = async () => {
     try {
@@ -48,9 +70,9 @@ const Timer: FC = () => {
     // Votre logique ici
   };
 
-  const renderItem = ({ item, index }: { item: Date; index: number }) => (
+  const renderItem = ({ item }: { item: { time: Date; label: string }; index: number }) => (
     <Text style={styles.lastPressTimeText}>
-      Clic {index + 1} : {item.toLocaleTimeString()}
+      {item.label} : {item.time.toLocaleTimeString()}
     </Text>
   );
 
@@ -77,15 +99,15 @@ const Timer: FC = () => {
         style={styles.listContainer}
       />
 
-       {/* Bouton "Valider" */}
-       <TouchableOpacity
+      {/* Bouton "Valider" */}
+      <TouchableOpacity
         onPress={onValidatePress}
         style={[styles.button, styles.validateButton]}
       >
         <Text style={styles.buttonText}>Valider</Text>
       </TouchableOpacity>
 
-      {/* Votre bouton "Annuler" existant */}
+      {/* Bouton "Annuler" */}
       <TouchableOpacity
         onPress={clearPressTimes}
         style={[styles.button, styles.clearButton]}
@@ -122,7 +144,7 @@ const styles = StyleSheet.create({
     top: 100,
     left: 20,
     right: 20,
-    maxHeight: '100%', // Ajustez la hauteur maximale si nécessaire
+    maxHeight: '100%',
     padding: 10,
   },
   lastPressTimeText: {
@@ -142,15 +164,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   clearButton: {
-    right: 135, // Positionnement sur le côté opposé
-    top: 270, // Positionnement en haut
-    backgroundColor: '#FF0000', // Couleur rouge pour le bouton "Annuler"
-  
+    right: 135,
+    top: 270,
+    backgroundColor: '#FF0000',
   },
   validateButton: {
-    right: -135, // Positionnement sur le côté opposé
-    top: 307, // Positionnement en haut
-    backgroundColor: '#0000FF', // Couleur bleue pour le bouton "Valider"
+    right: -135,
+    top: 307,
+    backgroundColor: '#0000FF',
   },
 });
 
