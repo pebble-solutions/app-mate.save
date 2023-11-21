@@ -25,7 +25,19 @@ const Timer: FC = () => {
 
   const onPressSun = async () => {
     const currentTime = new Date();
-    setPressTimes([...pressTimes, { time: currentTime, label: "" }]);
+    const newPressTime = { time: currentTime, label: "" };
+    const updatedPressTimes = [...pressTimes, newPressTime];
+    setPressTimes(updatedPressTimes);
+    await savePressTimes(updatedPressTimes);  // Sauvegarde des nouvelles données
+  };
+
+  const savePressTimes = async (times: { time: Date; label: string }[]) => {
+    try {
+      const timesToStore = JSON.stringify(times);
+      await AsyncStorage.setItem('pressTimes', timesToStore);
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde des heures dans AsyncStorage :", error);
+    }
   };
 
   useEffect(() => {
@@ -68,7 +80,7 @@ const Timer: FC = () => {
         {/* Logique existante pour afficher le cercle */}
         {index === 0 ? (
           <View style={styles.largeCircleBorder}>
-            <View style={styles.largeCircleLine} />
+         
           </View>
         ) : item.label === "Arrêt de l'activité" ? (
           <View style={styles.largeCircleFilled} />
