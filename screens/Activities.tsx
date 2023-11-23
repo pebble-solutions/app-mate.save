@@ -1,7 +1,18 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native';
+import ActivityModal from './modals/ActivityModal';
 
 const App = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -9,12 +20,21 @@ const App = () => {
       </View>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Mes activités</Text>
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity style={styles.addButton} onPress={openModal}>
           <Text style={styles.addButtonText}>+</Text>
           <Text style={styles.addButtonText}>Ajouter une activité</Text>
         </TouchableOpacity>
       </View>
-    
+
+      {/* Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}
+      >
+         <ActivityModal visible={modalVisible} onClose={closeModal} />
+      </Modal>
     </View>
   );
 };
@@ -22,51 +42,50 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212', // Fond gris foncé
+    backgroundColor: '#121212',
     justifyContent: 'flex-start',
   },
   header: {
     width: '100%',
-    paddingTop: 60, // Ajoutez plus d'espace en haut si nécessaire
+    paddingTop: 60,
     paddingBottom: 20,
     marginBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1F1F1F', // Fond de l'entête
+    backgroundColor: '#1F1F1F',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#ffffff', // Texte blanc
+    color: '#ffffff',
   },
   sectionTitle: {
     fontSize: 20,
-    color: '#ffffff', // S'assure que le texte est blanc
+    color: '#ffffff',
     fontWeight: 'bold',
     marginBottom: 10,
   },
-
   section: {
-    backgroundColor: '#1F1F1F', // Fond des sections
-    width: '100%', // Prend toute la largeur de l'écran
-    paddingVertical: 30, // Augmente l'espace vertical à l'intérieur de la carte
-    paddingHorizontal: 20, // Espace horizontal à l'intérieur de la carte
-    alignItems: 'center', // Centre les éléments horizontalement
-    justifyContent: 'center', // Centre les éléments verticalement
-    marginBottom: 10, // Espace entre les cartes
-    borderRadius: 20, // Coins arrondis pour les cartes
+    backgroundColor: '#1F1F1F',
+    width: '100%',
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+    borderRadius: 20,
   },
   addButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20, // Espace au-dessus du bouton
+    marginTop: 20,
   },
   addButtonText: {
-    color: '#ffffff', // Texte blanc
+    color: '#ffffff',
     fontWeight: 'bold',
     fontSize: 18,
-    marginLeft: 10, // Espace entre le symbole '+' et le texte
+    marginLeft: 10,
   },
 });
 
