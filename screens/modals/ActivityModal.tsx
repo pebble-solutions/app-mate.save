@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Text, View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ActivityModal = ({ visible, onClose }) => {
     const [activityName, setActivityName] = useState('');
@@ -16,14 +17,34 @@ const ActivityModal = ({ visible, onClose }) => {
         '#c780e8'
       ];
 
-    const createActivity = () => {
-        // Vous pouvez mettre ici la logique pour créer une activité avec le nom et la couleur sélectionnée.
-        // Par exemple, vous pouvez envoyer ces données à une API ou les traiter localement.
-
-        // Après avoir traité les données, vous pouvez fermer la modale.
-        onClose();
-    };
-
+      const createActivity = async () => {
+        try {
+          // Générer un UUID unique pour l'activité
+          const uuid = Math.random().toString(36).substring(7);
+      
+          // Créer l'objet d'activité avec les données
+          const activity = {
+            id: uuid,
+            name: activityName,
+            color: selectedColor,
+          };
+      
+          // Récupérer les activités existantes depuis AsyncStorage (s'il y en a)
+          const existingActivities = await AsyncStorage.getItem('activities');
+          const activities = existingActivities ? JSON.parse(existingActivities) : [];
+      
+          // Ajouter la nouvelle activité à la liste
+          activities.push(activity);
+      
+          // Stocker la liste mise à jour dans AsyncStorage
+          await AsyncStorage.setItem('activities', JSON.stringify(activities));
+      
+          // Fermer la modal
+          onClose();
+        } catch (error) {
+          console.error('Erreur lors de la création de l\'activité :', error);
+        }
+      };
     
 
     return (
@@ -36,7 +57,7 @@ const ActivityModal = ({ visible, onClose }) => {
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-                        <Text style={styles.closeButtonText}>X</Text>
+                        <Text style={styles.closeButtonText}>x</Text>
                     </TouchableOpacity>
                     <Text style={styles.modalTitle}>Créer une activité</Text>
                     <TextInput
@@ -52,7 +73,7 @@ const ActivityModal = ({ visible, onClose }) => {
                                 key={index}
                                 style={[
                                     styles.colorOption,
-                                    { backgroundColor: color, borderColor: selectedColor === color ? 'black' : 'transparent' },
+                                    { backgroundColor: color, borderColor: selectedColor === color ? 'white' : 'transparent' },
                                 ]}
                                 onPress={() => setSelectedColor(color)}
                             />
@@ -87,7 +108,6 @@ const styles = StyleSheet.create({
       },
       closeButtonText: {
         fontSize: 24,
-        fontWeight: 'bold',
         color: '#ffffff', // Texte blanc
       },
       modalTitle: {
@@ -136,8 +156,8 @@ const styles = StyleSheet.create({
       colorOption: {
         width: 30,
         height: 30,
-        borderRadius: 15,
-        borderWidth: 2,
+        borderRadius: 20,
+        borderWidth: 3,
       },
 
 });
