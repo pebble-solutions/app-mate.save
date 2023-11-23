@@ -14,13 +14,7 @@ const App = () => {
           <Text style={styles.addButtonText}>Ajouter une activité</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Autres activités</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <Text style={styles.addButtonText}>+</Text>
-          <Text style={styles.addButtonText}>Ajouter une activité</Text>
-        </TouchableOpacity>
-      </View>
+    
     </View>
   );
 };
