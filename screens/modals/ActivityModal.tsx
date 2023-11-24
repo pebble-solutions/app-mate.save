@@ -2,19 +2,20 @@ import React, { useState } from 'react';
 import { Modal, Text, View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const ActivityModal = ({ visible, onClose }) => {
     const [activityName, setActivityName] = useState('');
     const [selectedColor, setSelectedColor] = useState(null);
 
     const colorOptions = [
-        '#ff6961',
-        '#ffb480',
-        '#f8f38d',
-        '#42d6a4',
-        '#08cad1',
-        '#59adf6',
-        '#9d94ff',
-        '#c780e8'
+      '#b53d35',
+      '#b77856',
+      '#afa47a',
+      '#2fa580',
+      '#057a9a',
+      '#3f74a8',
+      '#7062c8',
+      '#8759a4'
       ];
 
       const createActivity = async () => {
@@ -26,7 +27,11 @@ const ActivityModal = ({ visible, onClose }) => {
           const activity = {
             id: uuid,
             name: activityName,
+            description: '',
+            start: (new Date()),
+            end: null,
             color: selectedColor,
+            sync: false,
           };
       
           // Récupérer les activités existantes depuis AsyncStorage (s'il y en a)
@@ -131,7 +136,7 @@ const styles = StyleSheet.create({
         color: '#ffffff', // Texte blanc
       },
       createButton: {
-        backgroundColor: 'orange', // Fond orange pour le bouton "Créer"
+        backgroundColor: '#9155fd', // Fond orange pour le bouton "Créer"
         padding: 10,
         borderRadius: 5,
         alignItems: 'center',

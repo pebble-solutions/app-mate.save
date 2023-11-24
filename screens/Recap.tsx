@@ -81,8 +81,10 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#9155fd', // Boutons violets
-    padding: 10,
-    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    justifyContent: 'space-between',
     // Autres styles pour les boutons
   },
   buttonText: {
