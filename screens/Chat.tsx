@@ -11,7 +11,7 @@ const Chat = () => {
   const conversationData = [
     {
       id: '1',
-      sender: 'Mari Lehouxs',
+      sender: 'Mari Lehoux',
       message: 'Salut, comment ça va ?',
       time: '10:00 AM',
     },

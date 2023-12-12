@@ -20,13 +20,13 @@ const ActivityModal = ({ visible, onClose }) => {
 
       const createActivity = async () => {
         try {
-          // Générer un UUID unique pour l'activité
+          // Générer un UUID unique pour l'activité@
           const uuid = Math.random().toString(36).substring(7);
       
           // Créer l'objet d'activité avec les données
           const activity = {
             id: uuid,
-            name: activityName,
+            label: activityName,
             description: '',
             start: (new Date()),
             end: null,

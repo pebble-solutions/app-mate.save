@@ -79,7 +79,7 @@ const App = () => {
               key={index}
               style={{ backgroundColor: activity.color, ...styles.activityItem }}
             >
-              <Text style={styles.activityName}>{activity.name}</Text>
+              <Text style={styles.activityName}>{activity.label}</Text>
               <Text style={styles.activityContent}>Crée le {moment(activity.start).format('DD.MM.YYYY')}</Text>
             </View>
           ))}
@@ -100,7 +100,7 @@ const App = () => {
                  key={index}
                  style={{ backgroundColor: activity.color, ...styles.activityItem }}
                >
-                 <Text style={styles.activityName}>{activity.name}</Text>
+                 <Text style={styles.activityName}>{activity.label}</Text>
                  <Text style={styles.activityContent}>Crée le {moment(activity.start).format('DD.MM.YYYY')}</Text>
                </View>
              ))}
