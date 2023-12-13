@@ -15,7 +15,7 @@ const App = () => {
   };
 
   const closeModal = async () => {
-    await fetchOnlineActivities
+    await fetchOnlineActivities();
     setModalVisible(false);
   };
 
@@ -101,7 +101,7 @@ const App = () => {
           <Text style={styles.addButtonText}>+</Text>
           <Text style={styles.addButtonText}>Ajouter une activité</Text>
         </TouchableOpacity>
-        
+
         {loading ? (
          <Text style={styles.loadingText}>Chargement en cours...</Text>
          ) : (
