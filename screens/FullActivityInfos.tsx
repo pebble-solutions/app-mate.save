@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
+import DeleteActivityButton from '../components/deleteActivityButton';
 
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   return (
@@ -20,9 +21,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       </View>
 
       {/* Bouton de suppression */}
-      <TouchableOpacity onPress={onDelete} style={styles.deleteButton}>
-        <Text style={styles.deleteButtonText}>Supprimer</Text>
-      </TouchableOpacity>
+     <DeleteActivityButton activity={activity} onDelete={onDelete} />
     </View>
   );
 };
