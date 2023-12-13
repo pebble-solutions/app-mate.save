@@ -4,6 +4,7 @@ import moment from 'moment';
 import DeleteActivityButton from '../components/deleteActivityButton';
 
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
+    const selectedItem = activity;
   return (
     <View style={styles.container}>
       {/* Barre supérieure avec bouton de fermeture */}
@@ -21,7 +22,10 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       </View>
 
       {/* Bouton de suppression */}
-     <DeleteActivityButton activity={activity} onDelete={onDelete} />
+      <DeleteActivityButton
+						title={selectedItem.label}
+						id={selectedItem._id}
+					/>
     </View>
   );
 };
