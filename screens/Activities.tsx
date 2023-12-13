@@ -72,7 +72,13 @@ const App = () => {
 
       {/* Liste des activités dans la partie "section" */}
       <ScrollView style={styles.section}>
-        <Text style={styles.sectionTitle}>Mes activités</Text>
+
+      
+    {/*    
+    
+    ancienes activités en local 
+    
+    <Text style={styles.sectionTitle}>Mes activités</Text>
         <ScrollView style={styles.activityList} contentContainerStyle={styles.activityListContent}>
           {activities.map((activity, index) => (
             <View
@@ -87,10 +93,15 @@ const App = () => {
         <TouchableOpacity style={styles.addButton} onPress={openModal}>
           <Text style={styles.addButtonText}>+</Text>
           <Text style={styles.addButtonText}>Ajouter une activité</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       
          {/* Liste des activités en ligne */}
-       <Text style={styles.sectionTitle}>autres activités en ligne</Text>
+       <Text style={styles.sectionTitle}>Mes activités : </Text>
+       <TouchableOpacity style={styles.addButton} onPress={openModal}>
+          <Text style={styles.addButtonText}>+</Text>
+          <Text style={styles.addButtonText}>Ajouter une activité</Text>
+        </TouchableOpacity>
+        
         {loading ? (
          <Text style={styles.loadingText}>Chargement en cours...</Text>
          ) : (
