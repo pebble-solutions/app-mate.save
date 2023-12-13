@@ -15,7 +15,7 @@ const App = () => {
   };
 
   const closeModal = async () => {
-    await fetchActivities();
+    await fetchOnlineActivities
     setModalVisible(false);
   };
 
@@ -113,8 +113,6 @@ const App = () => {
       </ScrollView>
 
       
-
-
 
       {/* Modal */}
       <Modal
