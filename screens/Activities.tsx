@@ -40,16 +40,6 @@ const App = () => {
     }
   };
 
-  // Fonction pour afficher la carte "Ajouter une activité"
-  const renderAddActivityCard = () => {
-    return (
-      <TouchableOpacity style={styles.addCard} onPress={openModal}>
-        <Text style={styles.addCardText}>+</Text>
-        <Text style={styles.addCardText}>Ajouter une activité</Text>
-      </TouchableOpacity>
-    );
-  };
-
   // Utilise useEffect pour charger les activités en ligne au montage du composant
   useEffect(() => {
     fetchOnlineActivities();
@@ -87,6 +77,12 @@ const App = () => {
                 </Text>
               </View>
             ))}
+
+            {/* Ajouter une dernière carte avec un fond noir */}
+            <TouchableOpacity style={styles.addCard} onPress={openModal}>
+            <Text style={styles.addCardText }>Ajouter une activité</Text>
+            <Text style={styles.addCardTextPlus}>+</Text>
+            </TouchableOpacity>
           </ScrollView>
         )}
       </ScrollView>
@@ -130,7 +126,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   section: {
-  
+
     width: '100%',
     paddingVertical: 30,
     paddingHorizontal: 20,
@@ -155,7 +151,7 @@ const styles = StyleSheet.create({
   },
   activityList: {
     marginTop: 20,
-    marginBottom : 110,
+    marginBottom: 110,
   },
   activityListContent: {
     flexDirection: 'row',
@@ -197,26 +193,40 @@ const styles = StyleSheet.create({
   },
 
   addCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
+    alignItems: 'center', 
     justifyContent: 'center',
-    marginTop: 20,
-    backgroundColor: '#303030',
-    paddingVertical: 10,
-    marginBottom: 20,
+    width: '48.5%',
+    marginBottom: 10,
+    height: 120,
+    padding: 10,
     borderRadius: 10,
+
+    borderColor: 'white', // Couleur de la bordure blanche
+    borderWidth: 1, // Largeur de la bordure
+    borderStyle: 'dashed', // Style de la bordure (pointillée)
+
+
   },
+
   addCardText: {
+    marginTop: 10,
     color: '#ffffff',
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginLeft: 10,
+    fontSize: 14,
+    textAlign: 'center',
   },
+  addCardTextPlus: {
+    color: '#ffffff',
+    fontSize: 30,
+    textAlign: 'center', 
+  },
+  
+  
+  
   loadingText: {
     color: '#ffffff',
     fontSize: 16,
     textAlign: 'center',
-    marginTop: 20,
   },
 
 });
