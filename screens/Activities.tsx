@@ -116,9 +116,7 @@ const App = () => {
              ))}
            </ScrollView>
          )}
-           <Text style={{ color: 'white' }}>
-       {JSON.stringify(activities)}
-        </Text>
+  
 
       </ScrollView>
 
