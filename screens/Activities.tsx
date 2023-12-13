@@ -19,7 +19,7 @@ const App = () => {
     setModalVisible(false);
   };
 
-  const fetchActivities = async () => {
+  /* const fetchActivities = async () => {
     try {
       const storedActivities = await AsyncStorage.getItem('activities');
       if (storedActivities !== null) {
@@ -29,7 +29,7 @@ const App = () => {
       console.error('Erreur lors de la récupération des activités :', error);
     }
   }; 
-
+ */
   const fetchOnlineActivities = async () => {
     try {
       const response = await fetch('https://api.pebble.solutions/v5/activity/');
@@ -45,7 +45,7 @@ const App = () => {
       setLoading(false);
     }
   }
-  const clearActivities = async () => {
+/*   const clearActivities = async () => {
     try {
       // Supprimer toutes les activités de AsyncStorage
       await AsyncStorage.removeItem('activities');
@@ -55,9 +55,8 @@ const App = () => {
       console.error('Erreur lors de la suppression des activités :', error);
     }
   };
-
+ */
   useEffect(() => {
-    fetchActivities();
     fetchOnlineActivities();
   }, [],);
 
@@ -65,9 +64,9 @@ const App = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Gestion des activités</Text>
-        <TouchableOpacity style={styles.clearButton} onPress={clearActivities}>
+       {/*  <TouchableOpacity style={styles.clearButton} onPress={clearActivities}>
           <Text style={styles.clearButtonText}>Effacer toutes les activités</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Liste des activités dans la partie "section" */}
