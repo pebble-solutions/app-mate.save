@@ -72,11 +72,9 @@ const App = () => {
       {/* Liste des activités dans la partie "section" */}
       <ScrollView style={styles.section}>
 
-      
-    {/*    
-    
-    ancienes activités en local 
-    
+
+
+    {/* ancienes activités en local 
     <Text style={styles.sectionTitle}>Mes activités</Text>
         <ScrollView style={styles.activityList} contentContainerStyle={styles.activityListContent}>
           {activities.map((activity, index) => (
@@ -114,6 +112,7 @@ const App = () => {
                  <Text style={styles.activityContent}>Crée le {moment(activity.start).format('DD.MM.YYYY')}</Text>
                </View>
              ))}
+        
            </ScrollView>
          )}
   
@@ -187,6 +186,7 @@ const styles = StyleSheet.create({
   },
   activityList: {
     marginTop: 20,
+    marginBottom : 110,
   },
   activityListContent: {
     flexDirection: 'row',
