@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import ActivityModal from './modals/ActivityModal';
+import FullActivityInfos from './FullActivityInfos'; // Importez votre composant FullActivityInfos ici
 import moment from 'moment';
 
 const App = () => {
@@ -10,15 +11,19 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   // Liste des activités en ligne
   const [onlineActivities, setOnlineActivities] = useState([]);
+  // Index de l'activité sélectionnée
+  const [selectedActivityIndex, setSelectedActivityIndex] = useState(-1);
 
-  // Fonction pour ouvrir le modal
-  const openModal = () => {
+  // Fonction pour ouvrir le modal avec l'index de l'activité sélectionnée
+  const openModal = (index) => {
+    setSelectedActivityIndex(index);
     setModalVisible(true);
   };
 
   // Fonction pour fermer le modal
   const closeModal = async () => {
     await fetchOnlineActivities();
+    setSelectedActivityIndex(-1);
     setModalVisible(false);
   };
 
@@ -62,21 +67,22 @@ const App = () => {
             contentContainerStyle={styles.activityListContent}
           >
             {onlineActivities.map((activity, index) => (
-              <View
+              <TouchableOpacity
                 key={index}
                 style={{ backgroundColor: activity.color, ...styles.activityItem }}
+                onPress={() => openModal(index)}
               >
                 <Text style={styles.activityName}>{activity.label}</Text>
                 <Text style={styles.activityContent}>
                   Crée le {moment(activity.start).format('DD.MM.YYYY')}
                 </Text>
-              </View>
+              </TouchableOpacity>
             ))}
 
-            {/* Ajouter une dernière carte avec un fond noir */}
-            <TouchableOpacity style={styles.addCard} onPress={openModal}>
-            <Text style={styles.addCardText }>Ajouter une activité</Text>
-            <Text style={styles.addCardTextPlus}>+</Text>
+            {/* Ajouter une dernière carte avec un fond noir pour l'ajout */}
+            <TouchableOpacity style={styles.addCard} onPress={() => openModal(-1)}>
+              <Text style={styles.addCardText}>Ajouter une activité</Text>
+              <Text style={styles.addCardTextPlus}>+</Text>
             </TouchableOpacity>
           </ScrollView>
         )}
@@ -89,11 +95,19 @@ const App = () => {
         visible={modalVisible}
         onRequestClose={closeModal}
       >
-        <ActivityModal visible={modalVisible} onClose={closeModal} />
+        {selectedActivityIndex !== -1 ? (
+          <FullActivityInfos
+            activity={onlineActivities[selectedActivityIndex]}
+            onClose={closeModal}
+          />
+        ) : (
+          <ActivityModal visible={modalVisible} onClose={closeModal} />
+        )}
       </Modal>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
