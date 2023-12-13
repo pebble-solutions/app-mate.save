@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import ActivityModal from './modals/ActivityModal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 
 const App = () => {
@@ -54,10 +53,6 @@ const App = () => {
       {/* Liste des activités dans la partie "section" */}
       <ScrollView style={styles.section}>
         <Text style={styles.sectionTitle}>Mes activités : </Text>
-        <TouchableOpacity style={styles.addButton} onPress={openModal}>
-          <Text style={styles.addButtonText}>+</Text>
-          <Text style={styles.addButtonText}>Ajouter une activité</Text>
-        </TouchableOpacity>
 
         {loading ? (
           <Text style={styles.loadingText}>Chargement en cours...</Text>
@@ -217,7 +212,7 @@ const styles = StyleSheet.create({
   },
   addCardTextPlus: {
     color: '#ffffff',
-    fontSize: 30,
+    fontSize: 35,
     textAlign: 'center', 
   },
   
