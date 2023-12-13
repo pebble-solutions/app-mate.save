@@ -5,31 +5,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 
 const App = () => {
+  // État du modal
   const [modalVisible, setModalVisible] = useState(false);
-  const [activities, setActivities] = useState([]);
+  // État de chargement
   const [loading, setLoading] = useState(true);
+  // Liste des activités en ligne
   const [onlineActivities, setOnlineActivities] = useState([]);
 
+  // Fonction pour ouvrir le modal
   const openModal = () => {
     setModalVisible(true);
   };
 
+  // Fonction pour fermer le modal
   const closeModal = async () => {
     await fetchOnlineActivities();
     setModalVisible(false);
   };
 
-  /* const fetchActivities = async () => {
-    try {
-      const storedActivities = await AsyncStorage.getItem('activities');
-      if (storedActivities !== null) {
-        setActivities(JSON.parse(storedActivities));
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération des activités :', error);
-    }
-  }; 
- */
+  // Fonction pour récupérer les activités en ligne depuis une API
   const fetchOnlineActivities = async () => {
     try {
       const response = await fetch('https://api.pebble.solutions/v5/activity/');
@@ -44,82 +38,58 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-  }
-/*   const clearActivities = async () => {
-    try {
-      // Supprimer toutes les activités de AsyncStorage
-      await AsyncStorage.removeItem('activities');
-      // Mettre à jour l'état pour vider la liste d'activités
-      setActivities([]);
-    } catch (error) {
-      console.error('Erreur lors de la suppression des activités :', error);
-    }
   };
- */
+
+  // Fonction pour afficher la carte "Ajouter une activité"
+  const renderAddActivityCard = () => {
+    return (
+      <TouchableOpacity style={styles.addCard} onPress={openModal}>
+        <Text style={styles.addCardText}>+</Text>
+        <Text style={styles.addCardText}>Ajouter une activité</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  // Utilise useEffect pour charger les activités en ligne au montage du composant
   useEffect(() => {
     fetchOnlineActivities();
-  }, [],);
+  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Gestion des activités</Text>
-       {/*  <TouchableOpacity style={styles.clearButton} onPress={clearActivities}>
-          <Text style={styles.clearButtonText}>Effacer toutes les activités</Text>
-        </TouchableOpacity> */}
       </View>
 
       {/* Liste des activités dans la partie "section" */}
       <ScrollView style={styles.section}>
-
-
-
-    {/* ancienes activités en local 
-    <Text style={styles.sectionTitle}>Mes activités</Text>
-        <ScrollView style={styles.activityList} contentContainerStyle={styles.activityListContent}>
-          {activities.map((activity, index) => (
-            <View
-              key={index}
-              style={{ backgroundColor: activity.color, ...styles.activityItem }}
-            >
-              <Text style={styles.activityName}>{activity.label}</Text>
-              <Text style={styles.activityContent}>Crée le {moment(activity.start).format('DD.MM.YYYY')}</Text>
-            </View>
-          ))}
-        </ScrollView>
+        <Text style={styles.sectionTitle}>Mes activités : </Text>
         <TouchableOpacity style={styles.addButton} onPress={openModal}>
-          <Text style={styles.addButtonText}>+</Text>
-          <Text style={styles.addButtonText}>Ajouter une activité</Text>
-        </TouchableOpacity> */}
-      
-         {/* Liste des activités en ligne */}
-       <Text style={styles.sectionTitle}>Mes activités : </Text>
-       <TouchableOpacity style={styles.addButton} onPress={openModal}>
           <Text style={styles.addButtonText}>+</Text>
           <Text style={styles.addButtonText}>Ajouter une activité</Text>
         </TouchableOpacity>
 
         {loading ? (
-         <Text style={styles.loadingText}>Chargement en cours...</Text>
-         ) : (
-           <ScrollView style={styles.activityList} contentContainerStyle={styles.activityListContent}>
-             {onlineActivities.map((activity, index) => (
-               <View
-                 key={index}
-                 style={{ backgroundColor: activity.color, ...styles.activityItem }}
-               >
-                 <Text style={styles.activityName}>{activity.label}</Text>
-                 <Text style={styles.activityContent}>Crée le {moment(activity.start).format('DD.MM.YYYY')}</Text>
-               </View>
-             ))}
-        
-           </ScrollView>
-         )}
-  
-
+          <Text style={styles.loadingText}>Chargement en cours...</Text>
+        ) : (
+          <ScrollView
+            style={styles.activityList}
+            contentContainerStyle={styles.activityListContent}
+          >
+            {onlineActivities.map((activity, index) => (
+              <View
+                key={index}
+                style={{ backgroundColor: activity.color, ...styles.activityItem }}
+              >
+                <Text style={styles.activityName}>{activity.label}</Text>
+                <Text style={styles.activityContent}>
+                  Crée le {moment(activity.start).format('DD.MM.YYYY')}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        )}
       </ScrollView>
-
-      
 
       {/* Modal */}
       <Modal
@@ -133,7 +103,6 @@ const App = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -194,7 +163,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   activityItem: {
-    width: '48.5%', // 2 activités par ligne (50% de la largeur avec un petit espace entre)
+    width: '48.5%',
     marginBottom: 10,
     height: 120,
     padding: 10,
@@ -214,7 +183,7 @@ const styles = StyleSheet.create({
   },
   clearButton: {
     backgroundColor: 'red',
-    borderRadius: 10, // Pour rendre le bouton rond
+    borderRadius: 10,
     paddingVertical: 7,
     paddingHorizontal: 10,
     alignItems: 'center',
@@ -225,6 +194,29 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontWeight: 'bold',
     fontSize: 12,
+  },
+
+  addCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    backgroundColor: '#303030',
+    paddingVertical: 10,
+    marginBottom: 20,
+    borderRadius: 10,
+  },
+  addCardText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginLeft: 10,
+  },
+  loadingText: {
+    color: '#ffffff',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
   },
 
 });
