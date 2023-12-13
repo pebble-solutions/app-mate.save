@@ -3,13 +3,13 @@ import { StyleSheet, Text, TouchableHighlight, Alert, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
-const DeleteActivityButton = ({title, id}) => {
+const DeleteActivityButton = ({title, id, onDeleteSuccess}) => {
 
 	const [activity, setActivity] = useState(0);
 	
 	const onPressButton = () => {
 
-			const deleteActivity = async () => {
+		    const deleteActivity = async () => {
 				let activity = {
 					id: id,
 				}
@@ -21,10 +21,10 @@ const DeleteActivityButton = ({title, id}) => {
 						},
 					});
 	
-					if (response .status ==202){
-						Alert.alert('suppression effectuée');
-					}
-					else if (response.status == 400 ||
+                    if (response.status == 202) {
+                        Alert.alert('Suppression effectuée');
+                        onDeleteSuccess(); // Appel de onDeleteSuccess lorsque la suppression réussit
+                      } 	else if (response.status == 400 ||
 						response.status == 403 ||
 						response.status == 404 || 
 						response.status == 429 ||
@@ -33,12 +33,13 @@ const DeleteActivityButton = ({title, id}) => {
 					Alert.alert('enregistrement impossible');
 					}
 				}
-				catch (error) {
-					console.error('Erreur lors de la récupération des données:', error);
-					Alert.alert('enregistrement a échoué');
-				}
+				catch(error){
+                    console.log(error);
+                }
 			}	
+
 			deleteActivity();
+        
 
 	}
 	return (

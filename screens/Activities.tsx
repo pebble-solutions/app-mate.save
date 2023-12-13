@@ -44,6 +44,11 @@ const App = () => {
     }
   };
 
+  const handleDeleteSuccess = () => {
+    setSelectedActivityIndex(-1);
+    setModalVisible(false);
+  };
+
   // Utilise useEffect pour charger les activités en ligne au montage du composant
   useEffect(() => {
     fetchOnlineActivities();
@@ -99,6 +104,8 @@ const App = () => {
           <FullActivityInfos
             activity={onlineActivities[selectedActivityIndex]}
             onClose={closeModal}
+            onDelete={closeModal}
+            onDeleteSuccess={handleDeleteSuccess}
           />
         ) : (
           <ActivityModal visible={modalVisible} onClose={closeModal} />
