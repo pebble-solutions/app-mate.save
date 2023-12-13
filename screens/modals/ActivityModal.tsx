@@ -20,36 +20,46 @@ const ActivityModal = ({ visible, onClose }) => {
 
       const createActivity = async () => {
         try {
-          // Générer un UUID unique pour l'activité@
-          const uuid = Math.random().toString(36).substring(7);
-      
-          // Créer l'objet d'activité avec les données
-          const activity = {
-            id: uuid,
-            label: activityName,
-            description: '',
-            start: (new Date()),
-            end: null,
-            color: selectedColor,
-            sync: false,
-          };
-      
-          // Récupérer les activités existantes depuis AsyncStorage (s'il y en a)
-          const existingActivities = await AsyncStorage.getItem('activities');
-          const activities = existingActivities ? JSON.parse(existingActivities) : [];
-      
-          // Ajouter la nouvelle activité à la liste
-          activities.push(activity);
-      
-          // Stocker la liste mise à jour dans AsyncStorage
-          await AsyncStorage.setItem('activities', JSON.stringify(activities));
-      
-          // Fermer la modal
-          onClose();
+            // Votre URL API
+            const apiUrl = 'https://api.pebble.solutions/v5/activity/';
+    
+            // Données de l'activité à envoyer
+            const activityData = {
+                label: activityName,
+                description: '',
+                start: new Date().toISOString(), // Utilisez ISO format pour la date
+                end: null,
+                color: selectedColor,
+                sync: false,
+            };
+    
+            // Options de la requête POST
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Spécifiez le type de contenu JSON
+                },
+                body: JSON.stringify(activityData), // Convertissez les données en JSON
+            };
+    
+            // Envoyer la requête POST à l'API
+            const response = await fetch(apiUrl, requestOptions);
+    
+            // Vérifier si la réponse est réussie (statut 200)
+            if (response.ok) {
+                const responseData = await response.json(); // Convertir la réponse en JSON
+                console.log('Activité créée avec succès:', responseData);
+                // Mettre à jour le stockage local (AsyncStorage) si nécessaire
+            } else {
+                console.error('Erreur lors de la création de l\'activité. Statut de réponse:', response.status);
+            }
+    
+            // Fermer la modal
+            onClose();
         } catch (error) {
-          console.error('Erreur lors de la création de l\'activité :', error);
+            console.error('Erreur lors de la création de l\'activité :', error);
         }
-      };
+    };
     
 
     return (
