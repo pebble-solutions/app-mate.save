@@ -44,12 +44,7 @@ const Recap = () => {
             </TouchableOpacity>
           ))}
         </View>
-          <TextInput
-                          style={styles.input}
-                          placeholder={activityName ? activityName : 'Nom de l\'activité'}
-                          value={activityName}
-                          onChangeText={text => setActivityName(text)}
-                      />
+         
       </View>
 
       <ScrollView style={styles.content}>

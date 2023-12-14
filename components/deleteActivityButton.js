@@ -3,9 +3,21 @@ import { StyleSheet, Text, TouchableHighlight, Alert, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
-const DeleteActivityButton = ({title, id, onDeleteSuccess}) => {
+const DeleteActivityButton = ({title, id}) => {
 
 	const [activity, setActivity] = useState(0);
+	const [onDeleteSucces, setOnDeleteSucces] = useState(false);
+	const AlertConfirm = () =>
+    Alert.alert('ATTENTION', 'Souhaitez-vous supprimer cette activité: '+title+' ?', [
+		{
+		text: 'Annuler',
+		// onPress: () => console.log('Cancel Pressed'),
+		style: 'cancel',
+		},
+		{text: 'OK',
+		onPress: () => onPressButton(),
+		},
+    ]);
 	
 	const onPressButton = () => {
 
@@ -23,14 +35,14 @@ const DeleteActivityButton = ({title, id, onDeleteSuccess}) => {
 	
                     if (response.status == 202) {
                         Alert.alert('Suppression effectuée');
-                        onDeleteSuccess(); // Appel de onDeleteSuccess lorsque la suppression réussit
+                        setOnDeleteSucces(true) // Appel de onDeleteSuccess lorsque la suppression réussit
                       } 	else if (response.status == 400 ||
 						response.status == 403 ||
 						response.status == 404 || 
 						response.status == 429 ||
 						response.status == 422 ||
 						response.status == 500){	
-					Alert.alert('enregistrement impossible');
+					Alert.alert('suppression impossible');
 					}
 				}
 				catch(error){
@@ -44,7 +56,7 @@ const DeleteActivityButton = ({title, id, onDeleteSuccess}) => {
 	}
 	return (
 		<View style={styles.container}>
-			<TouchableHighlight onPress={onPressButton}>
+			<TouchableHighlight onPress={AlertConfirm}>
 				<View style={styles.button}>
 					<Text style={styles.text}>{title}</Text>
 					<MaterialCommunityIcons name="trash-can" color={'white'} size={25} />

@@ -106,7 +106,7 @@ const App = () => {
             activity={onlineActivities[selectedActivityIndex]}
             onClose={closeModal}
             onDelete={closeModal}
-            onDeleteSuccess={handleDeleteSuccess}
+            onDeleteSuccess={closeModal}
           />
         ) : (
           <ActivityModal visible={modalVisible} onClose={closeModal} /> 
