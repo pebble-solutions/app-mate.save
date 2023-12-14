@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Modal, Text, View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import { Modal, Text, View, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const ActivityModal = ({ visible, onClose }) => {
+const ActivityModal = ({ visible, onClose , statusBarTranslucent}) => {
     const [activityName, setActivityName] = useState('');
+    const [activityDescrition, setActivityDescription] = useState('');
     const [selectedColor, setSelectedColor] = useState(null);
 
     const colorOptions = [
@@ -26,7 +27,7 @@ const ActivityModal = ({ visible, onClose }) => {
             // Données de l'activité à envoyer
             const activityData = {
                 label: activityName,
-                description: '',
+                description: activityDescrition,
                 start: new Date().toISOString(), // Utilisez ISO format pour la date
                 end: null,
                 color: selectedColor,
@@ -63,24 +64,35 @@ const ActivityModal = ({ visible, onClose }) => {
     
 
     return (
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={visible}
-            onRequestClose={onClose}
-        >
-            <View style={styles.modalContainer}>
+        // <Modal
+        //     animationType="slide"
+        //     transparent={true}
+        //     visible={visible}
+        //     onRequestClose={onClose}
+		// 	statusBarTranslucent={true}
+        // >
+            <View style={styles.modalContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.modalContent}>
                     <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                         <Text style={styles.closeButtonText}>x</Text>
                     </TouchableOpacity>
                     <Text style={styles.modalTitle}>Créer une activité</Text>
+					<Text style={styles.radioLabel}>status :</Text>
+                    <View>
+                    <TextInput
+                          style={styles.input}
+                          placeholder={activityName ? activityName : 'Nom de l\'activité'}
+                          value={activityName}
+                          onChangeText={text => setActivityName(text)}
+                      />
+                    
                     <TextInput
                         style={styles.input}
-                        placeholder="Nom de l'activité"
-                        value={activityName}
-                        onChangeText={text => setActivityName(text)}
+                        placeholder="Description de l'activité"
+                        value={activityDescrition}
+                        onChangeText={text => setActivityDescription(text)}
                     />
+                    </View>
                     <Text style={styles.colorLabel}>Choisissez une couleur :</Text>
                     <View style={styles.colorOptionsContainer}>
                         {colorOptions.map((color, index) => (
@@ -99,7 +111,7 @@ const ActivityModal = ({ visible, onClose }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </Modal>
+        // </Modal>
     );
 };
 
@@ -114,7 +126,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#1F1F1F', // Fond sombre pour la modal
         padding: 20,
         borderRadius: 10,
-        width: '80%',
+       width: '100%',
+       height: '100%',
       },
       closeButton: {
         position: 'absolute',

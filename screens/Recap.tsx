@@ -1,9 +1,36 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView , TextInput} from 'react-native';
 
 
 
 const Recap = () => {
+  const [metrics, setMetrics] = useState([]);
+	const [selectedItem, setSelectedItem] = useState(null);
+	const [modalVisible, setModalVisible] = useState(false);
+  const [activityName, setActivityName] = useState('');
+
+	
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		try {
+	// 			const fetchAndSetData = async (url(String), setter) => {
+	// 				const response = await fetch(url);
+	// 				const data = await response.json();
+	// 				setter(data);
+	// 				console.log(response, 'response');
+	// 		console.log(data, 'data');
+	// 			};
+				
+	// 			await Promise.all([
+	// 				fetchAndSetData('https://api.pebble.solutions/v5/metric/variable/', setMetrics),
+	// 			]);
+	// 		} catch (error) {
+	// 			console.error('Erreur lors de la récupération des données:', error);
+	// 		}
+	// 	};
+		
+	// 	fetchData();
+	// }, []);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -17,6 +44,12 @@ const Recap = () => {
             </TouchableOpacity>
           ))}
         </View>
+          <TextInput
+                          style={styles.input}
+                          placeholder={activityName ? activityName : 'Nom de l\'activité'}
+                          value={activityName}
+                          onChangeText={text => setActivityName(text)}
+                      />
       </View>
 
       <ScrollView style={styles.content}>
@@ -101,7 +134,14 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     // Autres styles pour les cartes
   },
-
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    color: '#ffffff', // Texte blanc
+  },
 
   cardTitle: {
     fontWeight: 'bold',

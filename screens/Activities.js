@@ -13,6 +13,7 @@ const App = () => {
   const [onlineActivities, setOnlineActivities] = useState([]);
   // Index de l'activité sélectionnée
   const [selectedActivityIndex, setSelectedActivityIndex] = useState(-1);
+  const [statusBar, setStatusBar] = useState(false);
 
   // Fonction pour ouvrir le modal avec l'index de l'activité sélectionnée
   const openModal = (index) => {
@@ -78,8 +79,8 @@ const App = () => {
                 onPress={() => openModal(index)}
               >
                 <Text style={styles.activityName}>{activity.label}</Text>
-                <Text style={styles.activityContent}>
-                  Crée le {moment(activity.start).format('DD.MM.YYYY')}
+                <Text style={styles.activityContent}>{activity.description}</Text>  
+                <Text style={styles.activityContent}>Crée le {moment(activity.start).format('DD.MM.YYYY')}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -108,7 +109,7 @@ const App = () => {
             onDeleteSuccess={handleDeleteSuccess}
           />
         ) : (
-          <ActivityModal visible={modalVisible} onClose={closeModal} />
+          <ActivityModal visible={modalVisible} onClose={closeModal} /> 
         )}
       </Modal>
     </View>

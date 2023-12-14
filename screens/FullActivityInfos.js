@@ -9,6 +9,11 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
     <View style={styles.container}>
       {/* Barre supérieure avec bouton de fermeture */}
       <View style={styles.header}>
+      {/* Bouton de suppression */}
+      <DeleteActivityButton
+            title={selectedItem.label}
+            id={selectedItem._id}
+          />
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>X</Text>
         </TouchableOpacity>
@@ -18,14 +23,11 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       <View style={styles.activityContent}>
         <Text style={styles.activityName}>{activity.label}</Text>
         <Text style={styles.activityDate}>Créé le {moment(activity.start).format('DD.MM.YYYY')}</Text>
+        <Text style={styles.activityDate}>{activity.description}</Text>
+
         {/* Ajoutez ici les autres informations de l'activité */}
       </View>
 
-      {/* Bouton de suppression */}
-      <DeleteActivityButton
-						title={selectedItem.label}
-						id={selectedItem._id}
-					/>
     </View>
   );
 };
