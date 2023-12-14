@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#1F1F1F', // Fond sombre pour la modal
         padding: 20,
         borderRadius: 10,
-       width: '80%',
+       	width: '80%',
       },
       closeButton: {
         position: 'absolute',
