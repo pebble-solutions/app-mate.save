@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
 	  width: '100%', // Prend toute la largeur de l'écran
 	  backgroundColor: '#d46363',
 	  padding: 10,
-	  borderRadius: 15,
+	  borderRadius: 10,
 	},
 	text: {
 	  color: 'white',

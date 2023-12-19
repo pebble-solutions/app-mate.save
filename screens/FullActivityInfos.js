@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   activityContent: {
     flex: 1,
-    justifyContent: 'center',
+   
     alignItems: 'center',
   },
   activityName: {
