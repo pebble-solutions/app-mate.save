@@ -6,14 +6,11 @@ import DeleteActivityButton from '../components/deleteActivityButton';
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
     const selectedItem = activity;
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, backgroundColor: selectedItem.color }}>
       {/* Barre supérieure avec bouton de fermeture */}
       <View style={styles.header}>
       {/* Bouton de suppression */}
-      <DeleteActivityButton
-            title={selectedItem.label}
-            id={selectedItem._id}
-          />
+    
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>X</Text>
         </TouchableOpacity>
@@ -24,9 +21,13 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         <Text style={styles.activityName}>{activity.label}</Text>
         <Text style={styles.activityDate}>Créé le {moment(activity.start).format('DD.MM.YYYY')}</Text>
         <Text style={styles.activityDate}>{activity.description}</Text>
-
         {/* Ajoutez ici les autres informations de l'activité */}
-      </View>
+      </View>  
+      
+      <DeleteActivityButton
+            title={selectedItem.label}
+            id={selectedItem._id}
+          />
 
     </View>
   );
@@ -35,7 +36,6 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121212',
     padding: 20,
   },
   header: {
@@ -63,6 +63,12 @@ const styles = StyleSheet.create({
   activityDate: {
     color: 'white',
     fontSize: 16,
+  },
+  deleteButtonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 20, // Espacement en bas de la page
   },
   deleteButton: {
     backgroundColor: 'red',
