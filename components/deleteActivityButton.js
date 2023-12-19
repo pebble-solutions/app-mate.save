@@ -57,30 +57,31 @@ const DeleteActivityButton = ({ title, id }) => {
 	}
 	return (
 		<View style={styles.container}>
-			<TouchableHighlight onPress={AlertConfirm}>
-				<View style={styles.button}>
-					<Text style={styles.text}>Supprimer cette activité</Text>
-				</View>
-			</TouchableHighlight>
+		  <TouchableHighlight onPress={AlertConfirm}>
+			<View style={styles.button}>
+			  <Text style={styles.text}>Supprimer cette activité</Text>
+			</View>
+		  </TouchableHighlight>
 		</View>
-	);
+	  );
 }
 
 const styles = StyleSheet.create({
 	container: {
-	  flex: 1, // Utilise tout l'espace disponible
-	  justifyContent: 'center',
-	  alignItems: 'center',
+	  flex: 1,
+	  justifyContent: 'flex-end', // Positionnez le contenu en bas de l'écran
+	  alignItems: 'center', // Centrez horizontalement
+	  marginBottom: 20, // Espacement en bas de la page
 	},
 	button: {
-	  width: '100%', // Définissez la largeur du bouton à 100%
+	  width: '100%', // Prend toute la largeur de l'écran
 	  backgroundColor: '#d46363',
 	  padding: 10,
 	  borderRadius: 15,
 	},
 	text: {
 	  color: 'white',
-	  textAlign: 'center', // Centrer le texte horizontalement
+	  textAlign: 'center',
 	},
   });
 

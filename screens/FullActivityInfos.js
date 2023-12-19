@@ -12,7 +12,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       {/* Bouton de suppression */}
     
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <Text style={styles.closeButtonText}>X</Text>
+          <Text style={styles.closeButtonText}>Fermer</Text>
         </TouchableOpacity>
       </View>
 
@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: 'white',
-    fontSize: 24,
+    marginTop: 15,
+    fontSize: 16,
   },
   activityContent: {
     flex: 1,
