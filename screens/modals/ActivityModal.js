@@ -77,7 +77,6 @@ const ActivityModal = ({ visible, onClose , statusBarTranslucent}) => {
                         <Text style={styles.closeButtonText}>x</Text>
                     </TouchableOpacity>
                     <Text style={styles.modalTitle}>Créer une activité</Text>
-					<Text style={styles.radioLabel}>status :</Text>
                     <View>
                     <TextInput
                           style={styles.input}
