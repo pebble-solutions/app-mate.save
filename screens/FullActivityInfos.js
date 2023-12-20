@@ -2,16 +2,25 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import DeleteActivityButton from '../components/deleteActivityButton';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Importez l'icône
 
-const FullActivityInfos = ({ activity, onClose, onDelete }) => {
-    const selectedItem = activity;
+const FullActivityInfos = ({ activity, onClose }) => {
+  const selectedItem = activity;
+
+  const handlePressClose = () => {
+    // Assurez-vous que le bouton "Fermer" appelle la fonction onClose correctement
+    onClose();
+  };
+
   return (
     <View style={{ ...styles.container, backgroundColor: selectedItem.color }}>
       {/* Barre supérieure avec bouton de fermeture */}
       <View style={styles.header}>
-      {/* Bouton de suppression */}
-    
-        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+        {/* Texte "Réglages" aligné à gauche */}
+        <Text style={styles.leftText}>Réglages</Text>
+        
+        {/* Bouton de suppression aligné à droite */}
+        <TouchableOpacity onPress={handlePressClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>Fermer</Text>
         </TouchableOpacity>
       </View>
@@ -23,12 +32,12 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         <Text style={styles.activityDate}>{activity.description}</Text>
         {/* Ajoutez ici les autres informations de l'activité */}
       </View>  
-      
-      <DeleteActivityButton
-            title={selectedItem.label}
-            id={selectedItem._id}
-          />
 
+      {/* Bouton de suppression */}
+      <DeleteActivityButton
+        title={selectedItem.label}
+        id={selectedItem._id}
+      />
     </View>
   );
 };
@@ -40,19 +49,25 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between', // Pour aligner "Réglages" à gauche et "Fermer" à droite
+    alignItems: 'center', // Pour centrer verticalement
+    padding: 10,
+  },
+  leftText: {
+    color: 'white',
+    fontSize: 14,
+
   },
   closeButton: {
     padding: 10,
   },
   closeButtonText: {
     color: 'white',
-    marginTop: 15,
-    fontSize: 16,
+    fontSize: 14,
+    paddingLeft: 15,
   },
   activityContent: {
     flex: 1,
-   
     alignItems: 'center',
   },
   activityName: {
@@ -69,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 20, // Espacement en bas de la page
+    marginBottom: 20,
   },
   deleteButton: {
     backgroundColor: 'red',

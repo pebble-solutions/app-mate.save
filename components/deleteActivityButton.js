@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableHighlight, Alert, View } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 const DeleteActivityButton = ({ title, id }) => {
@@ -21,6 +20,8 @@ const DeleteActivityButton = ({ title, id }) => {
 		]);
 
 	const onPressButton = () => {
+
+
 
 		const deleteActivity = async () => {
 			let activity = {
