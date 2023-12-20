@@ -7,11 +7,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 const FullActivityInfos = ({ activity, onClose }) => {
   const selectedItem = activity;
 
-  const handlePressClose = () => {
-    // Assurez-vous que le bouton "Fermer" appelle la fonction onClose correctement
-    onClose();
-  };
-
   return (
     <View style={{ ...styles.container, backgroundColor: selectedItem.color }}>
       {/* Barre supérieure avec bouton de fermeture */}
@@ -20,7 +15,7 @@ const FullActivityInfos = ({ activity, onClose }) => {
         <Text style={styles.leftText}>Réglages</Text>
         
         {/* Bouton de suppression aligné à droite */}
-        <TouchableOpacity onPress={handlePressClose} style={styles.closeButton}>
+        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>Fermer</Text>
         </TouchableOpacity>
       </View>
