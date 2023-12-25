@@ -10,7 +10,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   };
 
 
-  // Fonction pour générer les rectangles verts (4 par ligne) avec "Prénom Nom" en dessous
+// Fonction pour générer les rectangles verts (4 par ligne) avec "Prénom" et "Nom" sur des lignes distinctes
 const renderGreenRectangles = () => {
 	const rectangles = [];
 	const numRows = 4; // Nombre de lignes souhaité
@@ -26,8 +26,9 @@ const renderGreenRectangles = () => {
 			  {/* Contenu des rectangles, par exemple, un numéro */}
 			  <Text style={styles.greenRectangleText}>LM</Text>
 			</View>
-			{/* Zone inférieure pour "Prénom Nom" */}
-			<Text style={styles.greenRectangleName}>Prénom Nom</Text>
+			{/* Zone inférieure pour "Prénom" et "Nom" sur des lignes distinctes */}
+			<Text style={styles.greenRectangleName}>Prénom</Text>
+			<Text style={styles.greenRectangleName}>Nom</Text>
 		  </View>
 		);
 	  }
@@ -39,6 +40,7 @@ const renderGreenRectangles = () => {
 	}
 	return rectangles;
   };
+  
   
   
   
