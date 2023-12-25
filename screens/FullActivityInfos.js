@@ -9,19 +9,39 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
     console.log('Ouverture des réglages');
   };
 
-  // Fonction pour générer les carrés verts
-  const renderGreenSquares = () => {
-    const squares = [];
-    for (let i = 0; i < 16; i++) {
-      squares.push(
-        <View key={i} style={styles.greenSquare}>
-          {/* Contenu des carrés, par exemple, un numéro */}
-          <Text style={styles.greenSquareText}>{i + 1}</Text>
-        </View>
-      );
-    }
-    return squares;
+
+  // Fonction pour générer les rectangles verts (4 par ligne) avec "Prénom Nom" en dessous
+const renderGreenRectangles = () => {
+	const rectangles = [];
+	const numRows = 4; // Nombre de lignes souhaité
+	const numCols = 4; // Nombre de colonnes souhaité
+  
+	for (let i = 0; i < numRows; i++) {
+	  const row = [];
+	  for (let j = 0; j < numCols; j++) {
+		row.push(
+		  <View key={j} style={styles.greenRectangleContainer}>
+			{/* Zone supérieure pour le carré */}
+			<View style={styles.greenRectangle}>
+			  {/* Contenu des rectangles, par exemple, un numéro */}
+			  <Text style={styles.greenRectangleText}>LM</Text>
+			</View>
+			{/* Zone inférieure pour "Prénom Nom" */}
+			<Text style={styles.greenRectangleName}>Prénom Nom</Text>
+		  </View>
+		);
+	  }
+	  rectangles.push(
+		<View key={`row-${i}`} style={styles.rowContainer}>
+		  {row}
+		</View>
+	  );
+	}
+	return rectangles;
   };
+  
+  
+  
 
   return (
     <View style={{ ...styles.container, backgroundColor: selectedItem.color }}>
@@ -55,15 +75,18 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         {/* Contenu de la première section */}
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Collaborateurs</Text>
-          <Text style={styles.infoSectionContent}>- colab 1</Text>
-          <Text style={styles.infoSectionContent}>- colab 2</Text>
-          <Text style={styles.infoSectionContent}>- colab 3</Text>
-          {/* Contenu de la deuxième section */}
+          {/* Affichage des rectangles verts (4 par ligne) */}
+          <View style={styles.greenRectanglesContainer}>{renderGreenRectangles()}</View>
         </View>
+        {/* Contenu de la deuxième section (ancien code) */}
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Autres</Text>
-          {/* Affichage des carrés verts */}
-          <View style={styles.greenSquaresContainer}>{renderGreenSquares()}</View>
+		  <Text style={styles.infoSectionContent}>- autre 1</Text>
+		  <Text style={styles.infoSectionContent}>- autre 2</Text>
+		  <Text style={styles.infoSectionContent}>- autre 3</Text>
+
+          {/* Ancien code (à réintégrer) */}
+          {/* ... */}
         </View>
         {/* Contenu de la troisième section */}
         <DeleteActivityButton
@@ -73,7 +96,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       </ScrollView>
 
       {/* Cette View garantit que le ScrollView termine à 10% du bas de l'écran */}
-      <View style={{ height: '10%' }} />
+      <View/>
     </View>
   );
 };
@@ -116,7 +139,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 10,
-    padding: 20,
+    padding: 10,
     marginBottom: 12,
   },
   infoSectionTitle: {
@@ -130,25 +153,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
-  greenSquaresContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+  greenRectangleContainer: {
+	flex: 1,
+	flexDirection: 'column',
+	alignItems: 'center',
+	marginBottom: 10,
   },
-  greenSquare: {
-    width: '48%',
-    height: 80,
-    backgroundColor: 'green',
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+  greenRectangle: {
+	width: 70,
+	height: 70,
+	backgroundColor: 'green',
+	borderRadius: 10,
+	marginBottom: 7, // Espacement entre le carré et le texte
+	alignItems: 'center',
+	justifyContent: 'center',
   },
-  greenSquareText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  greenRectangleText: {
+	color: 'white',
+	fontSize: 16,
+	fontWeight: 'bold',
   },
+  greenRectangleName: {
+	color: 'white',
+	fontSize: 14,
+	textAlign: 'center',
+  },
+  rowContainer: {
+	flexDirection: 'row',
+	justifyContent: 'space-between',
+	marginBottom: 4,
+  },
+  
+  
 });
 
 export default FullActivityInfos;
