@@ -106,7 +106,7 @@ const renderGreenRectangles = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 10,
   },
   header: {
     flexDirection: 'row',
@@ -142,13 +142,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 10,
     padding: 10,
+    paddingBottom: 20,
     marginBottom: 12,
   },
   infoSectionTitle: {
+	  textAlign: 'center',
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 15,
+    marginTop: 10,
+    marginBottom: 20,
   },
   infoSectionContent: {
     color: 'white',
