@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import DeleteActivityButton from '../components/deleteActivityButton';
 
-const FullActivityInfos = ({ activity, onClose, onDelete }) => {
+const FullActivityInfos = ({ activity, onClose, onDeleteSuccess, onDelete }) => {
     const selectedItem = activity;
-  return (
+  if (activity) return (
     <View style={styles.container}>
       {/* Barre supérieure avec bouton de fermeture */}
       <View style={styles.header}>
@@ -13,6 +13,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       <DeleteActivityButton
             title={selectedItem.label}
             id={selectedItem._id}
+            ondelete={onClose}
           />
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>X</Text>

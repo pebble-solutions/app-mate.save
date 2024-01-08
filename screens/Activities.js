@@ -45,8 +45,10 @@ const App = () => {
     }
   };
 
-  const handleDeleteSuccess = () => {
+  const handleDeleteSuccess = async () => {
+    await fetchOnlineActivities();
     setSelectedActivityIndex(-1);
+
     setModalVisible(false);
   };
 
@@ -106,7 +108,7 @@ const App = () => {
             activity={onlineActivities[selectedActivityIndex]}
             onClose={closeModal}
             onDelete={closeModal}
-            onDeleteSuccess={closeModal}
+            onDeleteSuccess={handleDeleteSuccess}
           />
         ) : (
           <ActivityModal visible={modalVisible} onClose={closeModal} /> 

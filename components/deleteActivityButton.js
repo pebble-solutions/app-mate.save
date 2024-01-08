@@ -3,10 +3,9 @@ import { StyleSheet, Text, TouchableHighlight, Alert, View} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
-const DeleteActivityButton = ({title, id}) => {
+const DeleteActivityButton = ({title, id, onDelete}) => {
 
 	const [activity, setActivity] = useState(0);
-	const [onDeleteSucces, setOnDeleteSucces] = useState(false);
 	const AlertConfirm = () =>
     Alert.alert('ATTENTION', 'Souhaitez-vous supprimer cette activité: '+title+' ?', [
 		{
@@ -18,6 +17,14 @@ const DeleteActivityButton = ({title, id}) => {
 		onPress: () => onPressButton(),
 		},
     ]);
+	const AlertSuccess = () =>
+	Alert.alert('SUCCES', 'L\'activité a été supprimée', [
+		{
+		text: 'OK',
+		//rronPress: () => {onDelete();},
+		style: 'cancel',
+		},
+	]);
 	
 	const onPressButton = () => {
 
@@ -34,27 +41,29 @@ const DeleteActivityButton = ({title, id}) => {
 					});
 	
                     if (response.status == 202) {
-                        Alert.alert('Suppression effectuée');
-                        setOnDeleteSucces(true) // Appel de onDeleteSuccess lorsque la suppression réussit
-                      } 	else if (response.status == 400 ||
-						response.status == 403 ||
-						response.status == 404 || 
-						response.status == 429 ||
-						response.status == 422 ||
-						response.status == 500){	
-					Alert.alert('suppression impossible');
-					}
-				}
-				catch(error){
-                    console.log(error);
-                }
-			}	
-
-			deleteActivity();
-        
+                        AlertSuccess();
+						s                      }
+						else if (response.status == 400 ||
+							response.status == 403 ||
+							response.status == 404 || 
+							response.status == 429 ||
+							response.status == 422 ||
+							response.status == 500){	
+								Alert.alert('suppression impossible');
+							}
+						}
+						catch(error){
+							console.log(error);
+						}
+					}	
+					
+					deleteActivity();
+					setActivity(0)	;
+     
 
 	}
 	return (
+		
 		<View style={styles.container}>
 			<TouchableHighlight onPress={AlertConfirm}>
 				<View style={styles.button}>
