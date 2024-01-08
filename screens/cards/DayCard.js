@@ -48,9 +48,10 @@ const styles = StyleSheet.create({
     },
     card: {
         backgroundColor: 'rgba(37,39,66,255)', // Fond bleu foncé
-        margin: 10,
+        marginHorizontal: 10,
+        marginVertical: 7,
         padding: 15,
-        borderRadius: 15,
+        borderRadius: 10,
         color: '#ffffff', // Texte blanc
     },
     cardTitle: {

@@ -32,7 +32,16 @@ const Recap = () => {
       </View>
       <ScrollView style={styles.content}>
         <DayCarousel />
+        <View style={styles.addButtonContainer}>
+          <TouchableOpacity style={styles.addButton}>
+            <Text style={styles.addButtonText}>Ajouter un commentaire</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.addButton}>
+            <Text style={styles.addButtonText}>Ajouter une pièce jointe</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
+
     </View>
   );
 };
@@ -70,10 +79,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
   },
-  buttonText: {
-    fontWeight: 'bold',
-  },
-  content: {},
+
+  addButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+marginVertical: 5,
+    marginBottom: 100,
+},
+addButton: {
+    backgroundColor: '#9155FD',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    flex: 1, // Prend toute la largeur de l'écran
+    margin: 5,
+},
+addButtonText: {
+    color: '#ffffff',
+    textAlign: 'center',
+},
 });
 
 export default Recap;
