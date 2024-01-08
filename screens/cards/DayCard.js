@@ -30,6 +30,14 @@ const DayCard = ({ date, morningCheckIn, morningBreak, afternoonCheckIn, afterno
                 <Text style={styles.textWhite}>• Un autre commentaire fictif.</Text>
                 {/* Ajoutez d'autres commentaires fictifs ici */}
             </View>
+
+            <View style={styles.card}>
+                <Text style={styles.cardTitle}>Pieces jointes</Text>
+                <Text style={styles.textWhite}>• Ceci est une piece jointe sur cette journée.</Text>
+                <Text style={styles.textWhite}>• Ceci est une piece jointe sur cette journée.</Text>
+                <Text style={styles.textWhite}>• Ceci est une piece jointe sur cette journée.</Text>
+        
+            </View>
         </View>
     );
 };
