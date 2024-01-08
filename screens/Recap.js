@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView , TextInput} from 'react-native';
-
+import DayCarousel from './carousel/DayCarousel';
 
 
 const Recap = () => {
@@ -25,6 +25,8 @@ const Recap = () => {
       </View>
 
       <ScrollView style={styles.content}>
+
+      <DayCarousel /> 
         {/* La carte avec les détails de la journée */}
         <View style={styles.card}>
     <Text style={styles.cardTitle}>Vendredi 23 Septembre 2023</Text>
