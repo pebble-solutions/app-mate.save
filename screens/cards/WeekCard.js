@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
 
 const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, baseSalary, numberOfTR, overtimeRate }) => {
     const totalOvertimePay = totalOvertimeHours * overtimeRate;
+    const windowWidth = useWindowDimensions().width;
 
     return (
         <View style={styles.cardContainer}>
@@ -13,13 +15,29 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
             </View>
             <View style={styles.card}>
                 <Text style={styles.cardTitle}>Statistiques</Text>
-                <Text style={styles.textWhite}>ici des jolies statistiques</Text>
-                <Text style={styles.textWhite}>---------------------------0----</Text>
-                <Text style={styles.textWhite}>-------------------0------------</Text>
-                <Text style={styles.textWhite}>----------------0-----------0---</Text>
-                <Text style={styles.textWhite}>-------0------------------------</Text>
-                <Text style={styles.textWhite}>----0---------------------------</Text>
-                <Text style={styles.textWhite}>--0-----------------------------</Text>
+                <LineChart
+                    data={{
+                        labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'], // Remplacez par les jours réels
+                        datasets: [
+                            {
+                                data: [6.6, 8, 7, 7, 7.6], // Remplacez ces données par les statistiques réelles
+                            },
+                        ],
+                    }}
+                    width={windowWidth - 30}
+                    height={150}
+                    yAxisLabel={' '}
+                    chartConfig={{
+                        backgroundGradientFromOpacity: 0, // Supprime le fond
+                        backgroundGradientToOpacity: 0, // Supprime le fond
+                        decimalPlaces: 0,
+                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                        style: {
+                            borderRadius: 16,
+                            marginLeft: -30, // Décale le graphique vers la gauche
+                        },
+                    }}
+                />
             </View>
 
             <View style={styles.card}>
