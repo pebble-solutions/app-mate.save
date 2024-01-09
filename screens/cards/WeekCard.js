@@ -15,29 +15,30 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
             </View>
             <View style={styles.card}>
                 <Text style={styles.cardTitle}>Statistiques</Text>
-                <LineChart
-                    data={{
-                        labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'], // Remplacez par les jours réels
-                        datasets: [
-                            {
-                                data: [6.6, 8, 7, 7, 7.6], // Remplacez ces données par les statistiques réelles
+                <View style={{ marginLeft: -40 }}>
+                    <LineChart
+                        data={{
+                            labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'], // Remplacez par les jours réels
+                            datasets: [
+                                {
+                                     data: [6.6, 8, 7, 7, 7.6], // Remplacez ces données par les statistiques réelles
+                                },
+                            ],
+                        }}
+                        width={windowWidth - 20}
+                        height={170}
+                        yAxisLabel={' '}
+                        chartConfig={{
+                            backgroundGradientFromOpacity: 0, // Supprime le fond
+                            backgroundGradientToOpacity: 0, // Supprime le fond
+                            decimalPlaces: 0,
+                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            style: {
+                                borderRadius: 16,
                             },
-                        ],
-                    }}
-                    width={windowWidth - 30}
-                    height={150}
-                    yAxisLabel={' '}
-                    chartConfig={{
-                        backgroundGradientFromOpacity: 0, // Supprime le fond
-                        backgroundGradientToOpacity: 0, // Supprime le fond
-                        decimalPlaces: 0,
-                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        style: {
-                            borderRadius: 16,
-                            marginLeft: -30, // Décale le graphique vers la gauche
-                        },
-                    }}
-                />
+                        }}
+                    />
+                </View>
             </View>
 
             <View style={styles.card}>
@@ -53,7 +54,7 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
                 <Text style={styles.cardTitle}>Commentaires :</Text>
                 <Text style={styles.textWhite}>• Commentaire sur la semaine : Lorem ipsum dolor sit amet.</Text>
                 <Text style={styles.textWhite}>• Un autre commentaire sur la semaine : Consectetur adipiscing elit.</Text>
-                {/* Ajoutez d'autres commentaires fictifs ici */}
+            
             </View>
 
             <View style={styles.card}>
@@ -61,7 +62,7 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
                 <Text style={styles.textWhite}>• Pièce jointe 1</Text>
                 <Text style={styles.textWhite}>• Pièce jointe 2</Text>
                 <Text style={styles.textWhite}>• Pièce jointe 3</Text>
-                {/* Ajoutez d'autres pièces jointes fictives ici */}
+               
             </View>
         </View>
     );
