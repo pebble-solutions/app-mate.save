@@ -1,9 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import DayCarousel from './carousel/DayCarousel';
+import WeekCarousel from './carousel/WeekCarousel'; // Importez WeekCarousel
+import MonthCarousel from './carousel/MonthCarousel'; // Importez MonthCarousel
+import DateRangeCarousel from './carousel/DateRangeCarousel'; // Importez DateRangeCarousel
 
 const Recap = () => {
   const [selectedButton, setSelectedButton] = useState('jour'); // Le bouton 'jour' est sélectionné par défaut
+
+  // Fonction pour rendre le carrousel en fonction du bouton sélectionné
+  const renderCarousel = () => {
+    switch (selectedButton) {
+      case 'jour':
+        return <DayCarousel />;
+      case 'semaine':
+        return <WeekCarousel />;
+      case 'mois':
+        return <MonthCarousel />;
+      case 'periode':
+        return <DateRangeCarousel />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -31,7 +50,7 @@ const Recap = () => {
         </View>
       </View>
       <ScrollView style={styles.content}>
-        <DayCarousel />
+        {renderCarousel()}
         <View style={styles.addButtonContainer}>
           <TouchableOpacity style={styles.addButton}>
             <Text style={styles.addButtonText}>Ajouter un commentaire</Text>
@@ -41,7 +60,6 @@ const Recap = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
     </View>
   );
 };
@@ -79,26 +97,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
   },
-
   addButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 10,
-marginVertical: 5,
+    marginVertical: 5,
     marginBottom: 100,
-},
-addButton: {
+  },
+  addButton: {
     backgroundColor: '#9155FD',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     flex: 1, // Prend toute la largeur de l'écran
     margin: 5,
-},
-addButtonText: {
+  },
+  addButtonText: {
     color: '#ffffff',
     textAlign: 'center',
-},
+  },
 });
 
 export default Recap;
