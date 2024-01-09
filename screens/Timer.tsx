@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FC } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, Modal, ScrollView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import SvgSun from './SVG/SvgSun';
 import SvgMountains from './SVG/SvgMountains';
@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Timer: FC = () => {
   const [pressTimes, setPressTimes] = useState<{ time: Date; label: string }[]>([]);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalData, setModalData] = useState<{ time: Date; label: string }[]>([]);
 
   useEffect(() => {
     const loadPressTimes = async () => {
@@ -25,7 +27,8 @@ const Timer: FC = () => {
 
   const onPressSun = async () => {
     const currentTime = new Date();
-    const newPressTime = { time: currentTime, label: "" };
+    const index = pressTimes.length + 1;
+    const newPressTime = { time: currentTime, label: "" , index:index};
     const updatedPressTimes = [...pressTimes, newPressTime];
     setPressTimes(updatedPressTimes);
     await savePressTimes(updatedPressTimes);  // Sauvegarde des nouvelles données
@@ -67,9 +70,26 @@ const Timer: FC = () => {
     }
   };
 
-  const onValidatePress = () => {
-    // Votre logique ici
-  };
+  const onValidatePress = async () => {
+      const currentTime = new Date();
+      console.log("Validation des données");
+      console.log("Heure de validation :", currentTime);
+    try {
+        const storedPressTimes = await AsyncStorage.getItem('pressTimes');
+        if (storedPressTimes) {
+            const parsedPressTimes = JSON.parse(storedPressTimes);
+            console.log('Press Times in AsyncStorage:', parsedPressTimes);
+             // Vous pouvez ici utiliser ces données pour une autre logique
+            // Par exemple, afficher les données dans une fenêtre modale
+            setModalData(parsedPressTimes); // Suppose que vous avez un state `modalData`
+            setModalVisible(true); // Afficher la fenêtre modale
+        } else {
+            console.log('No press times stored in AsyncStorage');
+        }
+    } catch (error) {
+        console.error('Error retrieving data from AsyncStorage:', error);
+    }
+};
 
   const renderItem = ({ item, index }: { item: { time: Date; label: string }; index: number }) => (
     <View style={styles.listItem}>
@@ -136,123 +156,240 @@ const Timer: FC = () => {
       >
         <Text style={styles.buttonText}>Annuler</Text>
       </TouchableOpacity>
+
+      {/* Ajouter la fenêtre modale ici */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+        >
+            <View style={styles.modalContainer}>
+                <View style={styles.header}>
+                    <TouchableOpacity
+                    onPress={() => setModalVisible(false)}
+                    style={styles.buttonCancel}
+                    >
+                        <Text style={styles.buttonText}>Annuler</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.contentValidation}>
+                    <Text style={styles.contentName}>Activité du currentTime (date)</Text>
+                </View>
+                    
+                <FlatList
+                    style={styles.infoContainer}
+                    keyExtractor={(item, index) => index.toString()}
+                    data={modalData}
+                    renderItem={({ item }) => (
+                        <View style={styles.contentValidation}>
+                        <Text style={styles.timeText}>{item.label}</Text>
+                        <Text style={styles.timeText}>{item.index}</Text>
+
+                        <Text style={styles.timeText}>{item.time}</Text>
+                        </View>
+                    )}
+                />
+                <ScrollView style={styles.infoContainer}>
+                    <Text style={styles.infoSectionTitle}>Informations et variables</Text>
+                    <View style={styles.contentValidation}>
+                        <Text style={styles.contentName}>Covoiturage</Text>
+                        <Text style={styles.contentName}>Grand déplacement</Text>
+                        <Text style={styles.contentName}>hébergement</Text>
+                    </View>
+                </ScrollView>
+                <ScrollView style={styles.infoContainer}>
+                    <Text style={styles.infoSectionTitle}>ajouter un fichier</Text>
+                    <View style={styles.contentValidation}>
+                        <Text style={styles.contentName}>depuis les dossiers</Text>
+                        <Text style={styles.contentName}>depuis les images</Text>
+                    </View>
+                </ScrollView>
+                
+                <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={styles.buttonValidate}
+                >
+                    <Text style={styles.buttonText}>Valider cette activité</Text>
+                </TouchableOpacity>
+            </View>
+        </Modal>
     </LinearGradient>
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: '100%',
-  },
-  mountainsContainer: {
-    position: 'absolute',
-    bottom: -3,
-    width: '100%',
-  },
-  circleContainer: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    top: '29%',
-  },
-  listContainer: {
-    position: 'absolute',
-    top: 100,
-    left: 20,
-    right: 20,
-    maxHeight: '100%',
-    padding: 10,
-  },
-  listItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  timeline: {
-    alignItems: 'center',
-  },
-  verticalLine: {
-    width: 1,
-    height: 25,
-    backgroundColor: 'white',
-    position: 'absolute',
-    zIndex: 1,
-    bottom: 3,
-  },
-  largeCircleBorder: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    borderWidth: 3,
-    borderColor: 'white',
-    right: 2
-  },
-  lastItemLine: {
-    width: 1,
-    height: 22,
-    backgroundColor: 'white', // Couleur de la ligne pour le dernier élément
-    position: 'absolute',
-    zIndex: 1,
-    bottom: 12,
-    left: 4,
-  },
-  largeCircleFilled: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: 'white',
-    right: 3,
-  },
-  smallCircleFilled: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: 'white',
-    left: 0,
-  },
-  labelContainer: {
-    marginLeft: 10,
-  },
-  labelText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  opaqueLabel: {
-    opacity: 0.7,
-  },
-  timeContainer: {
-    marginLeft: 'auto',
-  },
-  timeText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  button: {
-    position: 'relative',
-    padding: 10,
-    borderRadius: 20,
-    width: 80,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  clearButton: {
-    right: 135,
-    top: 270,
-    backgroundColor: '#FF0000',
-  },
-  validateButton: {
-    right: -135,
-    top: 307,
-    backgroundColor: '#0000FF',
-  },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+
+    },
+    modalContainer: {
+        flex: 1,
+        padding:10,
+        width: '100%',
+        height: '100%',
+        marginTop: 22,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 10,
+      },
+    infoContainer: {
+        flex:1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: 10,
+        padding: 10,
+        paddingBottom: 20,
+        marginBottom: 12,
+    },
+    contentValidation: {
+        alignItems: 'center',
+        margin: 10,
+    },
+    contentName: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 18,
+      },
+
+    infoSectionTitle: {
+        textAlign: 'center',
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginBottom: 20,
+    },
+
+    
+
+    mountainsContainer: {
+        position: 'absolute',
+        bottom: -3,
+        width: '100%',
+    },
+    circleContainer: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        top: '29%',
+    },
+    listContainer: {
+        position: 'absolute',
+        top: 100,
+        left: 20,
+        right: 20,
+        maxHeight: '100%',
+        padding: 10,
+    },
+    listItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    timeline: {
+        alignItems: 'center',
+    },
+    verticalLine: {
+        width: 1,
+        height: 25,
+        backgroundColor: 'white',
+        position: 'absolute',
+        zIndex: 1,
+        bottom: 3,
+    },
+    largeCircleBorder: {
+        width: 16,
+        height: 16,
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: 'white',
+        right: 2
+    },
+    lastItemLine: {
+        width: 1,
+        height: 22,
+        backgroundColor: 'white', // Couleur de la ligne pour le dernier élément
+        position: 'absolute',
+        zIndex: 1,
+        bottom: 12,
+        left: 4,
+    },
+    largeCircleFilled: {
+        width: 16,
+        height: 16,
+        borderRadius: 8,
+        backgroundColor: 'white',
+        right: 3,
+    },
+    smallCircleFilled: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: 'white',
+        left: 0,
+    },
+    labelContainer: {
+        marginLeft: 10,
+    },
+    labelText: {
+        color: 'white',
+        fontSize: 16,
+    },
+    opaqueLabel: {
+        opacity: 0.7,
+    },
+    timeContainer: {
+        marginLeft: 'auto',
+    },
+    timeText: {
+        color: 'white',
+        fontSize: 16,
+    },
+    button: {
+        position: 'relative',
+        padding: 10,
+        borderRadius: 20,
+        width: 80,
+    },
+    buttonValidate: { 
+        padding: 10,
+        borderRadius: 20,
+        width: '100%',
+        backgroundColor: '#0000FF',
+        
+    },
+    buttonCancel: { 
+        padding: 10,
+        borderRadius: 20,
+        width: '40%',
+        backgroundColor: '#FF0000',
+        
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+        textAlign: 'center',
+    },
+    clearButton: {
+        right: 135,
+        top: 270,
+        backgroundColor: '#FF0000',
+    },
+    validateButton: {
+        right: -135,
+        top: 307,
+        backgroundColor: '#0000FF',
+    },
 });
 
 export default Timer;
