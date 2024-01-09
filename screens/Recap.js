@@ -4,7 +4,7 @@ import DayCarousel from './carousel/DayCarousel';
 import WeekCarousel from './carousel/WeekCarousel';
 import MonthCarousel from './carousel/MonthCarousel';
 import DateRangeCarousel from './carousel/DateRangeCarousel';
-import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Importez FontAwesome
+
 
 const Recap = () => {
   const [selectedButton, setSelectedButton] = useState('jour');
@@ -17,7 +17,7 @@ const Recap = () => {
         return <WeekCarousel />;
       case 'mois':
         return <MonthCarousel />;
-      case 'periode':
+      case 'période':
         return <DateRangeCarousel />;
       default:
         return null;
@@ -31,7 +31,7 @@ const Recap = () => {
         <Text style={styles.title}>Récapitulatif</Text>
         <Text style={styles.subtitle}>John Doe</Text>
         <View style={styles.buttonGroup}>
-          {['jour', 'semaine', 'mois', 'periode'].map((buttonLabel) => (
+          {['jour', 'semaine', 'mois', 'période'].map((buttonLabel) => (
             <TouchableOpacity
               key={buttonLabel}
               style={[
