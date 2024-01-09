@@ -57,16 +57,23 @@ const WeekCarousel = () => {
     // Ajoutez d'autres semaines de données ici...
   ];
 
-  const renderItem = ({ item }) => <WeekCard {...item} />;
+    // Inverser l'ordre des données pour afficher la semaine la plus récente en premier
+    const reversedData = [...weekDataArray];
 
-  return (
-    <Carousel
-      data={weekDataArray}
-      renderItem={renderItem}
-      sliderWidth={screenWidth}
-      itemWidth={itemWidth}
-    />
-  );
+    // Définir l'index initial sur la dernière semaine
+    const initialIndex = weekDataArray.length - 1;
+
+    const renderItem = ({ item }) => <WeekCard {...item} />;
+
+    return (
+        <Carousel
+            data={reversedData} // Utilisez les données triées dans l'ordre inverse
+            renderItem={renderItem}
+            sliderWidth={screenWidth}
+            itemWidth={itemWidth}
+            firstItem={initialIndex} // Définir l'index initial sur la dernière semaine
+        />
+    );
 };
 
 export default WeekCarousel;
