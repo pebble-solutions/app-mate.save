@@ -1,6 +1,6 @@
 import React from 'react';
 import Carousel from 'react-native-snap-carousel';
-import DayCard from '../cards/DayCard';
+import DateRangeCard from '../cards/DateRangeCard';
 import { Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
@@ -40,7 +40,7 @@ const calculateWorkedHours = (morningCheckIn, morningBreak, afternoonBreak, afte
     return `${hours}h${minutes}`;
 };
 
-const DayCarousel = () => {
+const DateRangeCarousel = () => {
     // Données fictives avec des pauses
     const testDaysData = [
         {
@@ -77,7 +77,7 @@ const DayCarousel = () => {
         );
     });
 
-    const renderItem = ({ item }) => <DayCard {...item} />;
+    const renderItem = ({ item }) => <DateRangeCard {...item} />;
 
     return (
         <Carousel
@@ -89,4 +89,4 @@ const DayCarousel = () => {
     );
 };
 
-export default DayCarousel;
+export default DateRangeCarousel;
