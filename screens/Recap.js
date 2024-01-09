@@ -27,7 +27,7 @@ const Recap = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <FontAwesome name="fa-solid fa-file-export" size={20} color="#ffffff" style={styles.exportIcon} />
+        <Text style={styles.exportText}>export</Text>
         <Text style={styles.title}>Récapitulatif</Text>
         <Text style={styles.subtitle}>John Doe</Text>
         <View style={styles.buttonGroup}>
@@ -98,9 +98,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
   },
-  exportIcon: {
+  exportText: {
     position: 'absolute',
-    left: 20, // Ajustez la position selon vos besoins
+    color: '#ffffff',
+    fontSize: 14,
+    right: 20, // Ajustez la position selon vos besoins
     top: 50, // Ajustez la position selon vos besoins
   },
   addButtonContainer: {
