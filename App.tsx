@@ -55,7 +55,6 @@ export default function App() {
             headerShown: false,
             tabBarStyle: {
               height: 70,
-              marginHorizontal: 5,
               paddingTop: 40,
               paddingBottom:50,
               backgroundColor: 'rgba(28,30,34,1)',
