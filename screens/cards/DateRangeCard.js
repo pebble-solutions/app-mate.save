@@ -8,9 +8,14 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
 
     const [selectedStartDate, setSelectedStartDate] = useState(startDate);
     const [selectedEndDate, setSelectedEndDate] = useState(endDate);
+    const [datesValidated, setDatesValidated] = useState(false);
 
     const handleValidate = () => {
-        // Ici, vous pouvez mettre à jour les dates sélectionnées et effectuer d'autres actions si nécessaire
+        if (selectedStartDate && selectedEndDate) {
+            setDatesValidated(true);
+        } else {
+            // Gérer la validation échouée, par exemple en affichant un message d'erreur
+        }
     };
 
     return (
@@ -33,59 +38,63 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
                 </TouchableOpacity>
             </View>
            
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Du {startDate} au {endDate}</Text>
-                <Text style={styles.textWhite}>Heures travaillées cette semaine : {totalWorkedHours}</Text>
-            </View>
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Statistiques</Text>
-                <View style={{ marginLeft: -40 }}>
-                    <LineChart
-                        data={{
-                            labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'], // Remplacez par les jours réels
-                            datasets: [
-                                {
-                                    data: [6.6, 8, 7, 7, 7.6], // Remplacez ces données par les statistiques réelles
-                                },
-                            ],
-                        }}
-                        width={windowWidth - 20}
-                        height={170}
-                        yAxisLabel={' '}
-                        chartConfig={{
-                            backgroundGradientFromOpacity: 0, // Supprime le fond
-                            backgroundGradientToOpacity: 0, // Supprime le fond
-                            decimalPlaces: 0,
-                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                            style: {
-                                borderRadius: 16,
-                            },
-                        }}
-                    />
-                </View>
-            </View>
+            {datesValidated && (
+                <>
+                    <View style={styles.card}>
+                        <Text style={styles.cardTitle}>Du {startDate} au {endDate}</Text>
+                        <Text style={styles.textWhite}>Heures travaillées cette semaine : {totalWorkedHours}</Text>
+                    </View>
+                    <View style={styles.card}>
+                        <Text style={styles.cardTitle}>Statistiques</Text>
+                        <View style={{ marginLeft: -40 }}>
+                            <LineChart
+                                data={{
+                                    labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'], // Remplacez par les jours réels
+                                    datasets: [
+                                        {
+                                            data: [6.6, 8, 7, 7, 7.6], // Remplacez ces données par les statistiques réelles
+                                        },
+                                    ],
+                                }}
+                                width={windowWidth - 20}
+                                height={170}
+                                yAxisLabel={' '}
+                                chartConfig={{
+                                    backgroundGradientFromOpacity: 0, // Supprime le fond
+                                    backgroundGradientToOpacity: 0, // Supprime le fond
+                                    decimalPlaces: 0,
+                                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                                    style: {
+                                        borderRadius: 16,
+                                    },
+                                }}
+                            />
+                        </View>
+                    </View>
 
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Informations de paie :</Text>
-                <Text style={styles.textWhite}>Salaire de base : ${baseSalary}</Text>
-                <Text style={styles.textWhite}>Nombre de TR : {numberOfTR}</Text>
-                <Text style={styles.textWhite}>Heures supplémentaires cette semaine : {totalOvertimeHours} heures</Text>
-                <Text style={styles.textWhite}>Taux horaire des heures supplémentaires : ${overtimeRate}/h</Text>
-                <Text style={styles.textWhite}>Total des heures supplémentaires : ${totalOvertimePay}</Text>
-            </View>
+                    <View style={styles.card}>
+                        <Text style={styles.cardTitle}>Informations de paie :</Text>
+                        <Text style={styles.textWhite}>Salaire de base : ${baseSalary}</Text>
+                        <Text style={styles.textWhite}>Nombre de TR : {numberOfTR}</Text>
+                        <Text style={styles.textWhite}>Heures supplémentaires cette semaine : {totalOvertimeHours} heures</Text>
+                        <Text style={styles.textWhite}>Taux horaire des heures supplémentaires : ${overtimeRate}/h</Text>
+                        <Text style={styles.textWhite}>Total des heures supplémentaires : ${totalOvertimePay}</Text>
+                    </View>
 
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Commentaires :</Text>
-                <Text style={styles.textWhite}>• Commentaire sur la semaine : Lorem ipsum dolor sit amet.</Text>
-                <Text style={styles.textWhite}>• Un autre commentaire sur la semaine : Consectetur adipiscing elit.</Text>
-            </View>
+                    <View style={styles.card}>
+                        <Text style={styles.cardTitle}>Commentaires :</Text>
+                        <Text style={styles.textWhite}>• Commentaire sur la semaine : Lorem ipsum dolor sit amet.</Text>
+                        <Text style={styles.textWhite}>• Un autre commentaire sur la semaine : Consectetur adipiscing elit.</Text>
+                    </View>
 
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Pièces jointes :</Text>
-                <Text style={styles.textWhite}>• Pièce jointe 1</Text>
-                <Text style={styles.textWhite}>• Pièce jointe 2</Text>
-                <Text style={styles.textWhite}>• Pièce jointe 3</Text>
-            </View>
+                    <View style={styles.card}>
+                        <Text style={styles.cardTitle}>Pièces jointes :</Text>
+                        <Text style={styles.textWhite}>• Pièce jointe 1</Text>
+                        <Text style={styles.textWhite}>• Pièce jointe 2</Text>
+                        <Text style={styles.textWhite}>• Pièce jointe 3</Text>
+                    </View>
+                </>
+            )}
         </View>
     );
 };
