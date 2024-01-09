@@ -6,6 +6,11 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
 
     return (
         <View style={styles.cardContainer}>
+           
+            <View style={styles.card}>
+                <Text style={styles.cardTitle}>Du {startDate} au {endDate}</Text>
+                <Text style={styles.textWhite}>Heures travaillées cette semaine : {totalWorkedHours}</Text>
+            </View>
             <View style={styles.card}>
                 <Text style={styles.cardTitle}>Statistiques</Text>
                 <Text style={styles.textWhite}>ici des jolies statistiques</Text>
@@ -15,10 +20,6 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
                 <Text style={styles.textWhite}>-------0------------------------</Text>
                 <Text style={styles.textWhite}>----0---------------------------</Text>
                 <Text style={styles.textWhite}>--0-----------------------------</Text>
-            </View>
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Semaine du {startDate} au {endDate}</Text>
-                <Text style={styles.textWhite}>Heures travaillées cette semaine : {totalWorkedHours}</Text>
             </View>
 
             <View style={styles.card}>

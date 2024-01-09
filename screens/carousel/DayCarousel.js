@@ -69,24 +69,30 @@ const DayCarousel = () => {
         },
         // Vous pouvez ajouter d'autres enregistrements ici...
     ];
+ // Inverser l'ordre des données pour afficher la carte la plus récente en premier
+ const reversedData = [...testDaysData];
 
-       // Calculer les heures travaillées pour chaque jour
-       testDaysData.forEach(day => {
-        day.workedHours = calculateWorkedHours(
-            day.morningCheckIn, day.morningBreak, day.afternoonBreak, day.afternoonCheckIn
-        );
-    });
+ // Calculer les heures travaillées pour chaque jour
+ reversedData.forEach(day => {
+     day.workedHours = calculateWorkedHours(
+         day.morningCheckIn, day.morningBreak, day.afternoonBreak, day.afternoonCheckIn
+     );
+ });
 
-    const renderItem = ({ item }) => <DayCard {...item} />;
+ // Définir l'index initial sur la dernière carte
+ const initialIndex = testDaysData.length - 1;
 
-    return (
-        <Carousel
-            data={testDaysData}
-            renderItem={renderItem}
-            sliderWidth={screenWidth}
-            itemWidth={itemWidth}
-        />
-    );
+ const renderItem = ({ item }) => <DayCard {...item} />;
+
+ return (
+     <Carousel
+         data={reversedData} // Utilisez les données inversées
+         renderItem={renderItem}
+         sliderWidth={screenWidth}
+         itemWidth={itemWidth}
+         firstItem={initialIndex} // Définir l'index initial sur la dernière carte
+     />
+ );
 };
 
 export default DayCarousel;

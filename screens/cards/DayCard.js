@@ -57,12 +57,13 @@ const styles = StyleSheet.create({
     cardTitle: {
         fontWeight: 'bold',
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 14,
         color: '#ffffff', // Texte blanc
         marginBottom: 10,
     },
     textWhite: {
         color: '#ffffff', // Texte blanc
+        fontSize: 12,
     },
 });
 
