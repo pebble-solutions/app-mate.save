@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import DayCarousel from './carousel/DayCarousel';
-import WeekCarousel from './carousel/WeekCarousel'; // Importez WeekCarousel
-import MonthCarousel from './carousel/MonthCarousel'; // Importez MonthCarousel
-import DateRangeCarousel from './carousel/DateRangeCarousel'; // Importez DateRangeCarousel
+import WeekCarousel from './carousel/WeekCarousel';
+import MonthCarousel from './carousel/MonthCarousel';
+import DateRangeCarousel from './carousel/DateRangeCarousel';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Importez FontAwesome
 
 const Recap = () => {
-  const [selectedButton, setSelectedButton] = useState('jour'); // Le bouton 'jour' est sélectionné par défaut
+  const [selectedButton, setSelectedButton] = useState('jour');
 
-  // Fonction pour rendre le carrousel en fonction du bouton sélectionné
   const renderCarousel = () => {
     switch (selectedButton) {
       case 'jour':
@@ -27,10 +27,10 @@ const Recap = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <FontAwesome name="fa-solid fa-file-export" size={20} color="#ffffff" style={styles.exportIcon} />
         <Text style={styles.title}>Récapitulatif</Text>
         <Text style={styles.subtitle}>John Doe</Text>
         <View style={styles.buttonGroup}>
-          {/* Les boutons 'jour', 'semaine', 'mois', et 'periode' */}
           {['jour', 'semaine', 'mois', 'periode'].map((buttonLabel) => (
             <TouchableOpacity
               key={buttonLabel}
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 50,
     paddingBottom: 20,
+    position: 'relative',
   },
   title: {
     fontSize: 20,
@@ -97,6 +98,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
   },
+  exportIcon: {
+    position: 'absolute',
+    left: 20, // Ajustez la position selon vos besoins
+    top: 50, // Ajustez la position selon vos besoins
+  },
   addButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    flex: 1, // Prend toute la largeur de l'écran
+    flex: 1,
     margin: 5,
   },
   addButtonText: {

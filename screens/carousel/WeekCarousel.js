@@ -1,42 +1,67 @@
 import React from 'react';
 import Carousel from 'react-native-snap-carousel';
-import WeekCard from '../cards/WeekCard'; // Importez le composant WeekCard au lieu de DayCard
+import WeekCard from '../cards/WeekCard';
 import { Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 const itemWidth = screenWidth * 1;
 
 const WeekCarousel = () => {
-  // Jeu de données pour la première semaine
-  const weekData1 = {
-    startDate: 'Lundi 9',
-    endDate: 'Dimanche 15',
-    totalWorkedHours: '24h15',
-    totalOvertimeHours: '4h30',
-    baseSalary: '$2000',
-    numberOfTR: 7,
-    overtimeRate: '20€/h',
-  };
+  // Tableau de jeux de données de semaines
+  const weekDataArray = [
+    {
+      startDate: 'Lundi 9',
+      endDate: 'Dimanche 15',
+      totalWorkedHours: '24h15',
+      totalOvertimeHours: '4h30',
+      baseSalary: '$2000',
+      numberOfTR: 7,
+      overtimeRate: '20€/h',
+    },
+    {
+      startDate: 'Lundi 16',
+      endDate: 'Dimanche 22',
+      totalWorkedHours: '27h45',
+      totalOvertimeHours: '5h15',
+      baseSalary: '$2100',
+      numberOfTR: 6,
+      overtimeRate: '22€/h',
+    },
+    {
+      startDate: 'Lundi 23',
+      endDate: 'Dimanche 29',
+      totalWorkedHours: '26h30',
+      totalOvertimeHours: '3h45',
+      baseSalary: '$2150',
+      numberOfTR: 8,
+      overtimeRate: '21€/h',
+    },
+    {
+      startDate: 'Lundi 30',
+      endDate: 'Dimanche 5',
+      totalWorkedHours: '28h00',
+      totalOvertimeHours: '6h00',
+      baseSalary: '$2200',
+      numberOfTR: 5,
+      overtimeRate: '23€/h',
+    },
+    {
+      startDate: 'Lundi 6',
+      endDate: 'Dimanche 12',
+      totalWorkedHours: '29h15',
+      totalOvertimeHours: '7h30',
+      baseSalary: '$2250',
+      numberOfTR: 7,
+      overtimeRate: '25€/h',
+    },
+    // Ajoutez d'autres semaines de données ici...
+  ];
 
-  // Jeu de données pour la deuxième semaine
-  const weekData2 = {
-    startDate: 'Lundi 16',
-    endDate: 'Dimanche 22',
-    totalWorkedHours: '27h45',
-    totalOvertimeHours: '5h15',
-    baseSalary: '$2100',
-    numberOfTR: 6,
-    overtimeRate: '22€/h',
-  };
-
-  // Tableau de jeux de données de semaine
-  const testWeekData = [weekData1, weekData2];
-
-  const renderItem = ({ item }) => <WeekCard {...item} />; // Utilisez WeekCard au lieu de DayCard
+  const renderItem = ({ item }) => <WeekCard {...item} />;
 
   return (
     <Carousel
-      data={testWeekData}
+      data={weekDataArray}
       renderItem={renderItem}
       sliderWidth={screenWidth}
       itemWidth={itemWidth}
