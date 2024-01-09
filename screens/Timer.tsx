@@ -9,6 +9,7 @@ const Timer: FC = () => {
   const [pressTimes, setPressTimes] = useState<{ time: Date; label: string }[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalData, setModalData] = useState<{ time: Date; label: string }[]>([]);
+  const [contentVisible, setContentVisible] = useState<boolean>(true);
 
   useEffect(() => {
     const loadPressTimes = async () => {
@@ -91,33 +92,34 @@ const Timer: FC = () => {
     }
 };
 
-  const renderItem = ({ item, index }: { item: { time: Date; label: string }; index: number }) => (
+const renderItem = ({ item, index }: { item: { time: Date; label: string }; index: number }) => (
+
     <View style={styles.listItem}>
-      <View style={styles.timeline}>
+        <View style={styles.timeline}>
         {/* Afficher verticalLine seulement si ce n'est ni le premier ni le dernier élément */}
         {index !== 0 && index !== pressTimes.length - 1 && <View style={styles.verticalLine} />}
         
         {/* Logique existante pour afficher le cercle */}
         {index === 0 ? (
-          <View style={styles.largeCircleBorder}>
-         
-          </View>
+            <View style={styles.largeCircleBorder}>
+            
+            </View>
         ) : item.label === "Arrêt de l'activité" ? (
-          <View style={styles.largeCircleFilled} />
+            <View style={styles.largeCircleFilled} />
         ) : (
-          <View style={styles.smallCircleFilled} />
+            <View style={styles.smallCircleFilled} />
         )}
-      </View>
-      <View style={styles.labelContainer}>
-      <Text style={[styles.labelText, item.label === "Pause" || item.label === "Reprise" ? styles.opaqueLabel : null]}>
+        </View>
+        <View style={styles.labelContainer}>
+        <Text style={[styles.labelText, item.label === "Pause" || item.label === "Reprise" ? styles.opaqueLabel : null]}>
         {item.label}
-      </Text>
+        </Text>
     </View>
-      <View style={styles.timeContainer}>
+        <View style={styles.timeContainer}>
         <Text style={styles.timeText}>{item.time.toLocaleTimeString()}</Text>
-      </View>
-      {/* Afficher lastItemLine seulement si c'est le dernier élément et la longueur de pressTimes est >= 2 */}
-      {index === pressTimes.length - 1 && pressTimes.length >= 2 && <View style={styles.lastItemLine} />}
+        </View>
+        {/* Afficher lastItemLine seulement si c'est le dernier élément et la longueur de pressTimes est >= 2 */}
+        {index === pressTimes.length - 1 && pressTimes.length >= 2 && <View style={styles.lastItemLine} />}
     </View>
   );
 
@@ -137,6 +139,7 @@ const Timer: FC = () => {
       </TouchableOpacity>
 
       <FlatList
+        
         data={pressTimes}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
@@ -146,6 +149,7 @@ const Timer: FC = () => {
       <TouchableOpacity
         onPress={onValidatePress}
         style={[styles.button, styles.validateButton]}
+        
       >
         <Text style={styles.buttonText}>Valider</Text>
       </TouchableOpacity>
@@ -159,7 +163,7 @@ const Timer: FC = () => {
 
       {/* Ajouter la fenêtre modale ici */}
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
@@ -176,35 +180,52 @@ const Timer: FC = () => {
                 <View style={styles.contentValidation}>
                     <Text style={styles.contentName}>Activité du currentTime (date)</Text>
                 </View>
-                    
-                <FlatList
-                    style={styles.infoContainer}
-                    keyExtractor={(item, index) => index.toString()}
-                    data={modalData}
-                    renderItem={({ item }) => (
-                        <View style={styles.contentValidation}>
-                        <Text style={styles.timeText}>{item.label}</Text>
-                        <Text style={styles.timeText}>{item.index}</Text>
+                {/* <View style={styles.infoContainer}>
+                    <FlatList
+                        keyExtractor={(item, index) => index.toString()}
+                        data={modalData}
+                        renderItem={({ item }) => (
+                            <View style={styles.contentValidationList}>
+                                <Text style={styles.timeText}>{item.index}</Text>
+                                <Text style={styles.timeText}>{item.label}</Text>
 
-                        <Text style={styles.timeText}>{item.time}</Text>
-                        </View>
-                    )}
-                />
-                <ScrollView style={styles.infoContainer}>
+                                <Text style={styles.timeText}>{item.time}</Text>
+                            </View>
+                        )}
+                    />
+                </View> */}
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoSectionTitle}>Informations session</Text>
+                    <View style={styles.contentValidation}>
+                        <Text style={styles.contentName}>Durée activité: 8H12</Text>
+                        <Text style={styles.contentName}>temps de pause session: 1H11</Text>
+                        <Text style={styles.contentName}>amplitude: 9H23</Text>
+                        <Text style={styles.contentName}>nombre de pauses: 3</Text>
+                        <TouchableOpacity
+                        onPress={() => console.log("Modifier ces informations")}
+                        style={styles.buttonPatch}
+                        >
+                            <Text style={styles.buttonText}>Modifier ces informations</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                </View>
+                <View style={styles.infoContainer}>
                     <Text style={styles.infoSectionTitle}>Informations et variables</Text>
                     <View style={styles.contentValidation}>
                         <Text style={styles.contentName}>Covoiturage</Text>
                         <Text style={styles.contentName}>Grand déplacement</Text>
                         <Text style={styles.contentName}>hébergement</Text>
                     </View>
-                </ScrollView>
-                <ScrollView style={styles.infoContainer}>
+                </View>
+                <View style={styles.infoContainer}>
                     <Text style={styles.infoSectionTitle}>ajouter un fichier</Text>
                     <View style={styles.contentValidation}>
                         <Text style={styles.contentName}>depuis les dossiers</Text>
                         <Text style={styles.contentName}>depuis les images</Text>
                     </View>
-                </ScrollView>
+                </View>
+                
                 
                 <TouchableOpacity
                 onPress={() => setModalVisible(false)}
@@ -253,10 +274,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 10,
     },
+    contentValidationList: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 10,
+    },
     contentName: {
         color: 'white',
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 15,
       },
 
     infoSectionTitle: {
@@ -272,6 +298,7 @@ const styles = StyleSheet.create({
 
     mountainsContainer: {
         position: 'absolute',
+        left: 10,
         bottom: -3,
         width: '100%',
     },
@@ -366,6 +393,14 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         width: '100%',
         backgroundColor: '#0000FF',
+        
+    },
+    buttonPatch: { 
+        padding: 10,
+        marginTop: 10,
+        borderRadius: 20,
+        width: '100%',
+        backgroundColor: 'grey',
         
     },
     buttonCancel: { 
