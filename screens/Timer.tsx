@@ -1,4 +1,4 @@
-import { Center, Heading } from '@gluestack-ui/themed';
+import { Center, Heading, Textarea, TextareaInput} from '@gluestack-ui/themed';
 
 
 import React, { useState, useEffect, FC } from 'react';
@@ -155,6 +155,13 @@ const Timer: FC = () => {
 
             <View>
                 <Heading size={"3xl"}>heading gluestack</Heading>
+
+        <Textarea size="md" isReadOnly={false} isInvalid={false} isDisabled={false}  w='$64'>
+          <TextareaInput
+            placeholder="Your text goes here..."
+          />
+        </Textarea>
+      
             </View>
             <TouchableOpacity onPress={clearPressTimes} style={[styles.button, styles.clearButton]}>
                 <Text style={styles.buttonText}>Annuler</Text>
