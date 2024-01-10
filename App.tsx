@@ -55,7 +55,6 @@ export default function App() {
             headerShown: false,
             tabBarStyle: {
               height: 70,
-              marginHorizontal: 5,
               marginBottom: 14,
               paddingTop: 30,
               borderRadius: 30,

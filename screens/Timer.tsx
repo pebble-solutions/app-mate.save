@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FC } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, FlatList, Modal, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, Modal, ScrollView , Switch, TextInput} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import SvgSun from './SVG/SvgSun';
 import SvgMountains from './SVG/SvgMountains';
@@ -10,6 +10,11 @@ const Timer: FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalData, setModalData] = useState<{ time: Date; label: string }[]>([]);
   const [contentVisible, setContentVisible] = useState<boolean>(true);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const inputAccessoryViewID = 'uniqueID';
+  const initialText = '';
+  const [text, setText] = useState(initialText);
 
   useEffect(() => {
     const loadPressTimes = async () => {
@@ -167,6 +172,7 @@ const renderItem = ({ item, index }: { item: { time: Date; label: string }; inde
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
+        onShow={() => setContentVisible(true)}
         >
             <View style={styles.modalContainer}>
                 <View style={styles.header}>
@@ -178,7 +184,7 @@ const renderItem = ({ item, index }: { item: { time: Date; label: string }; inde
                     </TouchableOpacity>
                 </View>
                 <View style={styles.contentValidation}>
-                    <Text style={styles.contentName}>Activité du currentTime (date)</Text>
+                    <Text style={styles.infoModalTitle}>Activité du 10 janv. 2023 'date'</Text>
                 </View>
                 {/* <View style={styles.infoContainer}>
                     <FlatList
@@ -186,21 +192,35 @@ const renderItem = ({ item, index }: { item: { time: Date; label: string }; inde
                         data={modalData}
                         renderItem={({ item }) => (
                             <View style={styles.contentValidationList}>
-                                <Text style={styles.timeText}>{item.index}</Text>
-                                <Text style={styles.timeText}>{item.label}</Text>
-
-                                <Text style={styles.timeText}>{item.time}</Text>
+                                <Text style={styles.contentName}>{item.index}</Text>
+                                <Text style={styles.contentName}>{item.label}</Text>
+                                <Text style={styles.contentName}>{item.time}</Text>
                             </View>
                         )}
-                    />
+                        />
                 </View> */}
+                
+                <ScrollView>
                 <View style={styles.infoContainer}>
                     <Text style={styles.infoSectionTitle}>Informations session</Text>
                     <View style={styles.contentValidation}>
-                        <Text style={styles.contentName}>Durée activité: 8H12</Text>
-                        <Text style={styles.contentName}>temps de pause session: 1H11</Text>
-                        <Text style={styles.contentName}>amplitude: 9H23</Text>
-                        <Text style={styles.contentName}>nombre de pauses: 3</Text>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>Durée de la session:</Text>
+                            <Text style={styles.contentName}>8H12</Text>
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>temps de pause session:</Text>
+                            <Text style={styles.contentName}>1H11</Text>
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>amplitude:</Text> 
+                            <Text style={styles.contentName}>9h23</Text>
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>nombre de pauses:</Text> 
+                            <Text style={styles.contentName}>3</Text> 
+                        </View>
+
                         <TouchableOpacity
                         onPress={() => console.log("Modifier ces informations")}
                         style={styles.buttonPatch}
@@ -213,26 +233,103 @@ const renderItem = ({ item, index }: { item: { time: Date; label: string }; inde
                 <View style={styles.infoContainer}>
                     <Text style={styles.infoSectionTitle}>Informations et variables</Text>
                     <View style={styles.contentValidation}>
-                        <Text style={styles.contentName}>Covoiturage</Text>
-                        <Text style={styles.contentName}>Grand déplacement</Text>
-                        <Text style={styles.contentName}>hébergement</Text>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>Covoiturage:</Text>
+                            <Switch
+                                trackColor={{false: '#767577', true: '#81b0ff'}}
+                                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={toggleSwitch}
+                                value={isEnabled}
+                            />
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>Grand dépalcement (300kms):</Text>
+                            <Switch
+                                trackColor={{false: '#767577', true: '#81b0ff'}}
+                                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={toggleSwitch}
+                                value={isEnabled}
+                            />
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>hébergement hötel:</Text>
+                            <Switch
+                                trackColor={{false: '#767577', true: '#81b0ff'}}
+                                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={toggleSwitch}
+                                value={isEnabled}
+                            />
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>formation:</Text>
+                            <Switch
+                                trackColor={{false: '#767577', true: '#81b0ff'}}
+                                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={toggleSwitch}
+                                value={isEnabled}
+                            />
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>montant total des ventes journalières:</Text>
+                            <TextInput
+                                style={styles.contentInput}
+                                inputAccessoryViewID={inputAccessoryViewID}
+                                onChangeText={setText}
+                                value={text}
+                                placeholder={'?'}
+                            />
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>dont nombre d'heures CSE:</Text>
+                            <TextInput
+                                style={styles.contentInput}
+                                inputAccessoryViewID={inputAccessoryViewID}
+                                onChangeText={setText}
+                                value={text}
+                                placeholder={'?'}
+                            />
+                        </View>
+                        
+                        <Text style={styles.contentName}>Commentaires:</Text>
+                            
+                        <TouchableOpacity
+                        onPress={() => console.log("Ajouter un commentaire")}
+                        style={styles.buttonPatch}
+                        >
+                            <Text style={styles.buttonText}>ici votre commentaire</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.infoContainer}>
-                    <Text style={styles.infoSectionTitle}>ajouter un fichier</Text>
+                    <Text style={styles.infoSectionTitle}>Ajouter un fichier</Text>
                     <View style={styles.contentValidation}>
-                        <Text style={styles.contentName}>depuis les dossiers</Text>
-                        <Text style={styles.contentName}>depuis les images</Text>
+                        <TouchableOpacity
+                        onPress={() => console.log("joindre fichier dossier")}
+                        style={styles.buttonPatch}
+                        >
+                            <Text style={styles.buttonText}>Depuis les dossiers</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                        onPress={() => console.log("joindre fichier image")}
+                        style={styles.buttonPatch}
+                        >
+                            <Text style={styles.buttonText}>Depuis les images</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-                
-                
                 <TouchableOpacity
                 onPress={() => setModalVisible(false)}
                 style={styles.buttonValidate}
                 >
                     <Text style={styles.buttonText}>Valider cette activité</Text>
                 </TouchableOpacity>
+                </ScrollView>
+                
+                
             </View>
         </Modal>
     </LinearGradient>
@@ -241,8 +338,8 @@ const renderItem = ({ item, index }: { item: { time: Date; label: string }; inde
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
         width: '100%',
         height: '100%',
 
@@ -250,10 +347,8 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         padding:10,
-        width: '100%',
-        height: '100%',
-        marginTop: 22,
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: '#F39D2C85',
+        justifyContent: 'space-around',
 
     },
     header: {
@@ -263,35 +358,54 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
       },
     infoContainer: {
-        flex:1,
         backgroundColor: 'rgba(0,0,0,0.5)',
         borderRadius: 10,
-        padding: 10,
-        paddingBottom: 20,
-        marginBottom: 12,
+        marginBottom: 10,
+        marginHorizontal: 5,
     },
     contentValidation: {
-        alignItems: 'center',
         margin: 10,
     },
     contentValidationList: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         margin: 10,
+    },
+    contentItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     contentName: {
         color: 'white',
-        fontWeight: 'bold',
-        fontSize: 15,
+        fontSize: 12,
       },
+    contentInput: {
+        padding: 0,
+        marginRight: 10,
+        color: 'white',
+        fontSize: 12,
+        borderWidth: 1,
+        borderColor: 'white',
+        borderRadius: 5,
+    },
 
     infoSectionTitle: {
         textAlign: 'center',
         color: 'white',
+        fontSize: 13,
+        fontWeight: 'bold',
+        marginTop: 5,
+        marginBottom: 5,
+    },
+    infoModalTitle: {
+        textAlign: 'center',
+        color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
-        marginTop: 10,
-        marginBottom: 20,
+        marginTop: 5,
+        marginBottom: 5,
     },
 
     
@@ -396,11 +510,12 @@ const styles = StyleSheet.create({
         
     },
     buttonPatch: { 
-        padding: 10,
-        marginTop: 10,
-        borderRadius: 20,
+        marginVertical: 5,
+        paddingVertical: 5,
+        borderRadius: 5,
         width: '100%',
-        backgroundColor: 'grey',
+        borderWidth: 1,
+        borderColor: 'white',
         
     },
     buttonCancel: { 
@@ -412,7 +527,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontSize: 16,
+        fontSize: 14,
         textAlign: 'center',
     },
     clearButton: {
