@@ -18,15 +18,15 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
                 <View style={{ marginLeft: -40 }}>
                     <LineChart
                         data={{
-                            labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'], // Remplacez par les jours réels
+                            labels: ['L', 'M', 'M', 'J', 'V', 'S', 'D'], // Remplacez ces données par les statistiques réelles
                             datasets: [
                                 {
-                                     data: [6.6, 8, 7, 7, 7.6], // Remplacez ces données par les statistiques réelles
+                                     data: [6.6, 8, 7, 7, 7.6,0,0], // Remplacez ces données par les statistiques réelles
                                 },
                             ],
                         }}
-                        width={windowWidth - 20}
-                        height={170}
+                        width={windowWidth - 10}
+                        height={160}
                         yAxisLabel={' '}
                         chartConfig={{
                             backgroundGradientFromOpacity: 0, // Supprime le fond
