@@ -21,7 +21,8 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
                             labels: ['1-7', '8-14', '15-21', '22-28', '29-31'], // Remplacez ces données par les statistiques réelles
                             datasets: [
                                 {
-                                     data: [6.6, 8, 7, 7, 7.6,0,0], // Remplacez ces données par les statistiques réelles
+                                    data: [0, 0, 7.2, 8.5, 6.8, 9.1, 7.4, 0, 0, 6.7, 7.9, 6.3, 8.8, 9.5, 7.1, 0, 0, 8.2, 7.6, 6.4, 9.3, 8.7, 0, 0, 6.9, 8.4, 7.7, 6.6, 9.2, 7.8, 0]
+
                                 },
                             ],
                         }}

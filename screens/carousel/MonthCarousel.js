@@ -1,12 +1,12 @@
 import React from 'react';
 import Carousel from 'react-native-snap-carousel';
-import WeekCard from '../cards/WeekCard';
+import MonthCard from '../cards/MonthCard';
 import { Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 const itemWidth = screenWidth * 1;
 
-const WeekCarousel = () => {
+const MonthCarousel = () => {
   // Tableau de jeux de données de semaines
   const weekDataArray = [
     {
@@ -63,7 +63,7 @@ const WeekCarousel = () => {
     // Définir l'index initial sur la dernière semaine
     const initialIndex = weekDataArray.length - 1;
 
-    const renderItem = ({ item }) => <WeekCard {...item} />;
+    const renderItem = ({ item }) => <MonthCard {...item} />;
 
     return (
         <Carousel
@@ -76,4 +76,4 @@ const WeekCarousel = () => {
     );
 };
 
-export default WeekCarousel;
+export default MonthCarousel;
