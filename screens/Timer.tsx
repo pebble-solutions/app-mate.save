@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FC } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, FlatList, Modal, ScrollView , Switch, TextInput} from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, Modal, ScrollView , Switch, TextInput, Alert} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import SvgSun from './SVG/SvgSun';
 import SvgMountains from './SVG/SvgMountains';
@@ -15,6 +15,7 @@ const Timer: FC = () => {
   const inputAccessoryViewID = 'uniqueID';
   const initialText = '';
   const [text, setText] = useState(initialText);
+  const [recap, setRecap] = useState<{ totalTime: string, numberBreak: number} []>([{totalTime: '', numberBreak: 0}]);
 
   useEffect(() => {
     const loadPressTimes = async () => {
@@ -84,11 +85,45 @@ const Timer: FC = () => {
         const storedPressTimes = await AsyncStorage.getItem('pressTimes');
         if (storedPressTimes) {
             const parsedPressTimes = JSON.parse(storedPressTimes);
+            if(parsedPressTimes.length > 0 && parsedPressTimes[parsedPressTimes.length - 1].index % 2 === 0){
+
             console.log('Press Times in AsyncStorage:', parsedPressTimes);
-             // Vous pouvez ici utiliser ces données pour une autre logique
-            // Par exemple, afficher les données dans une fenêtre modale
             setModalData(parsedPressTimes); // Suppose que vous avez un state `modalData`
+            console.log(modalData, 'modalData')
+            const startTime = parsedPressTimes[0].time;
+            const endTime = parsedPressTimes[parsedPressTimes.length - 1].time;
+            const endLabel = parsedPressTimes[parsedPressTimes.length - 1].label;
+            const startLabel = parsedPressTimes[0].label;
+            console.log(startLabel, 'startLabel');
+            console.log(endLabel, 'endLabel');
+            const formastart = new Date(startTime);
+            const foramend = new Date(endTime);
+            console.log(formastart, foramend, 'formastart et end')
+            const diff = foramend.getTime() - formastart.getTime();
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor(diff / (1000 * 60)) % 60;
+            const seconds = Math.floor(diff / 1000) % 60;
+            const duration = `${hours}h${minutes}m${seconds}s`;
+            const recap = { totalTime:duration };
+            console.log(duration, 'duration')
+            setRecap(recap => ({...recap, totalTime: duration}));    
+            console.log(recap, 'recap')
+            const numberBreak = parsedPressTimes.filter((item: string) => item.label === "Pause").length;
+            setRecap(recap => ({...recap, numberBreak: numberBreak}));
+            
+
+
             setModalVisible(true); // Afficher la fenêtre modale
+
+            }
+            else {
+                console.log('vous devez arrêter l\'activité pour valider');
+                Alert.alert('vous devez arrêter l\'activité pour valider votre session');
+            }
+
+
+            
+            
         } else {
             console.log('No press times stored in AsyncStorage');
         }
@@ -206,19 +241,19 @@ const renderItem = ({ item, index }: { item: { time: Date; label: string }; inde
                     <View style={styles.contentValidation}>
                         <View style={styles.contentItem}>
                             <Text style={styles.contentName}>Durée de la session:</Text>
-                            <Text style={styles.contentName}>8H12</Text>
+                            <Text style={styles.contentName}>{recap.totalTime}</Text>
                         </View>
                         <View style={styles.contentItem}>
-                            <Text style={styles.contentName}>temps de pause session:</Text>
+                            <Text style={styles.contentName}>activité:</Text>
                             <Text style={styles.contentName}>1H11</Text>
                         </View>
                         <View style={styles.contentItem}>
-                            <Text style={styles.contentName}>amplitude:</Text> 
+                            <Text style={styles.contentName}>pause:</Text> 
                             <Text style={styles.contentName}>9h23</Text>
                         </View>
                         <View style={styles.contentItem}>
                             <Text style={styles.contentName}>nombre de pauses:</Text> 
-                            <Text style={styles.contentName}>3</Text> 
+                            <Text style={styles.contentName}>{recap.numberBreak}</Text> 
                         </View>
 
                         <TouchableOpacity
