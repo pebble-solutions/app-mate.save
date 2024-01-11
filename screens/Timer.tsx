@@ -4,6 +4,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import SvgSun from './SVG/SvgSun';
 import SvgMountains from './SVG/SvgMountains';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { calculateDiffDate } from '../js/date';
+
 
 const Timer: FC = () => {
   const [pressTimes, setPressTimes] = useState<{ time: Date; label: string }[]>([]);
@@ -93,6 +95,8 @@ const Timer: FC = () => {
             const startTime = parsedPressTimes[0].time;
             const endTime = parsedPressTimes[parsedPressTimes.length - 1].time;
             const endLabel = parsedPressTimes[parsedPressTimes.length - 1].label;
+            const testDiff = calculateDiffDate(startTime, endTime);
+            console.log(testDiff, 'testDiff');
             const startLabel = parsedPressTimes[0].label;
             console.log(startLabel, 'startLabel');
             console.log(endLabel, 'endLabel');
@@ -219,7 +223,7 @@ const renderItem = ({ item, index }: { item: { time: Date; label: string }; inde
                     </TouchableOpacity>
                 </View>
                 <View style={styles.contentValidation}>
-                    <Text style={styles.infoModalTitle}>Activité du 10 janv. 2023 'date'</Text>
+                    <Text style={styles.infoModalTitle}>Activité X, session du 10 janv. 2023</Text>
                 </View>
                 {/* <View style={styles.infoContainer}>
                     <FlatList
@@ -360,7 +364,7 @@ const renderItem = ({ item, index }: { item: { time: Date; label: string }; inde
                 onPress={() => setModalVisible(false)}
                 style={styles.buttonValidate}
                 >
-                    <Text style={styles.buttonText}>Valider cette activité</Text>
+                    <Text style={styles.buttonText}>Valider cette session</Text>
                 </TouchableOpacity>
                 </ScrollView>
                 
