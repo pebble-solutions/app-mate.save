@@ -22,7 +22,7 @@ export default function App() {
   React.useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 2500,
+      duration: 250,
       easing: Easing.linear,
       useNativeDriver: false,
     }).start(async () => {
@@ -32,7 +32,7 @@ export default function App() {
       // Animation de fondu sortant
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 1000, // Durée de l'animation de fondu sortant
+        duration: 100, // Durée de l'animation de fondu sortant
         easing: Easing.linear,
         useNativeDriver: false,
       }).start(() => {
@@ -55,9 +55,8 @@ export default function App() {
             headerShown: false,
             tabBarStyle: {
               height: 70,
-              marginBottom: 14,
-              paddingTop: 30,
-              borderRadius: 30,
+              paddingTop: 40,
+              paddingBottom:50,
               backgroundColor: 'rgba(28,30,34,1)',
               position: 'absolute',
               borderTopWidth: 0,
