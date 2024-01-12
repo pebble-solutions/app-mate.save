@@ -450,8 +450,8 @@ const styles = StyleSheet.create({
     
 
     mountainsContainer: {
+        flex: 1,
         position: 'absolute',
-        left: 10,
         bottom: -3,
         width: '100%',
     },
