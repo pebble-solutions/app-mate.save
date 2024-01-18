@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, TouchableOpacity } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { format } from 'date-fns';
 
-const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, baseSalary, numberOfTR, overtimeRate }) => {
+const WeekCard = ({ totalWorkedHours, totalOvertimeHours, baseSalary, numberOfTR, overtimeRate }) => {
     const totalOvertimePay = totalOvertimeHours * overtimeRate;
     const windowWidth = useWindowDimensions().width;
 
-    const [selectedStartDate, setSelectedStartDate] = useState(startDate);
-    const [selectedEndDate, setSelectedEndDate] = useState(endDate);
+    const [selectedStartDate, setSelectedStartDate] = useState(null);
+    const [selectedEndDate, setSelectedEndDate] = useState(null);
     const [datesValidated, setDatesValidated] = useState(false);
 
     const handleValidate = () => {
@@ -21,28 +23,45 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
     return (
         <View style={styles.cardContainer}>
             <View style={styles.dateSelection}>
-                <TextInput
-                    style={styles.dateInput}
-                    placeholder="Date de début"
-                    value={selectedStartDate}
-                    onChangeText={(text) => setSelectedStartDate(text)}
+                <DateTimePicker
+                    value={selectedStartDate ? new Date(selectedStartDate) : new Date()}
+                    mode="date"
+                    display="default"
+                    onChange={(event, selectedDate) => {
+                        if (selectedDate) {
+                            setSelectedStartDate(selectedDate.toISOString());
+                        }
+                    }}
+                    textColor="#ffffff" // Couleur du texte en blanc
+                    titleTextColor="#ffffff" // Couleur du titre en blanc
                 />
-                <TextInput
-                    style={styles.dateInput}
-                    placeholder="Date de fin"
-                    value={selectedEndDate}
-                    onChangeText={(text) => setSelectedEndDate(text)}
+                <DateTimePicker
+                    value={selectedEndDate ? new Date(selectedEndDate) : new Date()}
+                    mode="date"
+                    display="default"
+                    onChange={(event, selectedDate) => {
+                        if (selectedDate) {
+                            setSelectedEndDate(selectedDate.toISOString());
+                        }
+                    }}
+                    theme={{
+                        textColor: '#ffffff', // Couleur du texte en blanc
+                        calendarBackground: 'transparent', // Fond transparent
+                        backgroundColor: 'transparent', // Fond transparent
+                    }}
                 />
                 <TouchableOpacity style={styles.validateButton} onPress={handleValidate}>
                     <Text style={styles.buttonText}>Valider</Text>
                 </TouchableOpacity>
             </View>
-           
+
             {datesValidated && (
                 <>
                     <View style={styles.card}>
-                        <Text style={styles.cardTitle}>Du {startDate} au {endDate}</Text>
-                        <Text style={styles.textWhite}>Heures travaillées cette semaine : {totalWorkedHours}</Text>
+
+
+                        <Text style={styles.cardTitle}>Periode du {format(new Date(selectedStartDate), 'dd/MM/yyyy')} au {format(new Date(selectedEndDate), 'dd/MM/yyyy')}</Text>
+
                     </View>
                     <View style={styles.card}>
                         <Text style={styles.cardTitle}>Statistiques</Text>
@@ -71,7 +90,6 @@ const WeekCard = ({ startDate, endDate, totalWorkedHours, totalOvertimeHours, ba
                             />
                         </View>
                     </View>
-
                     <View style={styles.card}>
                         <Text style={styles.cardTitle}>Informations de paie :</Text>
                         <Text style={styles.textWhite}>Salaire de base : ${baseSalary}</Text>
