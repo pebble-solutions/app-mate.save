@@ -1,49 +1,73 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import moment from 'moment';
 import DeleteActivityButton from '../components/deleteActivityButton';
+import { Picker } from '@react-native-picker/picker';
+
+//you need to add android:supportsRtl="true" to AndroidManifest.xml
+
+{/* <application
+...
+android:supportsRtl="true"> */}
 
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const selectedItem = activity;
   const openSettingsModal = () => {
     console.log('Ouverture des réglages');
   };
+  const [variables, setVariables] = useState([]);
+  const [selectedVariable, setSelectedVariable] = useState('');
+
+  useEffect(() => {
+    // hook pour effectuer la requête HTTP lors du chargement du composant
+    fetch('https://metric-utuvyi37ea-ew.a.run.app/v5/metric/variable/')
+      .then(response => response.json())
+      .then(data => {
+        // Une fois les données récupérées, extrayez les labels des variables et mettez-les à jour dans l'état
+        const variableLabels = data.map(variable => variable.label);
+        setVariables(variableLabels);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des données :', error);
+      });
+  }, []); // Le tableau vide en tant que dépendance signifie que cela ne sera exécuté qu'une seule fois lors du chargement du composant
 
 
-// Fonction pour générer les rectangles verts (4 par ligne) avec "Prénom" et "Nom" sur des lignes distinctes
-const renderGreenRectangles = () => {
-	const rectangles = [];
-	const numRows = 4; // Nombre de lignes souhaité
-	const numCols = 4; // Nombre de colonnes souhaité
-  
-	for (let i = 0; i < numRows; i++) {
-	  const row = [];
-	  for (let j = 0; j < numCols; j++) {
-		row.push(
-		  <View key={j} style={styles.greenRectangleContainer}>
-			{/* Zone supérieure pour le carré */}
-			<View style={styles.greenRectangle}>
-			  {/* Contenu des rectangles, par exemple, un numéro */}
-			  <Text style={styles.greenRectangleText}>LM</Text>
-			</View>
-			{/* Zone inférieure pour "Prénom" et "Nom" sur des lignes distinctes */}
-			<Text style={styles.greenRectangleName}>Prénom</Text>
-			<Text style={styles.greenRectangleName}>Nom</Text>
-		  </View>
-		);
-	  }
-	  rectangles.push(
-		<View key={`row-${i}`} style={styles.rowContainer}>
-		  {row}
-		</View>
-	  );
-	}
-	return rectangles;
+  // Fonction pour générer les rectangles verts (4 par ligne) avec "Prénom" et "Nom" sur des lignes distinctes
+  const renderGreenRectangles = () => {
+    const rectangles = [];
+    const numRows = 4; // Nombre de lignes souhaité
+    const numCols = 4; // Nombre de colonnes souhaité
+
+    for (let i = 0; i < numRows; i++) {
+      const row = [];
+      for (let j = 0; j < numCols; j++) {
+        row.push(
+          <View key={j} style={styles.greenRectangleContainer}>
+            {/* Zone supérieure pour le carré */}
+            <View style={styles.greenRectangle}>
+              {/* Contenu des rectangles, par exemple, un numéro */}
+              <Text style={styles.greenRectangleText}>LM</Text>
+            </View>
+            {/* Zone inférieure pour "Prénom" et "Nom" sur des lignes distinctes */}
+            <Text style={styles.greenRectangleName}>Prénom</Text>
+            <Text style={styles.greenRectangleName}>Nom</Text>
+          </View>
+        );
+      }
+      rectangles.push(
+        <View key={`row-${i}`} style={styles.rowContainer}>
+          {row}
+        </View>
+      );
+    }
+    return rectangles;
   };
-  
-  
-  
-  
+
+
+
+
 
   return (
     <View style={{ ...styles.container, backgroundColor: selectedItem.color }}>
@@ -70,10 +94,27 @@ const renderGreenRectangles = () => {
       <ScrollView style={styles.scrollView}>
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Variables liées</Text>
-          <Text style={styles.infoSectionContent}>- variable 1</Text>
-          <Text style={styles.infoSectionContent}>- variable 2</Text>
-          <Text style={styles.infoSectionContent}>- variable 3</Text>
+
+          {activity.variables.map(variable => (
+            <Text key={variable._id} style={styles.infoSectionContent}>
+              - {variable.label}
+            </Text>
+          ))}
+          <Text style={styles.infoSectionTitle}>autres variables disponibles</Text>
+          <Picker
+            selectedValue={selectedVariable}
+            onValueChange={(itemValue) => setSelectedVariable(itemValue)}
+          >
+            <Picker.Item label="Sélectionnez une variable" value="" />
+            {variables.map((label, index) => (
+              <Picker.Item key={index} label={label} value={label} />
+            ))}
+          </Picker>
+          <TouchableOpacity onPress={openSettingsModal} style={styles.settingsButton}>
+            <Text style={styles.settingsButtonText}>Ajouter</Text>
+          </TouchableOpacity>
         </View>
+
         {/* Contenu de la première section */}
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Collaborateurs</Text>
@@ -83,9 +124,9 @@ const renderGreenRectangles = () => {
         {/* Contenu de la deuxième section (ancien code) */}
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Autres</Text>
-		  <Text style={styles.infoSectionContent}>- autre 1</Text>
-		  <Text style={styles.infoSectionContent}>- autre 2</Text>
-		  <Text style={styles.infoSectionContent}>- autre 3</Text>
+          <Text style={styles.infoSectionContent}>- autre 1</Text>
+          <Text style={styles.infoSectionContent}>- autre 2</Text>
+          <Text style={styles.infoSectionContent}>- autre 3</Text>
 
           {/* Ancien code (à réintégrer) */}
           {/* ... */}
@@ -98,7 +139,7 @@ const renderGreenRectangles = () => {
       </ScrollView>
 
       {/* Cette View garantit que le ScrollView termine à 10% du bas de l'écran */}
-      <View/>
+      <View />
     </View>
   );
 };
@@ -146,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   infoSectionTitle: {
-	  textAlign: 'center',
+    textAlign: 'center',
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
@@ -159,37 +200,37 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   greenRectangleContainer: {
-	flex: 1,
-	flexDirection: 'column',
-	alignItems: 'center',
-	marginBottom: 10,
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   greenRectangle: {
-	width: 70,
-	height: 70,
-	backgroundColor: 'green',
-	borderRadius: 10,
-	marginBottom: 7, // Espacement entre le carré et le texte
-	alignItems: 'center',
-	justifyContent: 'center',
+    width: 70,
+    height: 70,
+    backgroundColor: 'green',
+    borderRadius: 10,
+    marginBottom: 7, // Espacement entre le carré et le texte
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   greenRectangleText: {
-	color: 'white',
-	fontSize: 16,
-	fontWeight: 'bold',
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   greenRectangleName: {
-	color: 'white',
-	fontSize: 14,
-	textAlign: 'center',
+    color: 'white',
+    fontSize: 14,
+    textAlign: 'center',
   },
   rowContainer: {
-	flexDirection: 'row',
-	justifyContent: 'space-between',
-	marginBottom: 4,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
   },
-  
-  
+
+
 });
 
 export default FullActivityInfos;

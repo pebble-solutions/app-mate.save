@@ -1,6 +1,4 @@
 import { Center, Heading, Input,InputField,InputIcon,InputSlot} from '@gluestack-ui/themed';
-
-
 import React, { useState, useEffect, FC } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, FlatList, Modal, ScrollView, Switch, TextInput, Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
