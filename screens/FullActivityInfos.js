@@ -21,7 +21,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
 
   useEffect(() => {
     // hook pour effectuer la requête HTTP lors du chargement du composant
-    fetch('https://metric-utuvyi37ea-ew.a.run.app/v5/metric/variable/')
+    fetch('https://api.pebble.solutions/v5/metric/variable/')
       .then(response => response.json())
       .then(data => {
         // Une fois les données récupérées, extrayez les labels des variables et mettez-les à jour dans l'état
@@ -33,6 +33,48 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       });
   }, []); // Le tableau vide en tant que dépendance signifie que cela ne sera exécuté qu'une seule fois lors du chargement du composant
 
+  // Fonction pour gérer l'ajout de la variable à l'activité
+const addVariableToActivity = () => {
+  if (selectedVariable) {
+    // Recherchez la variable correspondant au label sélectionné
+    const matchingVariable = variables.find(variable => variable.label === selectedVariable);
+
+    if (matchingVariable) {
+      // Si une variable correspondante est trouvée, utilisez son ID
+      const variableId = matchingVariable._id;
+
+      // Remplacez "activity.id" par la véritable propriété d'ID de votre activité
+      const activityId = activity._id;
+
+      // Effectuez la requête POST vers l'API en utilisant variableId comme ID de variable
+      const postData = {
+        variable_id: variableId,
+        mandatory: false,
+        order: 1
+      };
+
+      fetch(`https://api.pebble.solutions/v5/activity/${activityId}/metric/variable`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postData)
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Traitement des données de réponse si nécessaire
+          console.log('Variable ajoutée à l\'activité avec succès :', data);
+        })
+        .catch(error => {
+          console.error('Erreur lors de l\'ajout de la variable à l\'activité :', error);
+        });
+    } else {
+      console.warn('Aucune variable correspondante trouvée pour le label sélectionné.');
+    }
+  } else {
+    console.warn('Veuillez sélectionner une variable avant de l\'ajouter à l\'activité.');
+  }
+};
 
   // Fonction pour générer les rectangles verts (4 par ligne) avec "Prénom" et "Nom" sur des lignes distinctes
   const renderGreenRectangles = () => {
@@ -110,11 +152,14 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
               <Picker.Item key={index} label={label} value={label} />
             ))}
           </Picker>
-          <TouchableOpacity onPress={openSettingsModal} style={styles.settingsButton}>
-            <Text style={styles.settingsButtonText}>Ajouter</Text>
+          <TouchableOpacity onPress={addVariableToActivity} style={styles.settingsButton}>
+            <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
           </TouchableOpacity>
-        </View>
 
+          <Text>{selectedVariable}</Text>
+
+
+        </View>
         {/* Contenu de la première section */}
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Collaborateurs</Text>
@@ -127,9 +172,6 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           <Text style={styles.infoSectionContent}>- autre 1</Text>
           <Text style={styles.infoSectionContent}>- autre 2</Text>
           <Text style={styles.infoSectionContent}>- autre 3</Text>
-
-          {/* Ancien code (à réintégrer) */}
-          {/* ... */}
         </View>
         {/* Contenu de la troisième section */}
         <DeleteActivityButton
