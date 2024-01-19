@@ -156,7 +156,10 @@ const addVariableToActivity = () => {
             <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
           </TouchableOpacity>
 
-          <Text>{selectedVariable}</Text>
+          <Text> 1   {selectedVariable}</Text>
+          <Text>2   {selectedVariable._id}</Text>
+          <Text>3   {activity._id}</Text>
+          <Text>4   {variables}</Text>
 
 
         </View>
