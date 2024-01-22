@@ -8,12 +8,11 @@ android:supportsRtl="true"> */}
 
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import moment from 'moment';
-import DeleteActivityButton from '../components/deleteActivityButton';
 import RNPickerSelect from 'react-native-picker-select';
 
-const FullActivityInfos = ({ activity, onClose }) => {
+const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const selectedItem = activity;
   const openSettingsModal = () => {
     console.log('Ouverture des réglages');
@@ -32,7 +31,6 @@ const FullActivityInfos = ({ activity, onClose }) => {
     }
   };
 
-
   useEffect(() => {
     fetchVariables();
     setActivityVariables(activity.variables);
@@ -45,22 +43,22 @@ const FullActivityInfos = ({ activity, onClose }) => {
       const postData = {
         variable_id: variableId,
         mandatory: false,
-        order: 1
+        order: 1,
       };
 
       try {
         const response = await fetch(`https://api.pebble.solutions/v5/activity/${activity._id}/metric/variable`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(postData)
+          body: JSON.stringify(postData),
         });
 
         if (response.ok) {
           console.log('Variable ajoutée à l\'activité avec succès');
           const newData = await response.json();
-          setActivityVariables(prevVariables => [...prevVariables, newData]);
+          setActivityVariables((prevVariables) => [...prevVariables, newData]);
           setSelectedVariable({ label: '', _id: '' });
           fetchVariables();
         } else {
@@ -74,6 +72,38 @@ const FullActivityInfos = ({ activity, onClose }) => {
     }
   };
 
+  const deleteActivity = async () => {
+    try {
+      const response = await fetch(`https://api.pebble.solutions/v5/activity/${activity._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 202) {
+        Alert.alert('Suppression effectuée');
+        onClose(); // Appel de la fonction onClose pour fermer le composant
+        onDelete(); // Appel de la fonction onDelete pour effectuer la suppression en base de données
+      } else if ([400, 403, 404, 429, 422, 500].includes(response.status)) {
+        Alert.alert('Suppression impossible');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const AlertConfirm = () =>
+    Alert.alert('ATTENTION', 'Souhaitez-vous supprimer cette activité: ' + selectedItem.label + ' ?', [
+      {
+        text: 'Annuler',
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: deleteActivity, // Appel de la fonction deleteActivity lorsque l'utilisateur appuie sur OK
+      },
+    ]);
 
   const renderGreenRectangles = () => {
     const rectangles = [];
@@ -111,6 +141,9 @@ const FullActivityInfos = ({ activity, onClose }) => {
         <TouchableOpacity onPress={openSettingsModal} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>Réglages</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={AlertConfirm} style={styles.closeButton}>
+          <Text style={styles.closeButtonText}>Supprimer</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>Fermer</Text>
         </TouchableOpacity>
@@ -126,27 +159,27 @@ const FullActivityInfos = ({ activity, onClose }) => {
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Variables liées</Text>
 
-          {activity.variables.map(variable => (
+          {activity.variables.map((variable) => (
             <Text key={variable._id} style={styles.infoSectionContent}>
               - {variable.label}
             </Text>
           ))}
           <RNPickerSelect
             onValueChange={(itemValue) => {
-              const matchingVariable = variables.find(variable => variable.label === itemValue);
+              const matchingVariable = variables.find((variable) => variable.label === itemValue);
               setSelectedVariable(matchingVariable || { label: '', _id: '' });
             }}
             placeholder={{ label: 'Autres variables disponibles', value: '' }}
             items={variables.map((variable, index) => ({
               label: variable.label,
-              value: variable.label
+              value: variable.label,
             }))}
             style={{
               inputIOS: {
-                fontSize: 16,
+                fontSize: 14,
                 textAlign: 'center',
                 color: 'white', // Couleur du texte en blanc
-                paddingVertical: 12,
+                paddingVertical: 10,
                 paddingHorizontal: 10,
                 borderWidth: 1,
                 borderColor: 'gray',
@@ -154,10 +187,10 @@ const FullActivityInfos = ({ activity, onClose }) => {
                 marginBottom: 10, // Ajout de la marge inférieure ici
               },
               inputAndroid: {
-                fontSize: 16,
+                fontSize: 14,
                 textAlign: 'center',
                 color: 'white', // Couleur du texte en blanc
-                paddingVertical: 12,
+                paddingVertical: 10,
                 paddingHorizontal: 10,
                 borderWidth: 1,
                 borderColor: 'gray',
@@ -169,11 +202,6 @@ const FullActivityInfos = ({ activity, onClose }) => {
           <TouchableOpacity onPress={addVariableToActivity} style={styles.settingsButton}>
             <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
           </TouchableOpacity>
-
-          {/* <Text>1   {selectedVariable.label}</Text>
-          <Text>2   {selectedVariable._id}</Text>
-          <Text>3   {activity._id}</Text> */}
-
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Collaborateurs</Text>
@@ -193,13 +221,15 @@ const FullActivityInfos = ({ activity, onClose }) => {
             <Text style={styles.settingsButtonText}>Ajouter un quelque chose de special et exeptionnel </Text>
           </TouchableOpacity>
         </View>
-        <DeleteActivityButton
-          title={selectedItem.label}
-          id={selectedItem._id}
-        />
+        <TouchableOpacity onPress={() => {
+          AlertConfirm(); // Appel de la fonction AlertConfirm
+          onClose(); // Appel de la fonction onClose pour fermer la modale
+        }}>
+          <View style={styles.buttonDeleteActivity}>
+            <Text style={styles.textDeleteActivity}>Supprimer cette activité</Text>
+          </View>
+        </TouchableOpacity>
       </ScrollView>
-
-      <View />
     </View>
   );
 };
@@ -307,6 +337,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 4,
+  },
+  buttonDeleteActivity: {
+    width: '100%', // Prend toute la largeur de l'écran
+    backgroundColor: '#d46363',
+    padding: 10,
+    borderRadius: 10,
+  },
+  textDeleteActivity: {
+    color: 'white',
+    textAlign: 'center',
   },
 
 
