@@ -1,12 +1,8 @@
 
-
 //you need to add android:supportsRtl="true" to AndroidManifest.xml
-
 {/* <application
 ...
 android:supportsRtl="true"> */}
-
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import moment from 'moment';
@@ -20,7 +16,6 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const [variables, setVariables] = useState([]);
   const [selectedVariable, setSelectedVariable] = useState({ label: '', _id: '' });
   const [activityVariables, setActivityVariables] = useState([]);
-
 
   const fetchVariables = async () => {
     try {
@@ -55,7 +50,6 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(postData),
-
         });
 
         if (response.ok) {
@@ -180,24 +174,24 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
               inputIOS: {
                 fontSize: 14,
                 textAlign: 'center',
-                color: 'white', // Couleur du texte en blanc
+                color: 'white',
                 paddingVertical: 10,
                 paddingHorizontal: 10,
                 borderWidth: 1,
                 borderColor: 'gray',
                 borderRadius: 4,
-                marginBottom: 10, // Ajout de la marge inférieure ici
+                marginBottom: 10,
               },
               inputAndroid: {
                 fontSize: 14,
                 textAlign: 'center',
-                color: 'white', // Couleur du texte en blanc
+                color: 'white',
                 paddingVertical: 10,
                 paddingHorizontal: 10,
                 borderWidth: 1,
                 borderColor: 'gray',
                 borderRadius: 4,
-                marginBottom: 10, // Ajout de la marge inférieure ici
+                marginBottom: 10,
               },
             }}
           />
@@ -207,13 +201,13 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Collaborateurs</Text>
-          {/* Affichage des rectangles verts (4 par ligne) */}
+
           <View style={styles.greenRectanglesContainer}>{renderGreenRectangles()}</View>
           <TouchableOpacity style={styles.settingsButton}>
             <Text style={styles.settingsButtonText}>Ajouter un collaborateur</Text>
           </TouchableOpacity>
         </View>
-        {/* Contenu de la deuxième section (ancien code) */}
+
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Autres</Text>
           <Text style={styles.infoSectionContent}>- autre 1</Text>
@@ -224,8 +218,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={() => {
-
-          AlertConfirm(); // Appel de la fonction AlertConfirm
+          AlertConfirm();
         }}>
           <View style={styles.buttonDeleteActivity}>
             <Text style={styles.textDeleteActivity}>Supprimer cette activité</Text>
@@ -235,7 +228,6 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -264,7 +256,6 @@ const styles = StyleSheet.create({
     color: 'white', // Texte blanc pour une meilleure visibilité
     fontWeight: 'bold',
   },
-
   closeButton: {
     padding: 10,
     borderRadius: 5,
@@ -350,8 +341,6 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-
-
 });
 
 export default FullActivityInfos;

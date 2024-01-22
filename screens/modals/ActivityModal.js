@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native';
-
+import { Text, View, TouchableOpacity, TextInput, StyleSheet, } from 'react-native';
 
 const ActivityModal = ({ onClose, onCreated }) => {
   const [activityName, setActivityName] = useState('');
@@ -31,38 +30,33 @@ const ActivityModal = ({ onClose, onCreated }) => {
         end: null,
         color: selectedColor,
         sync: false,
-        variables:[]
+        variables: []
       };
 
       // Options de la requête POST
       const requestOptions = {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // Spécifiez le type de contenu JSON
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(activityData), // Convertissez les données en JSON
+        body: JSON.stringify(activityData),
       };
 
-      // Envoyer la requête POST à l'API
+      // Envoie la requête POST à l'API
       const response = await fetch(apiUrl, requestOptions);
 
-      // Vérifier si la réponse est réussie (statut 200)
       if (response.ok) {
         const responseData = await response.json(); // Convertir la réponse en JSON
         console.log('Activité créée avec succès:', responseData);
         onCreated({ ...activityData, _id: responseData._id })
-        // Mettre à jour le stockage local (AsyncStorage) si nécessaire
       } else {
         console.error('Erreur lors de la création de l\'activité. Statut de réponse:', response.status);
       }
-
-      // Fermer la modal
       onClose();
     } catch (error) {
       console.error('Erreur lors de la création de l\'activité :', error);
     }
   };
-
 
   return (
     <View style={styles.modalContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -75,7 +69,7 @@ const ActivityModal = ({ onClose, onCreated }) => {
           <TextInput
             style={styles.input}
             placeholder={activityName ? activityName : 'Nom de l\'activité'}
-            placeholderTextColor={'rgba(255, 255, 255, 0.7)'} // Utilisez placeholderTextColor
+            placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             value={activityName}
             onChangeText={text => setActivityName(text)}
           />
@@ -83,7 +77,7 @@ const ActivityModal = ({ onClose, onCreated }) => {
           <TextInput
             style={styles.input}
             placeholder="Description de l'activité"
-            placeholderTextColor={'rgba(255, 255, 255, 0.7)'} // Utilisez placeholderTextColor
+            placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
             value={activityDescrition}
             onChangeText={text => setActivityDescription(text)}
           />
@@ -181,7 +175,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 3,
   },
-
 });
 
 export default ActivityModal;
