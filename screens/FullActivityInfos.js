@@ -144,14 +144,26 @@ const FullActivityInfos = ({ activity, onClose }) => {
             style={{
               inputIOS: {
                 fontSize: 16,
+                textAlign: 'center',
+                color: 'white', // Couleur du texte en blanc
                 paddingVertical: 12,
                 paddingHorizontal: 10,
                 borderWidth: 1,
                 borderColor: 'gray',
                 borderRadius: 4,
-                color: 'black',
                 marginBottom: 10, // Ajout de la marge inférieure ici
-              }
+              },
+              inputAndroid: {
+                fontSize: 16,
+                textAlign: 'center',
+                color: 'white', // Couleur du texte en blanc
+                paddingVertical: 12,
+                paddingHorizontal: 10,
+                borderWidth: 1,
+                borderColor: 'gray',
+                borderRadius: 4,
+                marginBottom: 10, // Ajout de la marge inférieure ici
+              },
             }}
           />
           <TouchableOpacity onPress={addVariableToActivity} style={styles.settingsButton}>
