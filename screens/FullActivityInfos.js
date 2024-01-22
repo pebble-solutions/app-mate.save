@@ -11,7 +11,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import moment from 'moment';
 import DeleteActivityButton from '../components/deleteActivityButton';
-import { Picker } from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 const FullActivityInfos = ({ activity, onClose }) => {
   const selectedItem = activity;
@@ -131,19 +131,29 @@ const FullActivityInfos = ({ activity, onClose }) => {
               - {variable.label}
             </Text>
           ))}
-          <Text style={styles.infoSectionTitle}>Autres variables disponibles</Text>
-          <Picker
-            selectedValue={selectedVariable.label}
+          <RNPickerSelect
             onValueChange={(itemValue) => {
               const matchingVariable = variables.find(variable => variable.label === itemValue);
               setSelectedVariable(matchingVariable || { label: '', _id: '' });
             }}
-          >
-            <Picker.Item label="Sélectionnez une variable" value="" />
-            {variables.map((variable, index) => (
-              <Picker.Item key={index} label={variable.label} value={variable.label} />
-            ))}
-          </Picker>
+            placeholder={{ label: 'Autres variables disponibles', value: '' }}
+            items={variables.map((variable, index) => ({
+              label: variable.label,
+              value: variable.label
+            }))}
+            style={{
+              inputIOS: {
+                fontSize: 16,
+                paddingVertical: 12,
+                paddingHorizontal: 10,
+                borderWidth: 1,
+                borderColor: 'gray',
+                borderRadius: 4,
+                color: 'black',
+                marginBottom: 10, // Ajout de la marge inférieure ici
+              }
+            }}
+          />
           <TouchableOpacity onPress={addVariableToActivity} style={styles.settingsButton}>
             <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
           </TouchableOpacity>
@@ -157,6 +167,9 @@ const FullActivityInfos = ({ activity, onClose }) => {
           <Text style={styles.infoSectionTitle}>Collaborateurs</Text>
           {/* Affichage des rectangles verts (4 par ligne) */}
           <View style={styles.greenRectanglesContainer}>{renderGreenRectangles()}</View>
+          <TouchableOpacity style={styles.settingsButton}>
+            <Text style={styles.settingsButtonText}>Ajouter un collaborateur</Text>
+          </TouchableOpacity>
         </View>
         {/* Contenu de la deuxième section (ancien code) */}
         <View style={styles.infoContainer}>
@@ -164,6 +177,9 @@ const FullActivityInfos = ({ activity, onClose }) => {
           <Text style={styles.infoSectionContent}>- autre 1</Text>
           <Text style={styles.infoSectionContent}>- autre 2</Text>
           <Text style={styles.infoSectionContent}>- autre 3</Text>
+          <TouchableOpacity style={styles.settingsButton}>
+            <Text style={styles.settingsButtonText}>Ajouter un quelque chose de special et exeptionnel </Text>
+          </TouchableOpacity>
         </View>
         <DeleteActivityButton
           title={selectedItem.label}
