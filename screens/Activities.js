@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Modal, ScrollView } from 'rea
 import ActivityModal from './modals/ActivityModal';
 import FullActivityInfos from './FullActivityInfos'; // Importez votre composant FullActivityInfos ici
 import moment from 'moment';
+import { add } from 'date-fns';
 
 const App = () => {
   // État du modal
@@ -22,10 +23,10 @@ const App = () => {
   };
 
   // Fonction pour fermer le modal
-  const closeModal = async () => {
-    await fetchOnlineActivities();
-    setSelectedActivityIndex(-1);
+  const closeModal = () => {
     setModalVisible(false);
+    setSelectedActivityIndex(-1);
+
   };
 
   // Fonction pour récupérer les activités en ligne depuis une API
@@ -44,11 +45,16 @@ const App = () => {
       setLoading(false);
     }
   };
-
-  const handleDeleteSuccess = () => {
-    setSelectedActivityIndex(-1);
-    setModalVisible(false);
+  const removeActivity = (index) => {
+    closeModal();
+    const newActivities = [...onlineActivities];
+    newActivities.splice(index, 1);
+    setOnlineActivities(newActivities);
   };
+  const addActivity = (activity) => {
+	setOnlineActivities([...onlineActivities, activity]);
+  };
+
 
   // Utilise useEffect pour charger les activités en ligne au montage du composant
   useEffect(() => {
@@ -79,7 +85,7 @@ const App = () => {
                 onPress={() => openModal(index)}
               >
                 <Text style={styles.activityName}>{activity.label}</Text>
-                <Text style={styles.activityContent}>{activity.description}</Text>  
+                <Text style={styles.activityContent}>{activity.description}</Text>
                 <Text style={styles.activityContent}>Crée le {moment(activity.start).format('DD.MM.YYYY')}
                 </Text>
               </TouchableOpacity>
@@ -105,11 +111,14 @@ const App = () => {
           <FullActivityInfos
             activity={onlineActivities[selectedActivityIndex]}
             onClose={closeModal}
-            onDelete={closeModal}
-            onDeleteSuccess={closeModal}
+            onDelete={() => { removeActivity(selectedActivityIndex); }}
           />
         ) : (
-          <ActivityModal visible={modalVisible} onClose={closeModal} /> 
+          <ActivityModal
+            visible={modalVisible}
+            onClose={closeModal}
+			onCreated={addActivity}
+          />
         )}
       </Modal>
     </View>
@@ -211,7 +220,7 @@ const styles = StyleSheet.create({
 
   addCard: {
     flexDirection: 'column',
-    alignItems: 'center', 
+    alignItems: 'center',
     justifyContent: 'center',
     width: '48.5%',
     marginBottom: 10,
@@ -235,11 +244,11 @@ const styles = StyleSheet.create({
   addCardTextPlus: {
     color: '#ffffff',
     fontSize: 35,
-    textAlign: 'center', 
+    textAlign: 'center',
   },
-  
-  
-  
+
+
+
   loadingText: {
     color: '#ffffff',
     fontSize: 16,

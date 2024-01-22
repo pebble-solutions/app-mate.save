@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Modal, Text, View, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Text, View, TouchableOpacity, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native';
 
 
-const ActivityModal = ({ visible, onClose, statusBarTranslucent }) => {
+const ActivityModal = ({ onClose, onCreated }) => {
   const [activityName, setActivityName] = useState('');
   const [activityDescrition, setActivityDescription] = useState('');
   const [selectedColor, setSelectedColor] = useState(null);
@@ -32,6 +31,7 @@ const ActivityModal = ({ visible, onClose, statusBarTranslucent }) => {
         end: null,
         color: selectedColor,
         sync: false,
+        variables:[]
       };
 
       // Options de la requête POST
@@ -50,6 +50,7 @@ const ActivityModal = ({ visible, onClose, statusBarTranslucent }) => {
       if (response.ok) {
         const responseData = await response.json(); // Convertir la réponse en JSON
         console.log('Activité créée avec succès:', responseData);
+        onCreated({ ...activityData, _id: responseData._id })
         // Mettre à jour le stockage local (AsyncStorage) si nécessaire
       } else {
         console.error('Erreur lors de la création de l\'activité. Statut de réponse:', response.status);
@@ -64,13 +65,6 @@ const ActivityModal = ({ visible, onClose, statusBarTranslucent }) => {
 
 
   return (
-    // <Modal
-    //     animationType="slide"
-    //     transparent={true}
-    //     visible={visible}
-    //     onRequestClose={onClose}
-    // 	statusBarTranslucent={true}
-    // >
     <View style={styles.modalContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={styles.modalContent}>
         <TouchableOpacity style={styles.closeButton} onPress={onClose}>
@@ -113,7 +107,6 @@ const ActivityModal = ({ visible, onClose, statusBarTranslucent }) => {
         </TouchableOpacity>
       </View>
     </View>
-    // </Modal>
   );
 };
 

@@ -21,6 +21,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const [selectedVariable, setSelectedVariable] = useState({ label: '', _id: '' });
   const [activityVariables, setActivityVariables] = useState([]);
 
+
   const fetchVariables = async () => {
     try {
       const response = await fetch('https://api.pebble.solutions/v5/metric/variable/');
@@ -34,6 +35,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   useEffect(() => {
     fetchVariables();
     setActivityVariables(activity.variables);
+    console.log('use effect aoppélé :', activity.variables);
   }, [activity]);
 
   const addVariableToActivity = async () => {
@@ -53,14 +55,14 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(postData),
+
         });
 
         if (response.ok) {
           console.log('Variable ajoutée à l\'activité avec succès');
-          const newData = await response.json();
-          setActivityVariables((prevVariables) => [...prevVariables, newData]);
+          const newData = { label: selectedVariable.label, _id: selectedVariable._id };
+          setActivityVariables([...activityVariables, newData]);
           setSelectedVariable({ label: '', _id: '' });
-          fetchVariables();
         } else {
           console.error('Erreur lors de l\'ajout de la variable à l\'activité');
         }
@@ -82,9 +84,8 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       });
 
       if (response.status === 202) {
+        onDelete();
         Alert.alert('Suppression effectuée');
-        onClose(); // Appel de la fonction onClose pour fermer le composant
-        onDelete(); // Appel de la fonction onDelete pour effectuer la suppression en base de données
       } else if ([400, 403, 404, 429, 422, 500].includes(response.status)) {
         Alert.alert('Suppression impossible');
       }
@@ -159,7 +160,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Variables liées</Text>
 
-          {activity.variables.map((variable) => (
+          {activityVariables.map((variable) => (
             <Text key={variable._id} style={styles.infoSectionContent}>
               - {variable.label}
             </Text>
@@ -169,6 +170,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
               const matchingVariable = variables.find((variable) => variable.label === itemValue);
               setSelectedVariable(matchingVariable || { label: '', _id: '' });
             }}
+            value={selectedVariable.label}
             placeholder={{ label: 'Autres variables disponibles', value: '' }}
             items={variables.map((variable, index) => ({
               label: variable.label,
@@ -222,8 +224,8 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={() => {
+
           AlertConfirm(); // Appel de la fonction AlertConfirm
-          onClose(); // Appel de la fonction onClose pour fermer la modale
         }}>
           <View style={styles.buttonDeleteActivity}>
             <Text style={styles.textDeleteActivity}>Supprimer cette activité</Text>
