@@ -136,9 +136,6 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         <TouchableOpacity onPress={openSettingsModal} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>Réglages</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={AlertConfirm} style={styles.closeButton}>
-          <Text style={styles.closeButtonText}>Supprimer</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>Fermer</Text>
         </TouchableOpacity>
@@ -199,7 +196,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
             <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.infoContainer}>
+        {/* <View style={styles.infoContainer}>
           <Text style={styles.infoSectionTitle}>Collaborateurs</Text>
 
           <View style={styles.greenRectanglesContainer}>{renderGreenRectangles()}</View>
@@ -216,7 +213,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           <TouchableOpacity style={styles.settingsButton}>
             <Text style={styles.settingsButtonText}>Ajouter un quelque chose de special et exeptionnel </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <TouchableOpacity onPress={() => {
           AlertConfirm();
         }}>
