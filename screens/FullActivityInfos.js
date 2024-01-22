@@ -13,7 +13,7 @@ import moment from 'moment';
 import DeleteActivityButton from '../components/deleteActivityButton';
 import { Picker } from '@react-native-picker/picker';
 
-const FullActivityInfos = ({ activity, onClose, onDelete }) => {
+const FullActivityInfos = ({ activity, onClose }) => {
   const selectedItem = activity;
   const openSettingsModal = () => {
     console.log('Ouverture des réglages');
@@ -21,7 +21,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const [variables, setVariables] = useState([]);
   const [selectedVariable, setSelectedVariable] = useState({ label: '', _id: '' });
   const [activityVariables, setActivityVariables] = useState([]);
- 
+
   const fetchVariables = async () => {
     try {
       const response = await fetch('https://api.pebble.solutions/v5/metric/variable/');
@@ -38,7 +38,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
     setActivityVariables(activity.variables);
   }, [activity]);
 
- const addVariableToActivity = async () => {
+  const addVariableToActivity = async () => {
     if (selectedVariable._id) {
       const variableId = selectedVariable._id;
       const activityId = activity._id;
@@ -203,6 +203,11 @@ const styles = StyleSheet.create({
   settingsButtonText: {
     color: 'white', // Texte blanc pour une meilleure visibilité
     fontWeight: 'bold',
+  },
+
+  closeButton: {
+    padding: 10,
+    borderRadius: 5,
   },
 
   closeButtonText: {
