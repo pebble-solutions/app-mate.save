@@ -20,6 +20,7 @@
     "@react-native-picker/picker": "^2.6.1",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
+    "color": "^4.2.3",
     "date-fns": "^3.2.0",
     "deprecated-react-native-prop-types": "^2.2.0",
     "material-ui-community-icons": "^0.15.0",
