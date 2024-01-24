@@ -11,6 +11,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.1",
     "@gluestack-style/react": "^1.0.38",
     "@gluestack-ui/config": "^1.0.11",
     "@gluestack-ui/themed": "^1.0.35",

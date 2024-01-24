@@ -129,53 +129,53 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           data={activityVariables}
           renderItem={({ item, drag }) => (
             <ScaleDecorator>
-             <TouchableOpacity
-  onLongPress={() => {
-    setIsDragging(true);
-    drag();
-  }}
-  disabled={isDragging}
-  style={[
-    styles.infoSectionContentContainer,
-    {
-      backgroundColor: isDragging ? 'transparent' : backgroundColor,
-      borderRadius: 7,
-      paddingVertical: 10,
-      marginVertical: 5,
-      flexDirection: 'row',
-      alignItems: 'center',
-      position: 'relative',
-    },
-  ]}
->
- {/* Texte centré avec retour à la ligne si nécessaire */}
-{/* Texte centré avec retour à la ligne si nécessaire */}
-<View style={{ flex: 1, alignItems: 'center' }}>
-    <Text style={[styles.infoSectionContent, { flexWrap: 'wrap', textAlign: 'center' }]}>
-      {item.label.length > 25 ? item.label.substring(0, 25) + '...' : item.label}
-    </Text>
-  </View>
+              <TouchableOpacity
+                onLongPress={() => {
+                  setIsDragging(true);
+                  drag();
+                }}
+                disabled={isDragging}
+                style={[
+                  styles.infoSectionContentContainer,
+                  {
+                    backgroundColor: isDragging ? 'transparent' : backgroundColor,
+                    borderRadius: 7,
+                    paddingVertical: 10,
+                    marginVertical: 5,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    position: 'relative',
+                  },
+                ]}
+              >
+                {/* Texte centré avec retour à la ligne si nécessaire */}
+                {/* Texte centré avec retour à la ligne si nécessaire */}
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                  <Text style={[styles.infoSectionContent, { flexWrap: 'wrap', textAlign: 'center' }]}>
+                    {item.label.length > 25 ? item.label.substring(0, 25) + '...' : item.label}
+                  </Text>
+                </View>
 
 
-  {/* Icônes à droite en position absolue */}
-  <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
-    <TouchableOpacity onPress={() => handleDeleteVariable(item)}>
-      <Icon name="trash" size={20} color="white" />
-    </TouchableOpacity>
+                {/* Icônes à droite en position absolue */}
+                <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
+                  <TouchableOpacity onPress={() => handleDeleteVariable(item)}>
+                    <Icon name="trash" size={20} color="white" />
+                  </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => handleEditVariable(item)}>
-      <Icon name="edit" size={20} color="white" />
-    </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleEditVariable(item)}>
+                    <Icon name="edit" size={20} color="white" />
+                  </TouchableOpacity>
 
-    <TouchableOpacity onPress={() => handleToggleMandatory(item)}>
-      {item.mandatory ? (
-        <Icon name="fa-trash-o" size={20} color="white" />
-      ) : (
-        <Icon name="circle" size={20} color="white" />
-      )}
-    </TouchableOpacity>
-  </View>
-</TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleToggleMandatory(item)}>
+                    {item.mandatory ? (
+                      <Icon name="trash" size={20} color="white" />
+                    ) : (
+                      <Icon name="circle" size={20} color="white" />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
             </ScaleDecorator>
           )}
           keyExtractor={(item) => item._id}
@@ -199,24 +199,24 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           }))}
           style={{
             inputIOS: {
-              fontSize: 14,
+              fontSize: 16,
               textAlign: 'center',
-              color: 'white',
+              color: 'rgba(255, 255, 255, 1)',
               paddingVertical: 10,
               paddingHorizontal: 10,
               borderWidth: 1,
-              borderColor: 'gray',
+              borderColor: 'rgba(255, 255, 255, 0.7)',
               borderRadius: 4,
               marginBottom: 10,
             },
             inputAndroid: {
-              fontSize: 14,
+              fontSize: 16,
               textAlign: 'center',
-              color: 'white',
+              color: 'rgba(255, 255, 255, 1)',
               paddingVertical: 10,
               paddingHorizontal: 10,
               borderWidth: 1,
-              borderColor: 'gray',
+              borderColor: 'rgba(255, 255, 255, 0.7)',
               borderRadius: 4,
               marginBottom: 10,
             },
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 10,
   },
   infoSectionContentContainer: {
