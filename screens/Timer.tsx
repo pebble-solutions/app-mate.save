@@ -7,7 +7,7 @@ import SvgMountains from './SVG/SvgMountains';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { calculateDiffDate } from '../js/date';
 import RenderComponentsVariables from '../components/renderComponentsVariables';
-import RenderForm from '../components/renderFormVariables';
+import { set } from 'date-fns';
 
 const Timer: FC = () => {
     const [pressTimes, setPressTimes] = useState<{
@@ -16,6 +16,7 @@ const Timer: FC = () => {
     }[]>([]);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalData, setModalData] = useState<{
+        index: number;
         time: Date;
         label: string;
     }[]>([]);
@@ -27,13 +28,12 @@ const Timer: FC = () => {
     const [text, setText] = useState(initialText);
     const [selectedActivity, SetSelectedActivity ] = useState({label: 'Pebble Mate', _id:'01HMTW2SA105GFRZ88FFYYDC6G', description:'test validation session'});
     const [associatedVariables, SetAssociatedVariables] = useState([]);
-    const [recap, setRecap] = useState<{
-        totalTime: string;
-        numberBreak: number;
-    }[]>([{
-        totalTime: '',
-        numberBreak: 0
-    }]);
+    const [recap, setRecap] = useState<{totalTime: string;numberBreak: number;}[]>([{totalTime: '', numberBreak: 0}]);
+    const [tabPointage, setTabPointage] = useState<{time:Date; label: string;}[]>([])
+
+
+        
+    
     useEffect(() => {
         const loadPressTimes = async () => {
             try {
@@ -166,12 +166,10 @@ const Timer: FC = () => {
                 if (parsedPressTimes.length > 0 && parsedPressTimes[parsedPressTimes.length - 1].index % 2 === 0) {
                     console.log('Press Times in AsyncStorage:', parsedPressTimes);
                     setModalData(parsedPressTimes); // Suppose que vous avez un state `modalData`
-                    console.log(modalData, 'modalData');
                     const startTime = parsedPressTimes[0].time;
                     const endTime = parsedPressTimes[parsedPressTimes.length - 1].time;
                     const endLabel = parsedPressTimes[parsedPressTimes.length - 1].label;
                     const testDiff = calculateDiffDate(startTime, endTime);
-                    console.log(testDiff, 'testDiff');
                     const startLabel = parsedPressTimes[0].label;
                     console.log(startLabel, 'startLabel');
                     console.log(endLabel, 'endLabel');
@@ -209,28 +207,36 @@ const Timer: FC = () => {
             console.error('Error retrieving data from AsyncStorage:', error);
         }
     };
-    const RenderAssociatedVariables = () => {
-        return associatedVariables.map((variable, id) => {
-            return (
-                <View style={styles.contentVariable} key={id}>
-                    <Text style ={styles.contentName}>{variable.label}</Text>
-                    <Text style ={styles.contentName}>{variable.question}</Text>
-                    <Text style ={styles.contentName}>{variable.type}</Text>
-                    <Text style ={styles.contentName}>{variable.description}</Text>
-                    <Text style ={styles.contentName}>______________</Text>
-                </View>
-            )
-        })
+    const renderPresstimes = () => {
+        console.log(modalData, 'modalData');
+        modalData.map((item, index) => {
+            if(modalData[index].label === "Pause" || modalData[index].label === ""){
+                setTabPointage(tabPointage => [...tabPointage, item]);
+                setModalData(modalData[index].label,  "end");
+                
+        // return modalData.map((item, index) => {
+        //     return (
+        //         <View key={index} style={styles.contentItemWork}>
+        //             <Text style={styles.contentName}>{item.label}</Text>
+        //             <Text style={styles.contentName}>{item.time.toLocaleTimeString()}</Text>
+        //         </View>
+        //     )
+        // })
+    }
+        
+
+    const validateSession = () => { 
+        console.log('ValidateSession');
     }
 
-    const ValidateSession = () => {
+    const ConfirmValidateSession = () => {
         Alert.alert('Confirmation', 'Voulez-vous valider cette session ?',  [
             {
                 text: 'Annuler',
                 onPress: () => console.log('Cancel Pressed'),
                 style: 'cancel'
                 },
-                { text: 'OK', onPress: () => console.log('OK Pressed') }
+                { text: 'OK', onPress: () => validateSession() }
                 ],
                 { cancelable: false }
                 );
@@ -306,6 +312,9 @@ const Timer: FC = () => {
                 <View style={styles.infoContainer}>
                     <Text style={styles.infoSectionTitle}>Informations session</Text>
                     <View style={styles.contentValidation}>
+                        <View style={styles.rowItemWork}>
+                            {renderPresstimes() }
+                        </View>
                         <View style={styles.contentItem}>
                             <Text style={styles.contentName}>Durée de la session:</Text>
                             <Text style={styles.contentName}>{recap.totalTime}</Text>
@@ -314,9 +323,6 @@ const Timer: FC = () => {
                         <View style={styles.contentItem}>
                             <Text style={styles.contentName}>nombre de pauses:</Text>
                             <Text style={styles.contentName}>{recap.numberBreak}</Text>
-                        </View>
-                        <View>
-                            <Text>presstimes</Text>
                         </View>
                         <TouchableOpacity onPress={() => console.log("Modifier ces informations")} style={styles.buttonPatch}>
                             <Text style={styles.buttonText}>Modifier ces informations ?</Text>
@@ -399,7 +405,7 @@ const Timer: FC = () => {
                         </TouchableOpacity>
                     </View>
                 </View> */}
-                <TouchableOpacity onPress={(ValidateSession)} style={styles.buttonValidate}>
+                <TouchableOpacity onPress={(ConfirmValidateSession)} style={styles.buttonValidate}>
                     <Text style={styles.buttonText}>Valider cette session</Text>
                 </TouchableOpacity>
             </ScrollView>
@@ -447,6 +453,23 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
+    contentItemWork: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        borderRadius: 10,
+        margin: 10,
+        padding: 10,
+    },
+    contentItemWork2: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        borderRadius: 10,
+        margin: 10,
+        padding: 10,
+    },
+    
     contentVariable: {
         flexDirection: 'column',
         justifyContent: 'space-between',

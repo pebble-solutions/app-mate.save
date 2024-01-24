@@ -73,7 +73,6 @@ const RenderForm = ({item}, {type}) => {
 }
 const styles= StyleSheet.create({
     contentVariable: {
-        flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
@@ -89,7 +88,6 @@ const styles= StyleSheet.create({
         color: 'white',
     },
     inputField: {
-        width: 300,
         height: 40,
         backgroundColor: 'transparent',
         borderRadius: 5,

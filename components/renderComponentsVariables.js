@@ -9,6 +9,7 @@ const RenderComponentsVariables = ({tabVariables}) => {
     const [selectedItem, setSelectedItem] = React.useState(null);
 
     const handlePress = (item) => {
+        setFormVisible(true);
         setSelectedItem(item);
     }
     const renderFormItem = () => {
@@ -17,8 +18,10 @@ const RenderComponentsVariables = ({tabVariables}) => {
         else{
             console.log('handlepress', selectedItem)
             return (
-                <View>
-                    <RenderForm item={selectedItem} />
+                <View style={styles.contentForm}>
+                    {formVisible &&
+                    <RenderForm item={selectedItem}/>
+                    }
                 </View>
             )   
 
@@ -28,54 +31,30 @@ const RenderComponentsVariables = ({tabVariables}) => {
     }
 
 
-    // const RenderForm = ({variable, id}) => {
-    //     console.log(variable, id, 'variable')
-    //     switch (variable.type) {
-    //         case 'text':
-    //             console.log('text', variable.question)
-    //             return (
-    //                 <TextInput style={styles.contentName}
-    //                 placeholder={variable.type}>Text</TextInput>
-    //             )
-    //         case 'textarea':
-    //             console.log('textarea', variable.question)
-    //             return (
-    //                 <Text>textarea </Text>
-    //             )
-    //         case 'date':
-    //             console.log('date', variable.question)
-    //             return (
-    //                 <Text>date</Text>
-    //             )
-    //         case 'number':
-    //             console.log('number', variable.question)
-    //             return (
-    //                 <Text>number</Text>
-    //             )
-    //         case 'boolean':
-    //             console.log('boolean', variable.question)
-    //             return (
-    //                 <Text>booleen</Text>
-    //             )
-    //     }
-    // }
 
-    const renderVariables = () => { 
-        if(!tabVariables) return null;
-        else{
-            return tabVariables.map((item) => {
-                return (
-                    <View style={styles.contentVariable} key={item._id}>
-                        <TouchableHighlight onPress={() => handlePress(item)}>
-                            <Text style ={styles.contentName}>{item.question}</Text>    
-                        </TouchableHighlight>
-                    </View>
+
+        const renderVariables = () => { 
+            if(!tabVariables) return null;
+            else{
+                return tabVariables.map((item) => {
+                
+                        return (
+                            <View style={styles.contentVariable} key={item._id}>
+                                <TouchableHighlight onPress={() => handlePress(item)}>
+                                    <View>
+                                        <Text style ={styles.contentName}>{item.question}</Text> 
+                                        <Text style ={styles.contentName}>{item.mandatory}</Text>
+                                    </View>
+                                </TouchableHighlight>
+                            </View>
+                        )
+                    }
+                    
                 )
-            })
-            
-            
-        }
-    }    
+                
+                
+            }
+        }    
     return (    
         <View>
             {renderVariables()}
@@ -90,10 +69,23 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'start',
         backgroundColor: 'transparent',
         margin: 5,
         padding: 5,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'white',
+    },
+    contentForm: {
+        flex: 1,
+        
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'grey',
+        margin: 5,
+        padding: 20,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'white',
