@@ -1,4 +1,4 @@
-import { Center, Heading, Input,InputField,InputIcon,InputSlot} from '@gluestack-ui/themed';
+import {Heading} from '@gluestack-ui/themed';
 import React, { useState, useEffect, FC } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, FlatList, Modal, ScrollView, Switch, TextInput, Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -6,6 +6,9 @@ import SvgSun from './SVG/SvgSun';
 import SvgMountains from './SVG/SvgMountains';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { calculateDiffDate } from '../js/date';
+import RenderComponentsVariables from '../components/renderComponentsVariables';
+import RenderForm from '../components/renderFormVariables';
+
 const Timer: FC = () => {
     const [pressTimes, setPressTimes] = useState<{
         time: Date;
@@ -22,6 +25,8 @@ const Timer: FC = () => {
     const inputAccessoryViewID = 'uniqueID';
     const initialText = '';
     const [text, setText] = useState(initialText);
+    const [selectedActivity, SetSelectedActivity ] = useState({label: 'Pebble Mate', _id:'01HMTW2SA105GFRZ88FFYYDC6G', description:'test validation session'});
+    const [associatedVariables, SetAssociatedVariables] = useState([]);
     const [recap, setRecap] = useState<{
         totalTime: string;
         numberBreak: number;
@@ -64,7 +69,7 @@ const Timer: FC = () => {
         setPressTimes(updatedPressTimes);
         await savePressTimes(updatedPressTimes); // Sauvegarde des nouvelles données
     };
-
+    
     const savePressTimes = async (times: {
         time: Date;
         label: string;
@@ -112,7 +117,45 @@ const Timer: FC = () => {
             console.error("Erreur lors de la suppression des données :", error);
         }
     };
+
+    // const fetchSelectedActivity = async () => {
+    //     try {
+    //         const response = await fetch(`https://api.pebble.solutions/api/v5/activity/${selectedActivity._id}/metric/variable`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //     });
+    //     if (response.status == 200) {
+    //         console.log('Activity selected');
+    //         const associatedVariables = await response.json();
+    //     }
+    //     } catch (error) {
+    //         console.error('Error fetching selected activity:', error);
+    //     }
+    // };
+    
+    
     const onValidatePress = async () => {
+        const fetchSelectedActivity = async () => {
+            try {
+                const response = await fetch(`https://api.pebble.solutions/v5/activity/${selectedActivity._id}/metric/variable`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.status == 200) {
+                const variables = await response.json();
+                console.log(variables, 'associatedVariables');
+                SetAssociatedVariables(variables);
+
+            }
+            } catch (error) {
+                console.error('Error fetching selected activity:', error);
+            }
+        };
+        fetchSelectedActivity();
         const currentTime = new Date();
         console.log("Validation des données");
         console.log("Heure de validation :", currentTime);
@@ -166,6 +209,36 @@ const Timer: FC = () => {
             console.error('Error retrieving data from AsyncStorage:', error);
         }
     };
+    const RenderAssociatedVariables = () => {
+        return associatedVariables.map((variable, id) => {
+            return (
+                <View style={styles.contentVariable} key={id}>
+                    <Text style ={styles.contentName}>{variable.label}</Text>
+                    <Text style ={styles.contentName}>{variable.question}</Text>
+                    <Text style ={styles.contentName}>{variable.type}</Text>
+                    <Text style ={styles.contentName}>{variable.description}</Text>
+                    <Text style ={styles.contentName}>______________</Text>
+                </View>
+            )
+        })
+    }
+
+    const ValidateSession = () => {
+        Alert.alert('Confirmation', 'Voulez-vous valider cette session ?',  [
+            {
+                text: 'Annuler',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+                },
+                { text: 'OK', onPress: () => console.log('OK Pressed') }
+                ],
+                { cancelable: false }
+                );
+    }
+    const handlePress= () => {
+        console.log('handlePress');
+    }
+
     const renderItem = ({
         item,
         index
@@ -175,171 +248,164 @@ const Timer: FC = () => {
             label: string;
         };
         index: number;
-    }) => <View style={styles.listItem}>
-            <View style={styles.timeline}>
-                {/* Afficher verticalLine seulement si ce n'est ni le premier ni le dernier élément */}
-                {index !== 0 && index !== pressTimes.length - 1 && <View style={styles.verticalLine} />}
-
-                {/* Logique existante pour afficher le cercle */}
-                {index === 0 ? <View style={styles.largeCircleBorder}>
-
-                </View> : item.label === "Arrêt de l'activité" ? <View style={styles.largeCircleFilled} /> : <View style={styles.smallCircleFilled} />}
-            </View>
-            <View style={styles.labelContainer}>
-                <Text style={[styles.labelText, item.label === "Pause" || item.label === "Reprise" ? styles.opaqueLabel : null]}>
-                    {item.label}
-                </Text>
-            </View>
-            <View style={styles.timeContainer}>
-                <Text style={styles.timeText}>{item.time.toLocaleTimeString()}</Text>
-            </View>
-            {/* Afficher lastItemLine seulement si c'est le dernier élément et la longueur de pressTimes est >= 2 */}
-            {index === pressTimes.length - 1 && pressTimes.length >= 2 && <View style={styles.lastItemLine} />}
-        </View>;
-    return <LinearGradient colors={['#020716', '#1C4D69', '#EC8F7B', '#FF493E']} style={styles.container}>
-        <View style={styles.mountainsContainer}>
-            <SvgMountains />
-        </View>
-        <TouchableOpacity onPress={onPressSun} style={styles.circleContainer}>
-            <SvgSun />
-        </TouchableOpacity>
-
-        <FlatList data={pressTimes} renderItem={renderItem} keyExtractor={(item, index) => index.toString()} style={styles.listContainer} />
-
-        <TouchableOpacity onPress={onValidatePress} style={[styles.button, styles.validateButton]}>
-            <Text style={styles.buttonText}>Valider</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={clearPressTimes} style={[styles.button, styles.clearButton]}>
-            <Text style={styles.buttonText}>Annuler</Text>
-        </TouchableOpacity>
-
-        {/* Ajouter la fenêtre modale ici */}
-        <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)} onShow={() => setContentVisible(true)}>
-            <View style={styles.modalContainer}>
-                <Heading size={"3xl"}>ICI</Heading>
-                <Input>
-    <InputField />
-    <InputSlot>
-      <InputIcon></InputIcon>
-    </InputSlot>
-  </Input>
-                <View style={styles.header}>
-                    <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.buttonCancel}>
-                        <Text style={styles.buttonText}>Annuler</Text>
-                    </TouchableOpacity>
+    }) =>   
+            <View style={styles.listItem}>
+                <View style={styles.timeline}>
+                    {/* Afficher verticalLine seulement si ce n'est ni le premier ni le dernier élément */}
+                    {index !== 0 && index !== pressTimes.length - 1 && <View style={styles.verticalLine} />}
+                    
+                    {/* Logique existante pour afficher le cercle */}
+                    {index === 0 ? <View style={styles.largeCircleBorder}>
+                
+                    </View> : item.label === "Arrêt de l'activité" ? <View style={styles.largeCircleFilled} /> : <View style={styles.smallCircleFilled} />}
                 </View>
-                <View style={styles.contentValidation}>
-                    <Text style={styles.infoModalTitle}>Activité X, session du 10 janv. 2023</Text>
+                <View style={styles.labelContainer}>
+                    <Text style={[styles.labelText, item.label === "Pause" || item.label === "Reprise" ? styles.opaqueLabel : null]}>
+                    {item.label}
+                    </Text>
+                </View>
+                <View style={styles.timeContainer}>
+                    <Text style={styles.timeText}>{item.time.toLocaleTimeString()}</Text>
+                </View>
+                {/* Afficher lastItemLine seulement si c'est le dernier élément et la longueur de pressTimes est >= 2 */}
+                {index === pressTimes.length - 1 && pressTimes.length >= 2 && <View style={styles.lastItemLine} />}
+            </View>;
+
+    return <LinearGradient colors={['#020716', '#1C4D69', '#EC8F7B', '#FF493E']} style={styles.container}>
+            <View style={styles.mountainsContainer}>
+                <SvgMountains />
+            </View>
+            <TouchableOpacity onPress={onPressSun} style={styles.circleContainer}>
+                <SvgSun />
+            </TouchableOpacity>
+            <Heading size="3xl">{selectedActivity.label}</Heading>
+            <Heading size="md">{selectedActivity.description}</Heading>
+            <FlatList data={pressTimes} renderItem={renderItem} keyExtractor={(item, index) => index.toString()} style={styles.listContainer} />
+            <TouchableOpacity onPress={onValidatePress} style={[styles.button, styles.validateButton]}>
+            <Text style={styles.buttonText}>Valider</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={clearPressTimes} style={[styles.button, styles.clearButton]}>
+                <Text style={styles.buttonText}>Annuler</Text>
+            </TouchableOpacity>
+    
+    {/* Ajouter la fenêtre modale de validation de la session ici */}
+    <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={() => setModalVisible(false)} onShow={() => setContentVisible(true)}>
+        <View style={styles.modalContainer}>
+        
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.buttonCancel}>
+                    <Text style={styles.buttonText}>Annuler</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.contentValidation}>
+                <Text style={styles.infoModalTitle}>{selectedActivity.label} - {selectedActivity.description}</Text>
+                {/* <Text style={styles.infoModalTitle}>Session du {modalData[0].time}  </Text> */}
+            </View>
+    
+            <ScrollView>
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoSectionTitle}>Informations session</Text>
+                    <View style={styles.contentValidation}>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>Durée de la session:</Text>
+                            <Text style={styles.contentName}>{recap.totalTime}</Text>
+                        </View>
+                        
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>nombre de pauses:</Text>
+                            <Text style={styles.contentName}>{recap.numberBreak}</Text>
+                        </View>
+                        <View>
+                            <Text>presstimes</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => console.log("Modifier ces informations")} style={styles.buttonPatch}>
+                            <Text style={styles.buttonText}>Modifier ces informations ?</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 {/* <View style={styles.infoContainer}>
-                     <FlatList
-                        keyExtractor={(item, index) => index.toString()}
-                        data={modalData}
-                        renderItem={({ item }) => (
-                            <View style={styles.contentValidationList}>
-                                <Text style={styles.contentName}>{item.index}</Text>
-                                <Text style={styles.contentName}>{item.label}</Text>
-                                <Text style={styles.contentName}>{item.time}</Text>
-                            </View>
-                        )}
+                    <Text style={styles.infoSectionTitle}>Variables associées</Text>
+                    <View style={styles.contentValidation}>
+                        <RenderAssociatedVariables />
+                    </View>
+                </View> */}
+                <View style={styles.infoContainer}>
+                    <Text style={styles.infoSectionTitle}>variables</Text>
+                    <View style={styles.contentValidation}>
+                        <RenderComponentsVariables 
+                        tabVariables = {associatedVariables}
                         />
-                     </View> */}
-
-                <ScrollView>
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.infoSectionTitle}>Informations session</Text>
-                        <View style={styles.contentValidation}>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>Durée de la session:</Text>
-                                <Text style={styles.contentName}>{recap.totalTime}</Text>
-                            </View>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>activité:</Text>
-                                <Text style={styles.contentName}>1H11</Text>
-                            </View>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>pause:</Text>
-                                <Text style={styles.contentName}>9h23</Text>
-                            </View>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>nombre de pauses:</Text>
-                                <Text style={styles.contentName}>{recap.numberBreak}</Text>
-                            </View>
-
-                            <TouchableOpacity onPress={() => console.log("Modifier ces informations")} style={styles.buttonPatch}>
-                                <Text style={styles.buttonText}>Modifier ces informations</Text>
-                            </TouchableOpacity>
-
-                        </View>
                     </View>
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.infoSectionTitle}>Informations et variables</Text>
-                        <View style={styles.contentValidation}>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>Covoiturage:</Text>
-                                <Switch trackColor={{
-                                    false: '#767577',
-                                    true: '#81b0ff'
-                                }} thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'} ios_backgroundColor="#3e3e3e" onValueChange={toggleSwitch} value={isEnabled} />
-                            </View>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>Grand dépalcement (300kms):</Text>
-                                <Switch trackColor={{
-                                    false: '#767577',
-                                    true: '#81b0ff'
-                                }} thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'} ios_backgroundColor="#3e3e3e" onValueChange={toggleSwitch} value={isEnabled} />
-                            </View>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>hébergement hötel:</Text>
-                                <Switch trackColor={{
-                                    false: '#767577',
-                                    true: '#81b0ff'
-                                }} thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'} ios_backgroundColor="#3e3e3e" onValueChange={toggleSwitch} value={isEnabled} />
-                            </View>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>formation:</Text>
-                                <Switch trackColor={{
-                                    false: '#767577',
-                                    true: '#81b0ff'
-                                }} thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'} ios_backgroundColor="#3e3e3e" onValueChange={toggleSwitch} value={isEnabled} />
-                            </View>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>montant total des ventes journalières:</Text>
-                                <TextInput style={styles.contentInput} inputAccessoryViewID={inputAccessoryViewID} onChangeText={setText} value={text} placeholder={'?'} />
-                            </View>
-                            <View style={styles.contentItem}>
-                                <Text style={styles.contentName}>dont nombre d'heures CSE:</Text>
-                                <TextInput style={styles.contentInput} inputAccessoryViewID={inputAccessoryViewID} onChangeText={setText} value={text} placeholder={'?'} />
-                            </View>
-
-                            <Text style={styles.contentName}>Commentaires:</Text>
-
-                            <TouchableOpacity onPress={() => console.log("Ajouter un commentaire")} style={styles.buttonPatch}>
-                                <Text style={styles.buttonText}>ici votre commentaire</Text>
-                            </TouchableOpacity>
-                        </View>
+                    <View>
                     </View>
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.infoSectionTitle}>Ajouter un fichier</Text>
-                        <View style={styles.contentValidation}>
-                            <TouchableOpacity onPress={() => console.log("joindre fichier dossier")} style={styles.buttonPatch}>
-                                <Text style={styles.buttonText}>Depuis les dossiers</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => console.log("joindre fichier image")} style={styles.buttonPatch}>
-                                <Text style={styles.buttonText}>Depuis les images</Text>
-                            </TouchableOpacity>
+                </View>
+                    
+                {/* données en dur pour exemple affichage des diverses variables associées*/}
+                {/* <View style={styles.infoContainer}>
+                    <Text style={styles.infoSectionTitle}>Informations et variables</Text>
+                    <View style={styles.contentValidation}>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>Covoiturage:</Text>
+                            <Switch trackColor={{
+                                false: '#767577',
+                                true: '#81b0ff'
+                            }} thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'} ios_backgroundColor="#3e3e3e" onValueChange={toggleSwitch} value={isEnabled} />
                         </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>Grand dépalcement (300kms):</Text>
+                            <Switch trackColor={{
+                                false: '#767577',
+                                true: '#81b0ff'
+                            }} thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'} ios_backgroundColor="#3e3e3e" onValueChange={toggleSwitch} value={isEnabled} />
+                        </View>
+                        <View style={styles.contentItem}>
+                        <Text style={styles.contentName}>hébergement hötel:</Text>
+                        <Switch trackColor={{
+                            false: '#767577',
+                            true: '#81b0ff'
+                        }} thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'} ios_backgroundColor="#3e3e3e" onValueChange={toggleSwitch} value={isEnabled} />
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>formation:</Text>
+                            <Switch trackColor={{
+                                false: '#767577',
+                                true: '#81b0ff'
+                            }} thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'} ios_backgroundColor="#3e3e3e" onValueChange={toggleSwitch} value={isEnabled} />
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>montant total des ventes journalières:</Text>
+                            <TextInput style={styles.contentInput} inputAccessoryViewID={inputAccessoryViewID} onChangeText={setText} value={text} placeholder={'?'} />
+                        </View>
+                        <View style={styles.contentItem}>
+                            <Text style={styles.contentName}>dont nombre d'heures CSE:</Text>
+                            <TextInput style={styles.contentInput} inputAccessoryViewID={inputAccessoryViewID} onChangeText={setText} value={text} placeholder={'?'} />
+                        </View>
+                        
+                        <Text style={styles.contentName}>Commentaires:</Text>
+                        <TouchableOpacity onPress={() => console.log("Ajouter un commentaire")} style={styles.buttonPatch}>
+                            <Text style={styles.buttonText}>ici votre commentaire</Text>
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.buttonValidate}>
-                        <Text style={styles.buttonText}>Valider cette session</Text>
-                    </TouchableOpacity>
-                </ScrollView>
-
-
-            </View>
-        </Modal>
-    </LinearGradient>;
+                </View> */}
+                {/* données en dur pour affichage "ajout d'un fichier" */}
+                {/* <View style={styles.infoContainer}>
+                    <Text style={styles.infoSectionTitle}>Ajouter un fichier</Text>
+                    <View style={styles.contentValidation}>
+                        <TouchableOpacity onPress={() => console.log("joindre fichier dossier")} style={styles.buttonPatch}>
+                            <Text style={styles.buttonText}>Depuis les dossiers</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => console.log("joindre fichier image")} style={styles.buttonPatch}>
+                            <Text style={styles.buttonText}>Depuis les images</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View> */}
+                <TouchableOpacity onPress={(ValidateSession)} style={styles.buttonValidate}>
+                    <Text style={styles.buttonText}>Valider cette session</Text>
+                </TouchableOpacity>
+            </ScrollView>
+        </View>
+    </Modal>
+</LinearGradient>;
 };
 const styles = StyleSheet.create({
     container: {
@@ -352,7 +418,7 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         padding: 10,
-        backgroundColor: '#F39D2C85',
+        backgroundColor: '#F39D2C',
         justifyContent: 'space-around'
     },
     header: {
@@ -378,6 +444,11 @@ const styles = StyleSheet.create({
     },
     contentItem: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    contentVariable: {
+        flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center'
     },
