@@ -9,9 +9,11 @@ import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist'; // Import de DraggableFlatList
 import { NestableScrollContainer, NestableDraggableFlatList } from "react-native-draggable-flatlist"
+import Color from 'color';
 
 
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
+  const backgroundColor = activity ? Color(activity.color).darken(0.1).hex() : ''; // Vérification de nullité pour activity
   const selectedItem = activity;
   const openSettingsModal = () => {
     console.log('Ouverture des réglages');
@@ -165,7 +167,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
                 style={[
                   styles.infoSectionContentContainer,
                   {
-                    backgroundColor: isDragging ? 'transparent' : 'grey',
+                    backgroundColor: isDragging ? 'transparent' : backgroundColor,
                     alignItems: 'center',
                     borderRadius: 7,
                     paddingVertical: 10,
