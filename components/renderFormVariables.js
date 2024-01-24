@@ -1,40 +1,75 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
 
-const RenderForm = ({variable,id}) => {
-    console.log(variable, 'variable')
-    switch (variable.type) {
-        case 'text':
-            console.log('text', variable.question)
-            return (
-                <TextInput style={styles.inputField}
-                placeholder={variable.type}></TextInput>
-            )
-        case 'textarea':
-            console.log('textarea', variable.question)
-            return (
-                <TextInput style={styles.inputField}
-                placeholder={variable.type}></TextInput>
-            )
-        case 'date':
-            console.log('date', variable.question)
-            return (
-                <TextInput style={styles.inputField}
-                placeholder={variable.type}></TextInput>
-            )
-        case 'number':
-            console.log('number', variable.question)
-            return (
-                <TextInput style={styles.inputField}
-                placeholder={variable.type}></TextInput>
-            )
-        case 'boolean':
-            console.log('boolean', variable.question)
-            return (
-                <TextInput style={styles.inputField}
-                placeholder={variable.type}></TextInput>
-            )
+const RenderForm = ({item}, {type}) => {
+    console.log(type, ' type')
+    console.log(item, ' item')
+    if(item.type === 'text'){
+        return (
+            <TextInput style={styles.inputField}
+            placeholder={item.type}></TextInput>
+        )
     }
+    else if(item.type === 'textarea'){
+        return (
+            <TextInput style={styles.inputField}
+            placeholder={item.type}></TextInput>
+        )
+    }
+    else if(item.type === 'date'){
+        return (
+            <TextInput style={styles.inputField}
+            placeholder={item.type}></TextInput>
+        )
+    }
+    else if(item.type === 'number'){
+        return (
+            <TextInput style={styles.inputField}
+            placeholder={item.type}></TextInput>
+        )
+    }
+    else if(item.type === 'boolean'){
+        return (
+            <TextInput style={styles.inputField}
+            placeholder={item.type}></TextInput>
+        )
+    }
+    else{
+        return null
+    }
+    
+    // switch (item.type) {
+    //     case 'text':
+    //         console.log('text', item.question)
+    //         return (
+    //             <TextInput style={styles.inputField}
+    //             placeholder={item.type}></TextInput>
+    //         )
+    //     case 'textarea':
+    //         console.log('textarea', item.question)
+    //         return (
+    //             <TextInput style={styles.inputField}
+    //             placeholder={item.type}></TextInput>
+    //         )
+    //     case 'date':
+    //         console.log('date', item.question)
+    //         return (
+    //             <TextInput style={styles.inputField}
+    //             placeholder={item.type}></TextInput>
+    //         )
+    //     case 'number':
+    //         console.log('number', item.question)
+    //         return (
+    //             <TextInput style={styles.inputField}
+    //             placeholder={item.type}></TextInput>
+    //         )
+    //     case 'boolean':
+    //         console.log('boolean', item.question)
+    //         return (
+    //             <TextInput style={styles.inputField}
+    //             placeholder={item.type}></TextInput>
+    //         )
+    // }
 }
 const styles= StyleSheet.create({
     contentVariable: {

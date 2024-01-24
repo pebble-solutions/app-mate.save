@@ -1,20 +1,30 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableHighlight } from 'react-native';
 import RenderForm from './renderFormVariables';
 
 
 
 const RenderComponentsVariables = ({tabVariables}) => {
     const [formVisible, setFormVisible] = React.useState(false);
+    const [selectedItem, setSelectedItem] = React.useState(null);
 
-    const HandlePress = ({variable, id}) => {
-        setFormVisible(!formVisible);
-        console.log('handlepress')
-        return (
-            <View>
-                <RenderForm variable={variable} id={id}/>
-            </View>
-        )
+    const handlePress = (item) => {
+        setSelectedItem(item);
+    }
+    const renderFormItem = () => {
+
+        if(!selectedItem) return null;
+        else{
+            console.log('handlepress', selectedItem)
+            return (
+                <View>
+                    <RenderForm item={selectedItem} />
+                </View>
+            )   
+
+        }
+
+        
     }
 
 
@@ -50,22 +60,30 @@ const RenderComponentsVariables = ({tabVariables}) => {
     //     }
     // }
 
-        
+    const renderVariables = () => { 
+        if(!tabVariables) return null;
+        else{
+            return tabVariables.map((item) => {
+                return (
+                    <View style={styles.contentVariable} key={item._id}>
+                        <TouchableHighlight onPress={() => handlePress(item)}>
+                            <Text style ={styles.contentName}>{item.question}</Text>    
+                        </TouchableHighlight>
+                    </View>
+                )
+            })
             
+            
+        }
+    }    
+    return (    
+        <View>
+            {renderVariables()}
+            {renderFormItem()}
+        </View>
+    )
 
 
-    return tabVariables.map((variable, id) => {
-        return (
-            <View style={styles.contentVariable} key={id}>
-                <TouchableOpacity onPress={() => HandlePress({variable, id})}>
-                    <Text style ={styles.contentName}>{variable.question}</Text>    
-                </TouchableOpacity>
-                    {formVisible ? <RenderForm variable={variable} id={id}/> : null}
-                    {/* {formVisible ? <HandlePress variable={variable} id={id}/> : null} */}
-
-            </View>
-        )
-    })
 }
 const styles = StyleSheet.create({
     contentVariable: {
