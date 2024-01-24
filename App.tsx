@@ -10,6 +10,7 @@ import Chat from './screens/Chat';
 import Activities from './screens/Activities';
 import Recap from './screens/Recap';
 import Settings from './screens/Settings';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const Tab = createBottomTabNavigator();
 
@@ -46,6 +47,7 @@ export default function App() {
   
 
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <GluestackUIProvider config={config}>
         <View style={{ flex: 1, backgroundColor: 'transparent' }}>
         {menuVisible ? (
@@ -118,5 +120,6 @@ export default function App() {
         )}
         </View>
     </GluestackUIProvider>
+    </GestureHandlerRootView>
 );
 }

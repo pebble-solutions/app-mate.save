@@ -4,9 +4,10 @@
 ...
 android:supportsRtl="true"> */}
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList, Alert } from 'react-native';
 import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
+import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist'; // Import de DraggableFlatList
 
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const selectedItem = activity;
@@ -16,7 +17,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const [variables, setVariables] = useState([]);
   const [selectedVariable, setSelectedVariable] = useState({ label: '', _id: '' });
   const [activityVariables, setActivityVariables] = useState([]);
-
+  const [isDragging, setIsDragging] = useState(false);
   const fetchVariables = async () => {
     try {
       const response = await fetch('https://api.pebble.solutions/v5/metric/variable/');
@@ -30,7 +31,6 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   useEffect(() => {
     fetchVariables();
     setActivityVariables(activity.variables);
-    console.log('use effect aoppélé :', activity.variables);
   }, [activity]);
 
   const addVariableToActivity = async () => {
@@ -147,81 +147,80 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         <Text style={styles.activityDate}>{activity.description}</Text>
       </View>
 
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoSectionTitle}>Variables liées</Text>
+      <Text style={styles.infoSectionTitle}>Variables liées :</Text>
 
-          {activityVariables.map((variable) => (
-            <Text key={variable._id} style={styles.infoSectionContent}>
-              - {variable.label}
-            </Text>
-          ))}
-          <RNPickerSelect
-            onValueChange={(itemValue) => {
-              const matchingVariable = variables.find((variable) => variable.label === itemValue);
-              setSelectedVariable(matchingVariable || { label: '', _id: '' });
-            }}
-            value={selectedVariable.label}
-            placeholder={{ label: 'Autres variables disponibles', value: '' }}
-            items={variables.map((variable, index) => ({
-              label: variable.label,
-              value: variable.label,
-            }))}
-            style={{
-              inputIOS: {
-                fontSize: 14,
-                textAlign: 'center',
-                color: 'white',
-                paddingVertical: 10,
-                paddingHorizontal: 10,
-                borderWidth: 1,
-                borderColor: 'gray',
-                borderRadius: 4,
-                marginBottom: 10,
-              },
-              inputAndroid: {
-                fontSize: 14,
-                textAlign: 'center',
-                color: 'white',
-                paddingVertical: 10,
-                paddingHorizontal: 10,
-                borderWidth: 1,
-                borderColor: 'gray',
-                borderRadius: 4,
-                marginBottom: 10,
-              },
-            }}
-          />
-          <TouchableOpacity onPress={addVariableToActivity} style={styles.settingsButton}>
-            <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
-          </TouchableOpacity>
-        </View>
-        {/* <View style={styles.infoContainer}>
-          <Text style={styles.infoSectionTitle}>Collaborateurs</Text>
+      <DraggableFlatList
+        data={activityVariables}
+        renderItem={({ item, drag }) => (
+          <ScaleDecorator>
+            <TouchableOpacity
+              onLongPress={() => {
+                setIsDragging(true); // Le glissement commence
+                drag();
+              }}
+              disabled={isDragging}
+              style={[
+                styles.infoSectionContentContainer,
+                {
+                  backgroundColor: isDragging ? 'transparent' : 'grey',
+                  alignItems: 'center', // Centrer le texte horizontalement
+                  borderRadius: 10, // Bords arrondis
+                  paddingVertical: 10, // Marge verticale
+                  marginVertical: 5, // Marge verticale
+                },
+              ]}
+            >
+              <Text style={styles.infoSectionContent}>{item.label}</Text>
+            </TouchableOpacity>
+          </ScaleDecorator>
+        )}
+        keyExtractor={(item) => item._id}
+        onDragEnd={({ data: newData }) => {
+          setActivityVariables(newData);
+          setIsDragging(false); // Le glissement se termine
+        }}
+      />
 
-          <View style={styles.greenRectanglesContainer}>{renderGreenRectangles()}</View>
-          <TouchableOpacity style={styles.settingsButton}>
-            <Text style={styles.settingsButtonText}>Ajouter un collaborateur</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoSectionTitle}>Autres</Text>
-          <Text style={styles.infoSectionContent}>- autre 1</Text>
-          <Text style={styles.infoSectionContent}>- autre 2</Text>
-          <Text style={styles.infoSectionContent}>- autre 3</Text>
-          <TouchableOpacity style={styles.settingsButton}>
-            <Text style={styles.settingsButtonText}>Ajouter un quelque chose de special et exeptionnel </Text>
-          </TouchableOpacity>
-        </View> */}
-        <TouchableOpacity onPress={() => {
-          AlertConfirm();
-        }}>
-          <View style={styles.buttonDeleteActivity}>
-            <Text style={styles.textDeleteActivity}>Supprimer cette activité</Text>
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
+      <Text style={styles.infoSectionTitle}>Autres Variables disponibles :</Text>
+      <RNPickerSelect
+        onValueChange={(itemValue) => {
+          const matchingVariable = variables.find((variable) => variable.label === itemValue);
+          setSelectedVariable(matchingVariable || { label: '', _id: '' });
+        }}
+        value={selectedVariable.label}
+        placeholder={{ label: 'Selectionner une variable', value: '' }}
+        items={variables.map((variable, index) => ({
+          label: variable.label,
+          value: variable.label,
+        }))}
+        style={{
+          inputIOS: {
+            fontSize: 14,
+            textAlign: 'center',
+            color: 'white',
+            paddingVertical: 10,
+            paddingHorizontal: 10,
+            borderWidth: 1,
+            borderColor: 'gray',
+            borderRadius: 4,
+            marginBottom: 10,
+          },
+          inputAndroid: {
+            fontSize: 14,
+            textAlign: 'center',
+            color: 'white',
+            paddingVertical: 10,
+            paddingHorizontal: 10,
+            borderWidth: 1,
+            borderColor: 'gray',
+            borderRadius: 4,
+            marginBottom: 10,
+          },
+        }}
+      />
+      <TouchableOpacity onPress={addVariableToActivity} style={styles.settingsButton}>
+        <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -238,7 +237,7 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
   },
   settingsButton: {
-    backgroundColor: '#007bff', // Bleu classique pour les boutons
+    backgroundColor: '#007bff',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
@@ -250,7 +249,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   settingsButtonText: {
-    color: 'white', // Texte blanc pour une meilleure visibilité
+    color: 'white',
     fontWeight: 'bold',
   },
   closeButton: {
@@ -264,15 +263,16 @@ const styles = StyleSheet.create({
   },
   activityContent: {
     alignItems: 'center',
-    marginTop: 20,
+    marginBottom: 20,
   },
   activityName: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 24,
+    marginBottom: 10,
   },
   activityDate: {
-    color: 'white',
+    color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 16,
   },
   scrollView: {
@@ -291,12 +291,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 10,
+  },
+  infoSectionContentContainer: {
+    backgroundColor: 'transparent',
+    marginBottom: 10,
   },
   infoSectionContent: {
     color: 'white',
     fontSize: 16,
-    marginBottom: 10,
   },
   greenRectangleContainer: {
     flex: 1,
@@ -309,7 +312,7 @@ const styles = StyleSheet.create({
     height: 70,
     backgroundColor: 'green',
     borderRadius: 10,
-    marginBottom: 7, // Espacement entre le carré et le texte
+    marginBottom: 7,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -329,7 +332,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   buttonDeleteActivity: {
-    width: '100%', // Prend toute la largeur de l'écran
+    width: '100%',
     backgroundColor: '#d46363',
     padding: 10,
     borderRadius: 10,
