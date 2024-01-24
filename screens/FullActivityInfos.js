@@ -4,16 +4,16 @@
 ...
 android:supportsRtl="true"> */}
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
-import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist'; // Import de DraggableFlatList
+import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { NestableScrollContainer, NestableDraggableFlatList } from "react-native-draggable-flatlist"
 import Color from 'color';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
-  const backgroundColor = activity ? Color(activity.color).darken(0.1).hex() : ''; // Vérification de nullité pour activity
+  const backgroundColor = activity ? Color(activity.color).darken(0.1).hex() : '';
   const selectedItem = activity;
   const openSettingsModal = () => {
     console.log('Ouverture des réglages');
@@ -22,6 +22,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const [selectedVariable, setSelectedVariable] = useState({ label: '', _id: '' });
   const [activityVariables, setActivityVariables] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
+
   const fetchVariables = async () => {
     try {
       const response = await fetch('https://api.pebble.solutions/v5/metric/variable/');
@@ -100,39 +101,9 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       },
       {
         text: 'OK',
-        onPress: deleteActivity, // Appel de la fonction deleteActivity lorsque l'utilisateur appuie sur OK
+        onPress: deleteActivity,
       },
     ]);
-
-  const renderGreenRectangles = () => {
-    const rectangles = [];
-    const numRows = 4;
-    const numCols = 4;
-
-    for (let i = 0; i < numRows; i++) {
-      const row = [];
-      for (let j = 0; j < numCols; j++) {
-        row.push(
-          <View key={j} style={styles.greenRectangleContainer}>
-            {/* Zone supérieure pour le carré */}
-            <View style={styles.greenRectangle}>
-              {/* Contenu des rectangles, par exemple, un numéro */}
-              <Text style={styles.greenRectangleText}>LM</Text>
-            </View>
-            {/* Zone inférieure pour "Prénom" et "Nom" sur des lignes distinctes */}
-            <Text style={styles.greenRectangleName}>Prénom</Text>
-            <Text style={styles.greenRectangleName}>Nom</Text>
-          </View>
-        );
-      }
-      rectangles.push(
-        <View key={`row-${i}`} style={styles.rowContainer}>
-          {row}
-        </View>
-      );
-    }
-    return rectangles;
-  };
 
   return (
     <View style={{ ...styles.container, backgroundColor: selectedItem.color }}>
@@ -158,31 +129,59 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           data={activityVariables}
           renderItem={({ item, drag }) => (
             <ScaleDecorator>
-              <TouchableOpacity
-                onLongPress={() => {
-                  setIsDragging(true); // Le glissement commence
-                  drag();
-                }}
-                disabled={isDragging}
-                style={[
-                  styles.infoSectionContentContainer,
-                  {
-                    backgroundColor: isDragging ? 'transparent' : backgroundColor,
-                    alignItems: 'center',
-                    borderRadius: 7,
-                    paddingVertical: 10,
-                    marginVertical: 5,
-                  },
-                ]}
-              >
-                <Text style={styles.infoSectionContent}>{item.label}</Text>
-              </TouchableOpacity>
+             <TouchableOpacity
+  onLongPress={() => {
+    setIsDragging(true);
+    drag();
+  }}
+  disabled={isDragging}
+  style={[
+    styles.infoSectionContentContainer,
+    {
+      backgroundColor: isDragging ? 'transparent' : backgroundColor,
+      borderRadius: 7,
+      paddingVertical: 10,
+      marginVertical: 5,
+      flexDirection: 'row',
+      alignItems: 'center',
+      position: 'relative',
+    },
+  ]}
+>
+ {/* Texte centré avec retour à la ligne si nécessaire */}
+{/* Texte centré avec retour à la ligne si nécessaire */}
+<View style={{ flex: 1, alignItems: 'center' }}>
+    <Text style={[styles.infoSectionContent, { flexWrap: 'wrap', textAlign: 'center' }]}>
+      {item.label.length > 25 ? item.label.substring(0, 25) + '...' : item.label}
+    </Text>
+  </View>
+
+
+  {/* Icônes à droite en position absolue */}
+  <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
+    <TouchableOpacity onPress={() => handleDeleteVariable(item)}>
+      <Icon name="trash" size={20} color="white" />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => handleEditVariable(item)}>
+      <Icon name="edit" size={20} color="white" />
+    </TouchableOpacity>
+
+    <TouchableOpacity onPress={() => handleToggleMandatory(item)}>
+      {item.mandatory ? (
+        <Icon name="fa-trash-o" size={20} color="white" />
+      ) : (
+        <Icon name="circle" size={20} color="white" />
+      )}
+    </TouchableOpacity>
+  </View>
+</TouchableOpacity>
             </ScaleDecorator>
           )}
           keyExtractor={(item) => item._id}
           onDragEnd={({ data: newData }) => {
             setActivityVariables(newData);
-            setIsDragging(false); // Le glissement se termine
+            setIsDragging(false);
           }}
         />
 
@@ -262,7 +261,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
-
   closeButtonText: {
     color: 'white',
     fontSize: 14,
@@ -284,13 +282,6 @@ const styles = StyleSheet.create({
   scrollView: {
     marginTop: 20,
   },
-  infoContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 10,
-    padding: 10,
-    paddingBottom: 20,
-    marginBottom: 12,
-  },
   infoSectionTitle: {
     textAlign: 'center',
     color: 'white',
@@ -306,6 +297,10 @@ const styles = StyleSheet.create({
   infoSectionContent: {
     color: 'white',
     fontSize: 16,
+  },
+  iconContainer: {
+    flexDirection: 'row', // Aligner les icônes horizontalement
+    alignItems: 'center', // Centrer verticalement les icônes
   },
   greenRectangleContainer: {
     flex: 1,
