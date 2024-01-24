@@ -225,7 +225,13 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         <TouchableOpacity onPress={addVariableToActivity} style={styles.settingsButton}>
           <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={AlertConfirm}>
+        <View style={styles.buttonDeleteActivity}>
+            <Text style={styles.textDeleteActivity}>Supprimer cette activité</Text>
+          </View>
+        </TouchableOpacity>
       </NestableScrollContainer>
+      
     </View>
   );
 };
