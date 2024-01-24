@@ -8,6 +8,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, FlatList, Alert }
 import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist'; // Import de DraggableFlatList
+import { NestableScrollContainer, NestableDraggableFlatList } from "react-native-draggable-flatlist"
+
 
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const selectedItem = activity;
@@ -141,86 +143,88 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.activityContent}>
-        <Text style={styles.activityName}>{activity.label}</Text>
-        <Text style={styles.activityDate}>Créé le {moment(activity.start).format('DD.MM.YYYY')}</Text>
-        <Text style={styles.activityDate}>{activity.description}</Text>
-      </View>
+      <NestableScrollContainer style={styles.scrollView}>
+        <View style={styles.activityContent}>
+          <Text style={styles.activityName}>{activity.label}</Text>
+          <Text style={styles.activityDate}>Créé le {moment(activity.start).format('DD.MM.YYYY')}</Text>
+          <Text style={styles.activityDate}>{activity.description}</Text>
+        </View>
 
-      <Text style={styles.infoSectionTitle}>Variables liées :</Text>
+        <Text style={styles.infoSectionTitle}>Variables liées :</Text>
 
-      <DraggableFlatList
-        data={activityVariables}
-        renderItem={({ item, drag }) => (
-          <ScaleDecorator>
-            <TouchableOpacity
-              onLongPress={() => {
-                setIsDragging(true); // Le glissement commence
-                drag();
-              }}
-              disabled={isDragging}
-              style={[
-                styles.infoSectionContentContainer,
-                {
-                  backgroundColor: isDragging ? 'transparent' : 'grey',
-                  alignItems: 'center', // Centrer le texte horizontalement
-                  borderRadius: 10, // Bords arrondis
-                  paddingVertical: 10, // Marge verticale
-                  marginVertical: 5, // Marge verticale
-                },
-              ]}
-            >
-              <Text style={styles.infoSectionContent}>{item.label}</Text>
-            </TouchableOpacity>
-          </ScaleDecorator>
-        )}
-        keyExtractor={(item) => item._id}
-        onDragEnd={({ data: newData }) => {
-          setActivityVariables(newData);
-          setIsDragging(false); // Le glissement se termine
-        }}
-      />
+        <NestableDraggableFlatList
+          data={activityVariables}
+          renderItem={({ item, drag }) => (
+            <ScaleDecorator>
+              <TouchableOpacity
+                onLongPress={() => {
+                  setIsDragging(true); // Le glissement commence
+                  drag();
+                }}
+                disabled={isDragging}
+                style={[
+                  styles.infoSectionContentContainer,
+                  {
+                    backgroundColor: isDragging ? 'transparent' : 'grey',
+                    alignItems: 'center',
+                    borderRadius: 7,
+                    paddingVertical: 10,
+                    marginVertical: 5,
+                  },
+                ]}
+              >
+                <Text style={styles.infoSectionContent}>{item.label}</Text>
+              </TouchableOpacity>
+            </ScaleDecorator>
+          )}
+          keyExtractor={(item) => item._id}
+          onDragEnd={({ data: newData }) => {
+            setActivityVariables(newData);
+            setIsDragging(false); // Le glissement se termine
+          }}
+        />
 
-      <Text style={styles.infoSectionTitle}>Autres Variables disponibles :</Text>
-      <RNPickerSelect
-        onValueChange={(itemValue) => {
-          const matchingVariable = variables.find((variable) => variable.label === itemValue);
-          setSelectedVariable(matchingVariable || { label: '', _id: '' });
-        }}
-        value={selectedVariable.label}
-        placeholder={{ label: 'Selectionner une variable', value: '' }}
-        items={variables.map((variable, index) => ({
-          label: variable.label,
-          value: variable.label,
-        }))}
-        style={{
-          inputIOS: {
-            fontSize: 14,
-            textAlign: 'center',
-            color: 'white',
-            paddingVertical: 10,
-            paddingHorizontal: 10,
-            borderWidth: 1,
-            borderColor: 'gray',
-            borderRadius: 4,
-            marginBottom: 10,
-          },
-          inputAndroid: {
-            fontSize: 14,
-            textAlign: 'center',
-            color: 'white',
-            paddingVertical: 10,
-            paddingHorizontal: 10,
-            borderWidth: 1,
-            borderColor: 'gray',
-            borderRadius: 4,
-            marginBottom: 10,
-          },
-        }}
-      />
-      <TouchableOpacity onPress={addVariableToActivity} style={styles.settingsButton}>
-        <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
-      </TouchableOpacity>
+        <Text style={styles.infoSectionTitle}>Autres Variables disponibles :</Text>
+        <RNPickerSelect
+          onValueChange={(itemValue) => {
+            const matchingVariable = variables.find((variable) => variable.label === itemValue);
+            setSelectedVariable(matchingVariable || { label: '', _id: '' });
+          }}
+          value={selectedVariable.label}
+          placeholder={{ label: 'Selectionner une variable', value: '' }}
+          items={variables.map((variable, index) => ({
+            label: variable.label,
+            value: variable.label,
+          }))}
+          style={{
+            inputIOS: {
+              fontSize: 14,
+              textAlign: 'center',
+              color: 'white',
+              paddingVertical: 10,
+              paddingHorizontal: 10,
+              borderWidth: 1,
+              borderColor: 'gray',
+              borderRadius: 4,
+              marginBottom: 10,
+            },
+            inputAndroid: {
+              fontSize: 14,
+              textAlign: 'center',
+              color: 'white',
+              paddingVertical: 10,
+              paddingHorizontal: 10,
+              borderWidth: 1,
+              borderColor: 'gray',
+              borderRadius: 4,
+              marginBottom: 10,
+            },
+          }}
+        />
+        <TouchableOpacity onPress={addVariableToActivity} style={styles.settingsButton}>
+          <Text style={styles.settingsButtonText}>Ajouter cette variable à l'activité</Text>
+        </TouchableOpacity>
+      </NestableScrollContainer>
     </View>
   );
 };
