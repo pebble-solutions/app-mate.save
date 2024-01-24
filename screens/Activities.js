@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
 	activityItem: {
 		width: '48.5%',
 		marginBottom: 10,
-		height: 120,
+		height: 90,
 		padding: 10,
 		borderRadius: 10,
 	},
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		width: '48.5%',
 		marginBottom: 10,
-		height: 120,
+		height: 90,
 		padding: 10,
 		borderRadius: 10,
 
