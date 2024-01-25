@@ -115,16 +115,22 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           },
         });
     
-        if (response.status === 200) {
-          const updatedVariables = activityVariables.filter((item) => item._id !== variable._id);
-          setActivityVariables(updatedVariables);
+        if (response.ok) {
+          console.log('Variable supprimée de l\'activité avec succès');
+          const updatedVariables = [...activityVariables];
+      const indexToRemove = updatedVariables.findIndex((item) => item._id === variable._id);
+      if (indexToRemove !== -1) {
+        updatedVariables.splice(indexToRemove, 1); // Supprimer l'élément de la liste
+        setActivityVariables(updatedVariables); // Mettre à jour la liste
+      }rr
         } else {
-          console.error('Erreur lors de la suppression de la variable de l\'activité');
+          console.error('Erreur1 lors de la suppression de la variable de l\'activité');
         }
       } catch (error) {
-        console.error('Erreur lors de la suppression de la variable de l\'activité :', error);
+        console.error('Erreur2 lors de la suppression de la variable de l\'activité :', error);
       }
     };
+    
 
     const confirmDeleteVariable = (variable) => {
       Alert.alert(
