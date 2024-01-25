@@ -4,7 +4,7 @@ import { Text, View, TouchableOpacity, TextInput, StyleSheet, } from 'react-nati
 const ActivityModal = ({ onClose, onCreated }) => {
   const [activityName, setActivityName] = useState('');
   const [activityDescrition, setActivityDescription] = useState('');
-  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedColor, setSelectedColor] = useState('#000000');
 
   const colorOptions = [
     '#b53d35',
