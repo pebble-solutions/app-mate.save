@@ -123,3 +123,13 @@ export function dateToTime(val, refVal) {
     }
     return str;
 }
+
+/**
+ * Retourne la date  au format litttéral français
+ *@param {Date} date La date à transformer
+ *@return {string}
+    */
+export function dateToLiteral(date) {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    return date.toLocaleDateString('fr-FR', options);
+};

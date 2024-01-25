@@ -30,8 +30,8 @@ const postSession = {
     "typeID": "01H81Z7W545XNWSP9B4JMRMODC",
     "label": "Pointage de Mr HELIGON",
     "comment": "Commentaire",
-    "start": "2023-11-17 09:00:00",
-    "end": "2023-11-17 18:00:00",
+    "start": "2024-01-25T10:01:14.297Z",
+    "end": "2024-01-25T10:01:16.495Z",
     "status": "Active",
     "owner": {
         "id": "01H81Z7W545XNWSP9B4JMRMODC",
@@ -41,12 +41,12 @@ const postSession = {
     },
     "raw_datas": [
         {
-            "start": "2023-11-17 09:00:00",
-            "end": "2023-11-17 12:00:00",
+            "start": "2024-01-25T10:01:14.297Z",
+            "end": "2024-01-25T10:01:14.897Z",
         },
         {
-            "start": "2023-11-17 14:00:00",
-            "end": "2023-11-17 18:00:00",
+            "start": "2024-01-25T10:01:15.513Z",
+            "end": "2024-01-25T10:01:16.495Z",
         },
     ],
     "raw_variables": [
@@ -66,3 +66,25 @@ const postSession = {
         },
     ]
 }
+
+times:[
+    {"index": 1, "label": "Début d'activité", "time": 2024-01-25T10:01:14.297Z},
+    {"index": 2, "label": "Pause", "time": 2024-01-25T10:01:14.897Z},
+    {"index": 3, "label": "Reprise", "time": 2024-01-25T10:01:15.513Z},
+    {"index": 4, "label": "Arrêt de l'activité", "time": 2024-01-25T10:01:16.495Z}
+]
+
+postTimes:[
+    "start": "2024-01-25T10:01:14.297Z",
+    "end": "2024-01-25T10:01:16.495Z",
+    {
+        "start": "2024-01-25T10:01:14.297Z",
+        "end": "2024-01-25T10:01:14.897Z",
+    },
+    {
+        "start": "2024-01-25T10:01:15.513Z",
+        "end": "2024-01-25T10:01:16.495Z",
+    },
+    }
+]
+

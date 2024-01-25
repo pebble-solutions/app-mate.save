@@ -7,7 +7,10 @@ import SvgMountains from './SVG/SvgMountains';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { calculateDiffDate } from '../js/date';
 import RenderComponentsVariables from '../components/renderComponentsVariables';
-import { set } from 'date-fns';
+import RenderItemTimes from '../components/renderitemTime';
+import RenderSessionTimes from '../components/renderSession';
+import {transformToPostTimes} from '../js/changeTab';
+
 
 const Timer: FC = () => {
     const [pressTimes, setPressTimes] = useState<{
@@ -118,22 +121,7 @@ const Timer: FC = () => {
         }
     };
 
-    // const fetchSelectedActivity = async () => {
-    //     try {
-    //         const response = await fetch(`https://api.pebble.solutions/api/v5/activity/${selectedActivity._id}/metric/variable`, {
-    //         method: 'GET',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //     });
-    //     if (response.status == 200) {
-    //         console.log('Activity selected');
-    //         const associatedVariables = await response.json();
-    //     }
-    //     } catch (error) {
-    //         console.error('Error fetching selected activity:', error);
-    //     }
-    // };
+    
     
     
     const onValidatePress = async () => {
@@ -163,19 +151,17 @@ const Timer: FC = () => {
             const storedPressTimes = await AsyncStorage.getItem('pressTimes');
             if (storedPressTimes) {
                 const parsedPressTimes = JSON.parse(storedPressTimes);
+                console.log('Press Times in AsyncStorage:', parsedPressTimes);
                 if (parsedPressTimes.length > 0 && parsedPressTimes[parsedPressTimes.length - 1].index % 2 === 0) {
-                    console.log('Press Times in AsyncStorage:', parsedPressTimes);
+                    console.log(pressTimes, 'pressTimes');
                     setModalData(parsedPressTimes); // Suppose que vous avez un state `modalData`
                     const startTime = parsedPressTimes[0].time;
                     const endTime = parsedPressTimes[parsedPressTimes.length - 1].time;
                     const endLabel = parsedPressTimes[parsedPressTimes.length - 1].label;
                     const testDiff = calculateDiffDate(startTime, endTime);
                     const startLabel = parsedPressTimes[0].label;
-                    console.log(startLabel, 'startLabel');
-                    console.log(endLabel, 'endLabel');
                     const formastart = new Date(startTime);
                     const foramend = new Date(endTime);
-                    console.log(formastart, foramend, 'formastart et end');
                     const diff = foramend.getTime() - formastart.getTime();
                     const hours = Math.floor(diff / (1000 * 60 * 60));
                     const minutes = Math.floor(diff / (1000 * 60)) % 60;
@@ -207,22 +193,8 @@ const Timer: FC = () => {
             console.error('Error retrieving data from AsyncStorage:', error);
         }
     };
-    const renderPresstimes = () => {
-        console.log(modalData, 'modalData');
-        modalData.map((item, index) => {
-            if(modalData[index].label === "Pause" || modalData[index].label === ""){
-                setTabPointage(tabPointage => [...tabPointage, item]);
-                setModalData(modalData[index].label,  "end");
-                
-        // return modalData.map((item, index) => {
-        //     return (
-        //         <View key={index} style={styles.contentItemWork}>
-        //             <Text style={styles.contentName}>{item.label}</Text>
-        //             <Text style={styles.contentName}>{item.time.toLocaleTimeString()}</Text>
-        //         </View>
-        //     )
-        // })
-    }
+    
+    
         
 
     const validateSession = () => { 
@@ -312,8 +284,12 @@ const Timer: FC = () => {
                 <View style={styles.infoContainer}>
                     <Text style={styles.infoSectionTitle}>Informations session</Text>
                     <View style={styles.contentValidation}>
+                        <View style={styles.contentItem}>
+                            <RenderSessionTimes tabTimes={pressTimes} />
+                        </View>
                         <View style={styles.rowItemWork}>
-                            {renderPresstimes() }
+                        {/* <FlatList data={pressTimes} renderItem={renderItem} keyExtractor={(item, index) => index.toString()} style={styles.listContainer} /> */}
+                            <RenderItemTimes tabTimes={pressTimes} />
                         </View>
                         <View style={styles.contentItem}>
                             <Text style={styles.contentName}>Durée de la session:</Text>
@@ -633,4 +609,5 @@ const styles = StyleSheet.create({
         backgroundColor: '#0000FF'
     }
 });
+
 export default Timer;
