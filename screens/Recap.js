@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-nati
 import DayCarousel from './carousel/DayCarousel';
 import WeekCarousel from './carousel/WeekCarousel';
 import MonthCarousel from './carousel/MonthCarousel';
-import DateRangeCarousel from './carousel/DateRangeCarousel';
+import DateRangeCard from './cards/DateRangeCard';
 
 
 const Recap = () => {
@@ -18,7 +18,7 @@ const Recap = () => {
       case 'mois':
         return <MonthCarousel />;
       case 'période':
-        return <DateRangeCarousel />;
+        return <DateRangeCard />;
       default:
         return null;
     }
