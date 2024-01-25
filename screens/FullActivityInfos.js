@@ -10,7 +10,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { NestableScrollContainer, NestableDraggableFlatList } from "react-native-draggable-flatlist"
 import Color from 'color';
-import { faTrashCan, faCircleExclamation, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { faTrashCan, faCircleExclamation, faPenToSquare, faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
@@ -226,10 +226,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           renderItem={({ item, drag }) => (
             <ScaleDecorator>
               <TouchableOpacity
-                onLongPress={() => {
-                  setIsDragging(true);
-                  drag();
-                }}
+                onLongPress={drag} // Démarrez le glissement lorsque l'utilisateur appuie longtemps
                 disabled={isDragging}
                 style={[
                   styles.infoSectionContentContainer,
@@ -237,23 +234,43 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
                     backgroundColor: isDragging ? 'transparent' : backgroundColor,
                     borderRadius: 7,
                     paddingVertical: 10,
-                    marginVertical: 5,
+                    marginVertical: 1,
                     flexDirection: 'row',
                     alignItems: 'center',
                     position: 'relative',
+                    // Ajoutez une ombre uniquement lorsqu'il est en cours de glissement
+                    ...(isDragging && {
+                      shadowColor: 'black',
+                      shadowOffset: { width: 0, height: 0 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 5,
+                    }),
+                    elevation: isDragging ? 5 : 0, // Pour Android
                   },
                 ]}
               >
-      
+
+
+                <View style={{ position: 'absolute', left: 10, flexDirection: 'row' }}>
+                  <TouchableOpacity onPress={drag}>
+                    <FontAwesomeIcon icon={faBars} color='rgba(0, 0, 0, 0.3)' />
+                  </TouchableOpacity>
+                </View>
+
                 <View style={{ flex: 1, alignItems: 'center' }}>
                   <Text style={[styles.infoSectionContent, { flexWrap: 'wrap', textAlign: 'center' }]}>
                     {item.label.length > 25 ? item.label.substring(0, 25) + '...' : item.label}
                   </Text>
                 </View>
-
-
-                {/* Icônes à droite en position absolue */}
                 <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
+
+                  <TouchableOpacity onPress={() => handleToggleMandatory(item)} style={styles.iconContainer}>
+                    {item.mandatory ? (
+                      <FontAwesomeIcon icon={faCircleExclamation} color='white' />
+                    ) : (
+                      <FontAwesomeIcon icon={faCircleExclamation} size={20} color='rgba(0, 0, 0, 0.2)' />
+                    )}
+                  </TouchableOpacity>
                   <TouchableOpacity onPress={() => confirmDeleteVariable(item)} style={styles.iconContainer}>
                     <FontAwesomeIcon icon={faTrashCan} color='white' />
                   </TouchableOpacity>
@@ -262,13 +279,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
                     <FontAwesomeIcon icon={faPenToSquare} color='white' />
                   </TouchableOpacity> */}
 
-                  <TouchableOpacity onPress={() => handleToggleMandatory(item)} style={styles.iconContainer}>
-                    {item.mandatory ? (
-                      <FontAwesomeIcon icon={faCircleExclamation} color='white' />
-                    ) : (
-                      <FontAwesomeIcon icon={faCircleExclamation} color='grey' />
-                    )}
-                  </TouchableOpacity>
+
                 </View>
               </TouchableOpacity>
             </ScaleDecorator>
@@ -300,7 +311,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
               paddingVertical: 10,
               paddingHorizontal: 10,
               borderWidth: 1,
-              borderColor: '#007bff',
+              borderColor: 'rgba(255, 255, 255, 0.3)',
               borderRadius: 4,
               marginBottom: 5,
             },
@@ -399,7 +410,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row', // Aligner les icônes horizontalement
     alignItems: 'center', // Centrer verticalement les icônes
-    marginLeft: 5,
+    marginLeft: 10,
   },
   greenRectangleContainer: {
     flex: 1,
