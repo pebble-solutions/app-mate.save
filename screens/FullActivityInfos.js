@@ -7,10 +7,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import moment from 'moment';
 import RNPickerSelect from 'react-native-picker-select';
-import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
+import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { NestableScrollContainer, NestableDraggableFlatList } from "react-native-draggable-flatlist"
 import Color from 'color';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { faTrashCan, faCircleExclamation, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const backgroundColor = activity ? Color(activity.color).darken(0.1).hex() : '';
@@ -19,7 +20,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
     console.log('Ouverture des réglages');
   };
   const [variables, setVariables] = useState([]);
-  const [selectedVariable, setSelectedVariable] = useState({ label: '', _id: '' });
+  const [selectedVariable, setSelectedVariable] = useState({ label: '', _id: '', mandatory: false });
   const [activityVariables, setActivityVariables] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -159,19 +160,19 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
 
                 {/* Icônes à droite en position absolue */}
                 <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
-                  <TouchableOpacity onPress={() => handleDeleteVariable(item)}>
-                    <Icon name="trash" size={20} color="white" />
+                  <TouchableOpacity onPress={() => handleDeleteVariable(item)} style={styles.iconContainer}>
+                    <FontAwesomeIcon icon={faTrashCan} color='white' />
                   </TouchableOpacity>
 
-                  <TouchableOpacity onPress={() => handleEditVariable(item)}>
-                    <Icon name="edit" size={20} color="white" />
+                  <TouchableOpacity onPress={() => handleEditVariable(item)} style={styles.iconContainer}>
+                    <FontAwesomeIcon icon={faPenToSquare} color='white' />
                   </TouchableOpacity>
 
-                  <TouchableOpacity onPress={() => handleToggleMandatory(item)}>
+                  <TouchableOpacity onPress={() => handleToggleMandatory(item)} style={styles.iconContainer}>
                     {item.mandatory ? (
-                      <Icon name="trash" size={20} color="white" />
+                      <FontAwesomeIcon icon={faCircleExclamation} color='white' />
                     ) : (
-                      <Icon name="circle" size={20} color="white" />
+                      <FontAwesomeIcon icon={faCircleExclamation} color='grey' />
                     )}
                   </TouchableOpacity>
                 </View>
@@ -205,9 +206,9 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
               paddingVertical: 10,
               paddingHorizontal: 10,
               borderWidth: 1,
-              borderColor: 'rgba(255, 255, 255, 0.7)',
+              borderColor: '#007bff',
               borderRadius: 4,
-              marginBottom: 10,
+              marginBottom: 5,
             },
             inputAndroid: {
               fontSize: 16,
@@ -216,7 +217,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
               paddingVertical: 10,
               paddingHorizontal: 10,
               borderWidth: 1,
-              borderColor: 'rgba(255, 255, 255, 0.7)',
+              borderColor: '#007bff',
               borderRadius: 4,
               marginBottom: 10,
             },
@@ -253,10 +254,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+
     elevation: 5,
   },
   settingsButtonText: {
@@ -307,6 +305,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row', // Aligner les icônes horizontalement
     alignItems: 'center', // Centrer verticalement les icônes
+    marginLeft: 5,
   },
   greenRectangleContainer: {
     flex: 1,
@@ -341,6 +340,7 @@ const styles = StyleSheet.create({
   buttonDeleteActivity: {
     width: '100%',
     backgroundColor: '#d46363',
+    marginTop: 10,
     padding: 10,
     borderRadius: 10,
   },
