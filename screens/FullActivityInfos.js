@@ -101,10 +101,48 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
         style: 'cancel',
       },
       {
-        text: 'OK',
+        text: 'Supprimer',
         onPress: deleteActivity,
       },
     ]);
+
+    const handleDeleteVariable = async (variable) => {
+      try {
+        const response = await fetch(`https://api.pebble.solutions/v5/activity/${activity._id}/metric/variable/${variable._id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+    
+        if (response.status === 200) {
+          const updatedVariables = activityVariables.filter((item) => item._id !== variable._id);
+          setActivityVariables(updatedVariables);
+        } else {
+          console.error('Erreur lors de la suppression de la variable de l\'activité');
+        }
+      } catch (error) {
+        console.error('Erreur lors de la suppression de la variable de l\'activité :', error);
+      }
+    };
+
+    const confirmDeleteVariable = (variable) => {
+      Alert.alert(
+        'Confirmation',
+        `Voulez-vous vraiment supprimer la variable : ${variable.label} ?`,
+        [
+          {
+            text: 'Annuler',
+            style: 'cancel',
+          },
+          {
+            text: 'Supprimer',
+            onPress: () => handleDeleteVariable(variable),
+            style: 'destructive', // Utilisez le style 'destructive' pour indiquer une action de suppression
+          },
+        ]
+      );
+    };
 
   return (
     <View style={{ ...styles.container, backgroundColor: selectedItem.color }}>
@@ -160,9 +198,9 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
 
                 {/* Icônes à droite en position absolue */}
                 <View style={{ position: 'absolute', right: 10, flexDirection: 'row' }}>
-                  <TouchableOpacity onPress={() => handleDeleteVariable(item)} style={styles.iconContainer}>
-                    <FontAwesomeIcon icon={faTrashCan} color='white' />
-                  </TouchableOpacity>
+                <TouchableOpacity onPress={() => confirmDeleteVariable(item)} style={styles.iconContainer}>
+  <FontAwesomeIcon icon={faTrashCan} color='white' />
+</TouchableOpacity>
 
                   <TouchableOpacity onPress={() => handleEditVariable(item)} style={styles.iconContainer}>
                     <FontAwesomeIcon icon={faPenToSquare} color='white' />
