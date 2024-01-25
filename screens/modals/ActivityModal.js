@@ -4,18 +4,18 @@ import { Text, View, TouchableOpacity, TextInput, StyleSheet, } from 'react-nati
 const ActivityModal = ({ onClose, onCreated }) => {
   const [activityName, setActivityName] = useState('');
   const [activityDescrition, setActivityDescription] = useState('');
-  const [selectedColor, setSelectedColor] = useState('#000000');
+  const [selectedColor, setSelectedColor] = useState('#202020');
 
   const colorOptions = [
-    '#b53d35',
-    '#b77856',
-    '#afa47a',
-    '#2fa580',
-    '#057a9a',
-    '#3f74a8',
-    '#7062c8',
-    '#8759a4'
-  ];
+    '#036666',
+    '#355070',
+    '#6D597A',
+    '#B56576',
+    '#E56B6F',
+    '#b9375e',
+    '#8a2846',
+    '#11151c'
+];
 
   const createActivity = async () => {
     try {
