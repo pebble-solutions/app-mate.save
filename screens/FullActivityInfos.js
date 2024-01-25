@@ -152,11 +152,11 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
 
   const handleToggleMandatory = async (variable) => {
     const isCurrentlyMandatory = variable.mandatory;
-  
+
     const confirmationMessage = isCurrentlyMandatory
       ? `Voulez-vous vraiment rendre la variable "${variable.label}" non obligatoire ?`
       : `Voulez-vous vraiment rendre la variable "${variable.label}" obligatoire ?`;
-  
+
     Alert.alert(
       'Confirmation',
       confirmationMessage,
@@ -174,12 +174,12 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                   "mandatory": !isCurrentlyMandatory,
-                  "order": 1 
+                  "order": 1 // à supprimer stap
                 }),
               });
-  
+
               if (response.ok) {
                 console.log('Mise à jour de l\'état mandatory de la variable effectuée avec succès');
                 const updatedVariables = [...activityVariables];
@@ -199,7 +199,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       ]
     );
   };
-  
+
 
   return (
     <View style={{ ...styles.container, backgroundColor: selectedItem.color }}>
@@ -244,8 +244,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
                   },
                 ]}
               >
-                {/* Texte centré avec retour à la ligne si nécessaire */}
-                {/* Texte centré avec retour à la ligne si nécessaire */}
+      
                 <View style={{ flex: 1, alignItems: 'center' }}>
                   <Text style={[styles.infoSectionContent, { flexWrap: 'wrap', textAlign: 'center' }]}>
                     {item.label.length > 25 ? item.label.substring(0, 25) + '...' : item.label}
@@ -259,9 +258,9 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
                     <FontAwesomeIcon icon={faTrashCan} color='white' />
                   </TouchableOpacity>
 
-                  <TouchableOpacity onPress={() => handleEditVariable(item)} style={styles.iconContainer}>
+                  {/* <TouchableOpacity onPress={() => handleEditVariable(item)} style={styles.iconContainer}>
                     <FontAwesomeIcon icon={faPenToSquare} color='white' />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
 
                   <TouchableOpacity onPress={() => handleToggleMandatory(item)} style={styles.iconContainer}>
                     {item.mandatory ? (
