@@ -169,15 +169,11 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
           text: 'Confirmer',
           onPress: async () => {
             try {
-              const response = await fetch(`https://api.pebble.solutions/v5/activity/${activity._id}/metric/variable/${variable._id}`, {
+              const response = await fetch(`https://api.pebble.solutions/v5/activity/${activity._id}/metric/variable/${variable._id}/toggle_mandatory`, {
                 method: 'PATCH',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                  "mandatory": !isCurrentlyMandatory,
-                  "order": 1 // à supprimer stap
-                }),
               });
 
               if (response.ok) {
