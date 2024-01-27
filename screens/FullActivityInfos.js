@@ -13,7 +13,7 @@ import Color from 'color';
 import { faTrashCan, faCircleExclamation, faPenToSquare, faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
-const FullActivityInfos = ({ activity, onClose, onDelete }) => {
+const FullActivityInfos = ({ activity, onClose, onDelete, isOpen }) => {
   const backgroundColor = activity ? Color(activity.color).darken(0.1).hex() : '';
   const selectedItem = activity;
   const openSettingsModal = () => {
@@ -23,6 +23,11 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
   const [selectedVariable, setSelectedVariable] = useState({ label: '', _id: '', mandatory: false });
   const [activityVariables, setActivityVariables] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [isReopened, setIsReopened] = useState(false);
+
+  const refreshData = async () => {
+    fetchVariables();
+  };
 
   const fetchVariables = async () => {
     try {
@@ -38,6 +43,16 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
     fetchVariables();
     setActivityVariables(activity.variables);
   }, [activity]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsReopened(prevState => !prevState);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    refreshData();
+  }, [isReopened]);
 
   const addVariableToActivity = async () => {
     if (selectedVariable._id) {
@@ -149,6 +164,35 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
       ]
     );
   };
+
+  const updateVariableOrder = async (variable, newOrder) => {
+    try {
+      const response = await fetch(`https://api.pebble.solutions/v5/activity/${activity._id}/metric/variable/${variable._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ new_key: newOrder }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la mise à jour de l\'ordre de la variable');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de l\'ordre de la variable :', error);
+    }
+  };
+
+  const onDragEnd = async ({ data: newData }) => {
+    setIsDragging(false);
+
+    newData.forEach(async (variable, index) => {
+      await updateVariableOrder(variable, index + 1);
+    });
+  
+    setActivityVariables(newData);
+  };
+
 
   const handleToggleMandatory = async (variable) => {
     const isCurrentlyMandatory = variable.mandatory;
@@ -281,10 +325,7 @@ const FullActivityInfos = ({ activity, onClose, onDelete }) => {
             </ScaleDecorator>
           )}
           keyExtractor={(item) => item._id}
-          onDragEnd={({ data: newData }) => {
-            setActivityVariables(newData);
-            setIsDragging(false);
-          }}
+          onDragEnd={onDragEnd}
         />
 
         <Text style={styles.infoSectionTitle}>Autres Variables disponibles :</Text>
