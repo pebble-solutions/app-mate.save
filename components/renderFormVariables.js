@@ -3,26 +3,35 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import ResponseText from "./formVariable/variableText";
 import ResponseNumber from "./formVariable/variableNumber";
 import ResponseBoolean from "./formVariable/variableBoolean";
+import ResponseTextArea from "./formVariable/variableTextArea";
+import ResponseDate from "./formVariable/variableDate";
+import ResponseTime from "./formVariable/variableTime";
+import ResponseDateTime from "./formVariable/variableDateTime";
+import ResponseDateRange from "./formVariable/variableDateRange";
+
 
 
 const RenderForm = ({item}, {type}) => {
+    // const [inputValueText, setInputValueText] = React.useState("");
+    // const handleChangeValue = (text) => {
+    //     setInputValueText(text);
+    // }
+
     console.log(type, ' type')
     console.log(item, ' item')
     if(item.type === 'text'){
         return (
-            <ResponseText varText={item}/>
+            <View>
+                <ResponseText  varText={item}/>
+{/* 
+                <ResponseText  getValue={handleChangeValue}  varText={item}/>
+                <Text> value in parent: {inputValueText} </Text> */}
+            </View>
         )
     }
     else if(item.type === 'textarea'){
         return (
-            <TextInput style={styles.inputField}
-            placeholder={item.type}></TextInput>
-        )
-    }
-    else if(item.type === 'date'){
-        return (
-            <TextInput style={styles.inputField}
-            placeholder={item.type}></TextInput>
+            <ResponseTextArea  varTextArea={item}/>
         )
     }
     else if(item.type === 'number'){
@@ -32,15 +41,38 @@ const RenderForm = ({item}, {type}) => {
     }
     else if(item.type === 'boolean'){
         return (
-            // <TextInput style={styles.inputField}
-            // placeholder={item.type}></TextInput>
-            <ResponseBoolean varBoolean={item}/>
+         
+        <ResponseBoolean varBoolean={item} />
+      
+        )
+    }
+    else if(item.type === 'date'){
+        return (
+      
+            <ResponseDate varDate={item}/>
+        )
+    }
+    else if(item.type === 'time'){
+        return (
+      
+            <ResponseTime varTime={item}/>
+        )
+    }
+    else if(item.type === 'dateTime'){
+        return (
+      
+            <ResponseDateTime varDateTime={item}/>
+        )
+    }
+    else if(item.type === 'dateRange'){
+        return (
+      
+            <ResponseDateRange varDateRange={item}/>
         )
     }
     else{
         return null
     }
-    
     
 }
 const styles= StyleSheet.create({

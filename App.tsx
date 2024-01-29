@@ -10,6 +10,7 @@ import Chat from './screens/Chat';
 import Activities from './screens/Activities';
 import Recap from './screens/Recap';
 import Settings from './screens/Settings';
+import RenderForm from './components/renderFormVariables'
 
 const Tab = createBottomTabNavigator();
 
@@ -100,6 +101,7 @@ export default function App() {
             <Tab.Screen name="Timer" component={Timer} options={{ tabBarLabel: () => null }} />
             <Tab.Screen name="Recap" component={Recap} options={{ tabBarLabel: () => null }} />
             <Tab.Screen name="Settings" component={Settings} options={{ tabBarLabel: () => null }} />
+            <Tab.Screen name="Tunnel" component={RenderForm}  />
             </Tab.Navigator>
         </NavigationContainer>
     ) : (

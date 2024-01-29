@@ -5,11 +5,14 @@ import RenderForm from './renderFormVariables';
 
 
 const RenderComponentsVariables = ({tabVariables}) => {
+    const [variablesVisibles, setVariablesVisibles] = React.useState(true);
+    const   [response, setResponse] = React.useState({ response: ""});
     const [formVisible, setFormVisible] = React.useState(false);
     const [selectedItem, setSelectedItem] = React.useState(null);
 
     const handlePress = (item) => {
         setFormVisible(true);
+        setVariablesVisibles(false);
         setSelectedItem(item);
     }
     const renderFormItem = () => {
@@ -34,8 +37,10 @@ const RenderComponentsVariables = ({tabVariables}) => {
 
 
         const renderVariables = () => { 
-            if(!tabVariables) return null;
-            else{
+            if(!tabVariables ) return null;
+            // else if (variablesVisibles){
+
+            // }
                 return tabVariables.map((item) => {
                 
                         return (
@@ -52,7 +57,6 @@ const RenderComponentsVariables = ({tabVariables}) => {
                     }
                     
                 )
-            }
         }    
     return (    
         <View>
