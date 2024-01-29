@@ -44,6 +44,7 @@ const RenderComponentsVariables = ({tabVariables}) => {
                                     <View>
                                         <Text style ={styles.contentName}>{item.question}</Text> 
                                         <Text style ={styles.contentName}>{item.mandatory}</Text>
+                                    
                                     </View>
                                 </TouchableHighlight>
                             </View>
@@ -51,8 +52,6 @@ const RenderComponentsVariables = ({tabVariables}) => {
                     }
                     
                 )
-                
-                
             }
         }    
     return (    

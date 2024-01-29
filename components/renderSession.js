@@ -26,7 +26,7 @@ const RenderSessionTimes = ({tabTimes}) => {
                     <Text style={styles.contentName}>Fin:</Text>
                     <Text style={styles.contentName}>{formatDate(new Date(sessionTime[0].end))}</Text>
                 </View>
-                <Text style={styles.label}>Temps</Text>
+                {/* <Text style={styles.label}>Temps</Text> */}
             </View>
         )
 }  

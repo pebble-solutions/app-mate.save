@@ -1,13 +1,16 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
+import ResponseText from "./formVariable/variableText";
+import ResponseNumber from "./formVariable/variableNumber";
+import ResponseBoolean from "./formVariable/variableBoolean";
+
 
 const RenderForm = ({item}, {type}) => {
     console.log(type, ' type')
     console.log(item, ' item')
     if(item.type === 'text'){
         return (
-            <TextInput style={styles.inputField}
-            placeholder={item.type}></TextInput>
+            <ResponseText varText={item}/>
         )
     }
     else if(item.type === 'textarea'){
@@ -24,52 +27,21 @@ const RenderForm = ({item}, {type}) => {
     }
     else if(item.type === 'number'){
         return (
-            <TextInput style={styles.inputField}
-            placeholder={item.type}></TextInput>
+            <ResponseNumber varNumber={item}/>
         )
     }
     else if(item.type === 'boolean'){
         return (
-            <TextInput style={styles.inputField}
-            placeholder={item.type}></TextInput>
+            // <TextInput style={styles.inputField}
+            // placeholder={item.type}></TextInput>
+            <ResponseBoolean varBoolean={item}/>
         )
     }
     else{
         return null
     }
     
-    // switch (item.type) {
-    //     case 'text':
-    //         console.log('text', item.question)
-    //         return (
-    //             <TextInput style={styles.inputField}
-    //             placeholder={item.type}></TextInput>
-    //         )
-    //     case 'textarea':
-    //         console.log('textarea', item.question)
-    //         return (
-    //             <TextInput style={styles.inputField}
-    //             placeholder={item.type}></TextInput>
-    //         )
-    //     case 'date':
-    //         console.log('date', item.question)
-    //         return (
-    //             <TextInput style={styles.inputField}
-    //             placeholder={item.type}></TextInput>
-    //         )
-    //     case 'number':
-    //         console.log('number', item.question)
-    //         return (
-    //             <TextInput style={styles.inputField}
-    //             placeholder={item.type}></TextInput>
-    //         )
-    //     case 'boolean':
-    //         console.log('boolean', item.question)
-    //         return (
-    //             <TextInput style={styles.inputField}
-    //             placeholder={item.type}></TextInput>
-    //         )
-    // }
+    
 }
 const styles= StyleSheet.create({
     contentVariable: {

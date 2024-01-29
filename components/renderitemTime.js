@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
+import { transformToPostTimes } from "../js/changeTab";
 
 // Fonction pour formater une date
 const formatDate = (date) => {
@@ -8,14 +9,15 @@ const formatDate = (date) => {
 };
 
 const RenderItemTimes = ({tabTimes}) => {
+    sessionWork = transformToPostTimes(tabTimes);
+    console.log(sessionWork)
             
-    if(tabTimes.length > 0  ) {
+    if(sessionWork.length > 0  ) {
 
-        return tabTimes.map((item) => {
+        return sessionWork.map((item) => {
                 const Time = new Date(item.time)
                 return (
                     <View key={item.index} style={styles.contentItem}>
-                        
                         <Text style={styles.contentName}>{item.label}:</Text>
                         <Text style={styles.contentName}>{formatDate(Time)}</Text>
                     </View>
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
         margin: 5,
     },
     contentItem: {
-        flexDirection: 'row',
+        flexDirection: 'raw',
         justifyContent: 'space-between',
         alignItems: 'center'
     },

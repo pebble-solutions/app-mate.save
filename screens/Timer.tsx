@@ -9,7 +9,7 @@ import { calculateDiffDate } from '../js/date';
 import RenderComponentsVariables from '../components/renderComponentsVariables';
 import RenderItemTimes from '../components/renderitemTime';
 import RenderSessionTimes from '../components/renderSession';
-import {transformToPostTimes} from '../js/changeTab';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Timer: FC = () => {
@@ -287,9 +287,13 @@ const Timer: FC = () => {
                         <View style={styles.contentItem}>
                             <RenderSessionTimes tabTimes={pressTimes} />
                         </View>
+                        <View style={styles.contentItem}>
+                            <RenderItemTimes tabTimes={pressTimes} />
+
+                            </View>
                         <View style={styles.rowItemWork}>
                         {/* <FlatList data={pressTimes} renderItem={renderItem} keyExtractor={(item, index) => index.toString()} style={styles.listContainer} /> */}
-                            <RenderItemTimes tabTimes={pressTimes} />
+                            {/* <RenderItemTimes tabTimes={pressTimes} /> */}
                         </View>
                         <View style={styles.contentItem}>
                             <Text style={styles.contentName}>Durée de la session:</Text>
@@ -300,7 +304,8 @@ const Timer: FC = () => {
                             <Text style={styles.contentName}>nombre de pauses:</Text>
                             <Text style={styles.contentName}>{recap.numberBreak}</Text>
                         </View>
-                        <TouchableOpacity onPress={() => console.log("Modifier ces informations")} style={styles.buttonPatch}>
+                        <TouchableOpacity onPress={() => console.log("Modifier ces informations")} style={styles.buttonPatch}> 
+                         {/* onPress={() => navigation.navigate('Variables')} */}
                             <Text style={styles.buttonText}>Modifier ces informations ?</Text>
                         </TouchableOpacity>
                     </View>
